@@ -1,0 +1,49 @@
+### Java / Maven ###
+backend/target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+.mvn/timing.properties
+dependency-reduced-pom.xml
+build/
+out/
+
+### IntelliJ / VS Code ###
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.class
+
+### Logs ###
+*.log
+logs/
+spring.log
+
+### OS junk ###
+.DS_Store
+Thumbs.db
+
+### Environment / Config ###
+.env
+*.local
+application-*.properties
+
+### Docker ###
+# Don’t commit built images or volumes
+docker-compose.override.yml
+*.pid
+**/docker-data/
+**/mysql-data/
+**/db_data/
+
+### Node / Frontend (if ever added) ###
+node_modules/
+dist/
+build/
+
+### Backup / Archive ###
+*.zip
+*.tar
+*.tar.gz
+*.bak
