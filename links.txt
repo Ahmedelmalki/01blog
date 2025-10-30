@@ -1,1 +1,5 @@
 https://hibernate.org/orm/processor/
+reading list for tomorow:
+https://www.typescriptlang.org/docs/handbook/intro.html
+https://docs.docker.com/compose/gettingstarted/
+https://www.geeksforgeeks.org/springboot/spring-mvc-webmvcconfigure/
