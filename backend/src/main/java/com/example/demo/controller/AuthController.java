@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.User;
+import com.example.demo.payload.UserResponse;
 import com.example.demo.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -16,7 +18,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
-        return ResponseEntity.ok(authService.register(user));
+    public ResponseEntity<UserResponse> register(@RequestBody User user) {
+        User savedUser = authService.register(user);
+        return ResponseEntity.ok(new UserResponse(savedUser));
     }
 }

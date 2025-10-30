@@ -2,6 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+
+import java.util.HashSet;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,7 +23,10 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists");
         }
 
-        if(user.getRoles() == null || user.getRoles().isEmpty()) {
+        if(user.getRoles() == null) {
+            user.setRoles(new HashSet<>());
+        }
+        if(user.getRoles().isEmpty()) {
             user.getRoles().add("USER");
         }
 
