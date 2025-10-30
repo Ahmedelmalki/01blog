@@ -2,7 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AuthService {
@@ -14,9 +16,17 @@ public class AuthService {
     }
 
     public User register(User user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email already exists");
+        if(userRepository.existsByEmail(user.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists");
         }
+
+        if(user.getRoles() == null || user.getRoles().isEmpty()) {
+            user.getRoles().add("USER");
+        }
+
+        user.setUsername(user.getUsername().trim());
+        user.setEmail(user.getEmail().trim());
+
         return userRepository.save(user);
     }
 }

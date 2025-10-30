@@ -15,7 +15,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -24,7 +24,7 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
-    private Set<String> roles = new HashSet<>(); // e.g., USER, ADMIN
+    private Set<String> roles = new HashSet<>();
 
     public User() {}
 
@@ -34,7 +34,7 @@ public class User {
         this.password = password;
     }
 
-    // Getters & setters
+    // Getters and setters
     public Long getId() { return id; }
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }

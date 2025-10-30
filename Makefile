@@ -9,7 +9,7 @@ build:
 	docker compose -f $(DOCKER_COMPOSE) build
 
 up:
-	docker compose -f $(DOCKER_COMPOSE) up -d
+	docker compose -f $(DOCKER_COMPOSE) up 
 
 down:
 	docker compose -f $(DOCKER_COMPOSE) down
@@ -23,3 +23,6 @@ clean:
 	docker system prune -af
 
 run: build up logs
+
+enter:
+	mysql -h 127.0.0.1 -u 01blog -p01blogpass
