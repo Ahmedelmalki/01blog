@@ -15,6 +15,12 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(unique = false, nullable = false)
+    private String firstname;
+
+    @Column(unique = false, nullable = false)
+    private String lastname;
+
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -28,7 +34,9 @@ public class User {
 
     public User() {}
 
-    public User(String username, String email, String password) {
+    public User(String firstname, String lastname,String username, String email, String password) {
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -36,6 +44,13 @@ public class User {
 
     // Getters and setters
     public Long getId() { return id; }
+ 
+    public String getFirstname() { return firstname; }
+    public void setFirstname(String firstname) { this.firstname = firstname; }
+
+    public String getLastname() { return lastname; }
+    public void setLastname(String lastname) { this.lastname = lastname; }
+
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
     public String getEmail() { return email; }

@@ -30,6 +30,8 @@ public class AuthService {
             user.getRoles().add("USER");
         }
 
+        user.setFirstname(user.getFirstname().trim());
+        user.setLastname(user.getLastname().trim());
         user.setUsername(user.getUsername().trim());
         user.setEmail(user.getEmail().trim());
 

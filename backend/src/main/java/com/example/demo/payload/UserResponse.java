@@ -6,12 +6,16 @@ import java.util.Set;
 public class UserResponse {
     private Long id;
     private String username;
+    private String firstname;
+    private String lastname;
     private String email;
     private Set<String> roles;
 
     public UserResponse(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
+        this.firstname = user.getFirstname();
+        this.lastname = user.getLastname();
         this.email = user.getEmail();
         this.roles = user.getRoles();
     }
@@ -19,6 +23,8 @@ public class UserResponse {
     // Getters
     public Long getId() { return id; }
     public String getUsername() { return username; }
+    public String getFirstname() { return firstname; }
+    public String getLastname() { return lastname; }
     public String getEmail() { return email; }
     public Set<String> getRoles() { return roles; }
 }
