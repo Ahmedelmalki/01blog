@@ -6,3 +6,7 @@ reading list for tomorow:
 https://www.typescriptlang.org/docs/handbook/intro.html
 https://docs.docker.com/compose/gettingstarted/
 https://www.geeksforgeeks.org/springboot/spring-mvc-webmvcconfigure/
+
+https://auth0.com/learn/json-web-tokens
+https://docs.spring.io/spring-framework/reference/core/beans/java.html
+https://docs.spring.io/spring-framework/reference/core/beans/basics.html
