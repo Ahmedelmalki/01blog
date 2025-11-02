@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 @Service
 public class PostService {
 
-    private final PostRepository postRepository;
+    private final PostRepository postRepository; // they cannot be reassigned
     private final UserRepository userRepository;
 
     public PostService(PostRepository postRepository, UserRepository userRepository) {

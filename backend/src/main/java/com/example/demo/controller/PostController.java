@@ -2,8 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Post;
 import com.example.demo.service.PostService;
-import com.example.demo.util.JwtUtil;
 import org.springframework.http.ResponseEntity;
+import com.example.demo.util.JwtUtil;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
