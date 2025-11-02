@@ -15,13 +15,11 @@ public class CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final CommentRequest request;
 
-    public CommentService(PostRepository postRepository, UserRepository userRepository, CommentRepository commentRepository, CommentRequest request){
+    public CommentService(PostRepository postRepository, UserRepository userRepository, CommentRepository commentRepository){
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
-        this.request = request;
     }
 
     public Comment createComment(String username, CommentRequest request){
@@ -34,7 +32,7 @@ public class CommentService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
 
         // Create and save comment
-    Comment comment = new Comment(request.getContent(), post, user);
+        Comment comment = new Comment(request.getContent(), post, user);
 
         return commentRepository.save(comment);
     }

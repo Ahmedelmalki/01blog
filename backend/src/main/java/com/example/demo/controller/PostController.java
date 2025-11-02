@@ -24,8 +24,6 @@ public class PostController {
         // Extract token and username
         String token = authHeader.replace("Bearer ", "");
         String username = jwtUtil.extractUsername(token);
-
-        System.out.println("==> "+ "entered"+username);
         Post savedPost = postService.createPost(username, post);
         return ResponseEntity.ok(savedPost);
     }
