@@ -1,6 +1,8 @@
+
 package com.example.demo.service;
 
 import com.example.demo.model.*;
+import com.example.demo.payload.CommentRequest;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.PostRepository; // responsible for saving shit
 import com.example.demo.repository.UserRepository;
@@ -13,24 +15,26 @@ public class CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final CommentRequest request;
 
-    public CommentService(PostRepository postRepository, UserRepository userRepository, CommentRepository commentRepository){
+    public CommentService(PostRepository postRepository, UserRepository userRepository, CommentRepository commentRepository, CommentRequest request){
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
+        this.request = request;
     }
 
-    public Comment createComment(String username, Long postId, String content){
+    public Comment createComment(String username, CommentRequest request){
             // Find the user
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         // Find the post
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findById(request.getPostId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
 
         // Create and save comment
-        Comment comment = new Comment(content, post, user);
+    Comment comment = new Comment(request.getContent(), post, user);
 
         return commentRepository.save(comment);
     }

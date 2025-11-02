@@ -1,9 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Comment;
-// import com.example.demo.model.Post;
+import com.example.demo.payload.CommentRequest;
 import com.example.demo.service.CommentService;
-// import com.example.demo.repository.CommentRepository;
 import com.example.demo.util.*;
 
 import org.springframework.http.ResponseEntity;
@@ -22,18 +21,13 @@ public class CommentController {
         this.jwtUtil = jwtUtil;
     }
     @PostMapping
-    public ResponseEntity<Comment> createComment(
-        @RequestHeader("Authorization") String authHeader,
-        @RequestBody Comment comment) {
-            System.out.println("0000000000000000000000000000000000000");
-
+    public ResponseEntity<Comment> createComment(@RequestHeader("Authorization") String authHeader, @RequestBody CommentRequest request) {
     String token = authHeader.replace("Bearer ", "");
     String username = jwtUtil.extractUsername(token);
 
     Comment saved = commentService.createComment(
         username,
-        comment.getPost().getId(),
-        comment.getContent()
+       request
     );
 
     return ResponseEntity.ok(saved);
