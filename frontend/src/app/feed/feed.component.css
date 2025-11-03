@@ -1,0 +1,161 @@
+/* Main feed container */
+.feed-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Header with title and logout button */
+.feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+}
+
+.feed-header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+/* Logout button styling */
+.logout-btn {
+  padding: 0.5rem 1.5rem;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.logout-btn:hover {
+  background-color: #333;
+}
+
+/* Loading state */
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Error message */
+.error {
+  background-color: #fee;
+  color: #c00;
+  padding: 1rem;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* No posts message */
+.no-posts {
+  text-align: center;
+  padding: 3rem;
+  color: #999;
+  font-size: 1.1rem;
+}
+
+/* Posts list container */
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Individual post card */
+.post-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s;
+}
+
+.post-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Post header with author info */
+.post-header {
+  margin-bottom: 1rem;
+}
+
+.author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.author-name {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #333;
+}
+
+.username {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Post title */
+.post-title {
+  font-size: 1.5rem;
+  margin: 0.5rem 0;
+  color: #222;
+}
+
+/* Post content */
+.post-content {
+  color: #555;
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+
+/* Post media (images) */
+.post-media {
+  margin: 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.post-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Post footer with engagement stats */
+.post-footer {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.stat {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 600px) {
+  .feed-container {
+    padding: 1rem;
+  }
+
+  .feed-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .post-title {
+    font-size: 1.2rem;
+  }
+}

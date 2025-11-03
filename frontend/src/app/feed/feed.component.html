@@ -1,0 +1,66 @@
+<!-- Feed Container -->
+<div class="feed-container">
+  
+  <!-- Header with logout button -->
+  <div class="feed-header">
+    <h1>Feed</h1>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </div>
+
+  <!-- Loading spinner while fetching posts -->
+  <div *ngIf="isLoading" class="loading">
+    <p>Loading posts...</p>
+  </div>
+
+  <!-- Error message if API call fails -->
+  <div *ngIf="errorMessage" class="error">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <!-- Display posts if loaded successfully -->
+  <div *ngIf="!isLoading && !errorMessage" class="posts-list">
+    
+    <!-- Message if no posts exist -->
+    <div *ngIf="posts.length === 0" class="no-posts">
+      <p>No posts yet. Be the first to post!</p>
+    </div>
+
+    <!-- Loop through each post -->
+    <div *ngFor="let postResponse of posts" class="post-card">
+      
+      <!-- Post header with author info -->
+      <div class="post-header">
+        <div class="author-info">
+          <span class="author-name">
+            {{ postResponse.post.author.firstname }} {{ postResponse.post.author.lastname }}
+          </span>
+          <span class="username">@{{ postResponse.post.author.username }}</span>
+        </div>
+      </div>
+
+      <!-- Post title -->
+      <h2 class="post-title">{{ postResponse.post.title }}</h2>
+
+      <!-- Post content -->
+      <p class="post-content">{{ postResponse.post.content }}</p>
+
+      <!-- Post media (image) if exists -->
+      <div *ngIf="postResponse.post.mediaLink" class="post-media">
+        <img [src]="postResponse.post.mediaLink" [alt]="postResponse.post.title">
+      </div>
+
+      <!-- Post footer with engagement stats -->
+      <div class="post-footer">
+        <span class="stat">
+          👍 {{ postResponse.likesCount }} likes
+        </span>
+        <span class="stat">
+          👎 {{ postResponse.dislikesCount }} dislikes
+        </span>
+        <span class="stat">
+          💬 {{ postResponse.commentsCount }} comments
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
