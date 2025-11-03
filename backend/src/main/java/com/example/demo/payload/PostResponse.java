@@ -9,8 +9,7 @@ public class PostResponse {
     private int dislikesCount;
     private int commentsCount;
 
-    //         return new PostResponse(post, likesCount, dislikesCount, commentsCount);
-
+    // return new PostResponse(post, likesCount, dislikesCount, commentsCount);
     public PostResponse(Post post, int likesCount,int  dislikesCount,int commentsCount){
         this.post = post;
         this.likesCount = likesCount;

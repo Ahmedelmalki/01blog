@@ -21,18 +21,21 @@ public class PostController {
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping
-    public ResponseEntity<Post> createPost(@RequestHeader("Authorization") String authHeader, @RequestBody Post post) {
-        // Extract token and username
+   @PostMapping
+    public ResponseEntity<PostResponse> createPost(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody Post post) {
+
         String token = authHeader.replace("Bearer ", "");
         String username = jwtUtil.extractUsername(token);
-        PostResponse savedPost =  postService.createPost(username, post);
+        PostResponse savedPost = postService.createPost(username, post);
         return ResponseEntity.ok(savedPost);
     }
 
         // Get all posts (feed)
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPosts() {
+        System.out.println("000000000##########@@@@@@@");
         List<PostResponse> posts = postService.getAllPosts();
         return ResponseEntity.ok(posts);
     }
@@ -51,106 +54,14 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 }
-package com.example.demo.payload;
+package com.example.demo.model;
 
-import com.example.demo.model.Post;
-
-public class PostResponse {
-
-    private Post post;
-    private int likesCount;
-    private int dislikesCount;
-    private int commentsCount;
-
-    //         return new PostResponse(post, likesCount, dislikesCount, commentsCount);
-
-    public PostResponse(Post post, int likesCount,int  dislikesCount,int commentsCount){
-        this.post = post;
-        this.likesCount = likesCount;
-        this.dislikesCount = dislikesCount;
-        this.commentsCount = commentsCount;
-    }
-}package com.example.demo.service;
-
-import com.example.demo.model.Post;
-import com.example.demo.model.User;
-import com.example.demo.payload.PostResponse;
-import com.example.demo.repository.PostRepository;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.repository.PostLikeRepository;
-import com.example.demo.repository.CommentRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-@Service
-public class PostService {
-
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
-    private final PostLikeRepository postLikeRepository;
-    private final CommentRepository commentRepository;
-
-    public PostService(PostRepository postRepository, 
-                      UserRepository userRepository,
-                      PostLikeRepository postLikeRepository,
-                      CommentRepository commentRepository) {
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-        this.postLikeRepository = postLikeRepository;
-        this.commentRepository = commentRepository;
-    }
-
-    // Create a new post
-    public Post createPost(String username, Post post) {
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        
-        post.setAuthor(user);
-        Post savedPost = postRepository.save(post);
-        return buildPostResponse(savedPost);
-    }
-
-    // Get all posts (for feed)
-    public List<PostResponse> getAllPosts() {
-        return postRepository.findAll().stream()
-            .map(this::buildPostResponse)
-            .collect(Collectors.toList());
-    }
-
-    // Get a single post by ID
-    public PostResponse getPostById(Long id) {
-        Post post = postRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
-        return buildPostResponse(post);
-    }
-
-    // Get all posts by a specific user
-    public List<PostResponse> getPostsByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        
-        return postRepository.findByAuthor(user).stream()
-            .map(this::buildPostResponse)
-            .collect(Collectors.toList());
-    }
-
-    // Helper method to build PostResponse with aggregated data
-    private PostResponse buildPostResponse(Post post) {
-        int likesCount = postLikeRepository.countByPostAndValue(post, 1);
-        int dislikesCount = postLikeRepository.countByPostAndValue(post, -1);
-        int commentsCount = commentRepository.countByPost(post);
-        
-        return new PostResponse(post, likesCount, dislikesCount, commentsCount);
-    }
-}package com.example.demo.model;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "posts")
 public class Post {
 
@@ -197,8 +108,84 @@ package com.example.demo.repository;
 
 import com.example.demo.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.Optional;
+import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-  Optional<Post>  findByAuthor(User author);
+  List<Post> findByAuthor(User author);
+}
+package com.example.demo.service;
+
+import com.example.demo.model.Post;
+import com.example.demo.model.User;
+import com.example.demo.payload.PostResponse;
+import com.example.demo.repository.PostRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.PostLikeRepository;
+import com.example.demo.repository.CommentRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class PostService {
+
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final CommentRepository commentRepository;
+
+    public PostService(PostRepository postRepository, 
+                      UserRepository userRepository,
+                      PostLikeRepository postLikeRepository,
+                      CommentRepository commentRepository) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
+        this.postLikeRepository = postLikeRepository;
+        this.commentRepository = commentRepository;
+    }
+
+    // Create a new post
+    public PostResponse createPost(String username, Post post) {
+    User user = userRepository.findByUsername(username)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    post.setAuthor(user);
+    Post savedPost = postRepository.save(post);
+    return buildPostResponse(savedPost);
+}
+
+    // Get all posts (for feed)
+    public List<PostResponse> getAllPosts() {
+        return postRepository.findAll().stream()
+            .map(this::buildPostResponse)
+            .collect(Collectors.toList());
+    }
+
+    // Get a single post by ID
+    public PostResponse getPostById(Long id) {
+        Post post = postRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
+        return buildPostResponse(post);
+    }
+
+    // Get all posts by a specific user
+    public List<PostResponse> getPostsByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        
+        return postRepository.findByAuthor(user).stream()
+            .map(this::buildPostResponse)
+            .collect(Collectors.toList());
+    }
+
+    // Helper method to build PostResponse with aggregated data
+    private PostResponse buildPostResponse(Post post) {
+        int likesCount = postLikeRepository.countByPostAndValue(post, 1);
+        int dislikesCount = postLikeRepository.countByPostAndValue(post, -1);
+        int commentsCount = commentRepository.countByPost(post);
+        
+        return new PostResponse(post, likesCount, dislikesCount, commentsCount);
+    }
 }
