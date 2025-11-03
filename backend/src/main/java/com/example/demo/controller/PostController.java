@@ -5,6 +5,8 @@ import com.example.demo.service.PostService;
 import org.springframework.http.ResponseEntity;
 import com.example.demo.util.JwtUtil;
 import org.springframework.web.bind.annotation.*;
+import com.example.demo.payload.PostResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
@@ -19,12 +21,36 @@ public class PostController {
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping
-    public ResponseEntity<Post> createPost(@RequestHeader("Authorization") String authHeader, @RequestBody Post post) {
-        // Extract token and username
+   @PostMapping
+    public ResponseEntity<PostResponse> createPost(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody Post post) {
+
         String token = authHeader.replace("Bearer ", "");
         String username = jwtUtil.extractUsername(token);
-        Post savedPost = postService.createPost(username, post);
+        PostResponse savedPost = postService.createPost(username, post);
         return ResponseEntity.ok(savedPost);
+    }
+
+        // Get all posts (feed)
+    @GetMapping
+    public ResponseEntity<List<PostResponse>> getAllPosts() {
+        System.out.println("000000000##########@@@@@@@");
+        List<PostResponse> posts = postService.getAllPosts();
+        return ResponseEntity.ok(posts);
+    }
+
+    // wtf is that 
+    @GetMapping("/{id}")
+    public ResponseEntity<PostResponse> getPostById(@PathVariable Long id) {
+        PostResponse post = postService.getPostById(id);
+        return ResponseEntity.ok(post);
+    }
+
+    // Get posts by specific user
+    @GetMapping("/user/{username}")
+    public ResponseEntity<List<PostResponse>> getPostsByUser(@PathVariable String username) {
+        List<PostResponse> posts = postService.getPostsByUsername(username);
+        return ResponseEntity.ok(posts);
     }
 }
