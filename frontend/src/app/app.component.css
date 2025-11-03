@@ -1,46 +1,12 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #fff;
-  color: #000;
+header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  height: 100vh;
+  padding: 1rem 2rem;
+  background: #f0f0f0;
+  border-bottom: 1px solid #ddd;
 }
 
-.login-container {
-  border: 1px solid #000;
+main {
   padding: 2rem;
-  width: 300px;
-  text-align: center;
-  background-color: #fff;
-}
-
-input {
-  width: 100%;
-  padding: 0.5rem;
-  margin: 0.5rem 0;
-  border: 1px solid #000;
-  background-color: #fff;
-  color: #000;
-}
-
-button {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #000;
-  background-color: #000;
-  color: #fff;
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.error {
-  color: red;
-  margin-top: 1rem;
 }
