@@ -5,6 +5,7 @@
   <div class="feed-header">
     <h1>Feed</h1>
     <button class="logout-btn" (click)="logout()">Logout</button>
+    <button class="create-btn" routerLink="/post/create">+ Create Post</button>
   </div>
 
   <!-- Loading spinner while fetching posts -->
@@ -51,12 +52,8 @@
 
       <!-- Post footer with engagement stats -->
       <div class="post-footer">
-        <span class="stat">
-          👍 {{ postResponse.likesCount }} likes
-        </span>
-        <span class="stat">
-          👎 {{ postResponse.dislikesCount }} dislikes
-        </span>
+      <fa-icon [icon]="faThumbsUp"></fa-icon> {{ postResponse.likesCount }} likes
+      <fa-icon [icon]="faThumbsDown"></fa-icon> {{ postResponse.dislikesCount }} dislikes
         <span class="stat">
           💬 {{ postResponse.commentsCount }} comments
         </span>

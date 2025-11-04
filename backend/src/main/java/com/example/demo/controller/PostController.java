@@ -35,7 +35,6 @@ public class PostController {
         // Get all posts (feed)
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPosts() {
-        System.out.println("000000000##########@@@@@@@");
         List<PostResponse> posts = postService.getAllPosts();
         return ResponseEntity.ok(posts);
     }

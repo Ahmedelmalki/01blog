@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 
 // Interface to match your PostResponse from backend
 interface PostResponse {
@@ -25,11 +27,13 @@ interface PostResponse {
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FontAwesomeModule, RouterLink],
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.css']
 })
 export class FeedComponent implements OnInit {
+  faThumbsUp = faThumbsUp;
+  faThumbsDown = faThumbsDown;
   // Array to hold all posts from the API
   posts: PostResponse[] = [];
   

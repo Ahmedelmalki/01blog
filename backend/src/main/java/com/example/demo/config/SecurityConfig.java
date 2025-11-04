@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -32,6 +33,11 @@ public class SecurityConfig {
             .cors(cors -> {})
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/files/upload").authenticated() // Upload requires auth
+                .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()   
+                .requestMatchers("/posts/**").authenticated()
+                .requestMatchers("/comments/**").authenticated()
+                .requestMatchers("/likes/**").authenticated()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
