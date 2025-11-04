@@ -12,3 +12,4 @@ https://docs.spring.io/spring-framework/reference/core/beans/basics.html
 
 later:
 https://github.com/angular/angular/discussions/50719
+https://angular.dev/guide/http/making-requests#fetching-json-data

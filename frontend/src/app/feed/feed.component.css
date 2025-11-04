@@ -187,3 +187,22 @@
     font-size: 1.2rem;
   }
 }
+
+.reaction-btn {
+  background: none;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.reaction-btn:hover {
+  background: #f0f0f0;
+}
+
+.reaction-btn.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}

@@ -34,42 +34,31 @@ interface PostResponse {
 export class FeedComponent implements OnInit {
   faThumbsUp = faThumbsUp;
   faThumbsDown = faThumbsDown;
-  // Array to hold all posts from the API
   posts: PostResponse[] = [];
-  
-  // Loading state for better UX
   isLoading = true;
-  
-  // Error message if API call fails
   errorMessage: string | null = null;
 
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
-    // Load posts when component initializes
     this.loadPosts();
   }
 
-  // Fetch all posts from backend
   loadPosts() {
     this.isLoading = true;
     this.errorMessage = null;
 
-    // Get JWT token from localStorage (saved during login)
     const token = localStorage.getItem('token');
     
-    // If no token, redirect to login
     if (!token) {
       this.router.navigate(['/login']);
       return;
     }
 
-    // Set up authorization header with Bearer token
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
-    // Call GET /posts endpoint
     this.http.get<PostResponse[]>('http://localhost:8080/posts', { headers })
       .subscribe({
         next: (data) => {
@@ -78,20 +67,86 @@ export class FeedComponent implements OnInit {
           this.isLoading = false;
         },
         error: (err) => {
-          console.error('❌ Failed to load posts:', err);
+          console.log('❌ Failed to load posts:', err);
           this.errorMessage = 'Failed to load posts. Please try again.';
           this.isLoading = false;
           
-          // If unauthorized (401), redirect to login
           if (err.status === 401) {
             localStorage.removeItem('token');
             this.router.navigate(['/login']);
           }
         }
       });
+  } // ========= END METHOD ==========
+
+  userReactions : Map<number, number> = new Map();
+  
+  toggleLike(postId: number){
+    this.toggleReaction(postId, 1);
   }
 
-  // Logout function - clears token and redirects
+  toggleDislike(postId: number){
+    this.toggleReaction(postId, -1);
+  }
+
+  toggleReaction(postId: number, val: number){
+    const token = localStorage.getItem('token');
+    if (!token){
+      this.router.navigate(['/login']);
+      return;
+    }
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    this.http.post(      
+    `http://localhost:8080/posts/${postId}/like?vale=${val}`,
+    {},
+    { headers }).subscribe({
+        next: () => {
+          const currentReaction = this.userReactions.get(postId);
+          
+          const post = this.posts.find(p => p.post.id == postId);
+          if (!post) return;
+          if (currentReaction == val){ // Remove reaction
+            this.userReactions.delete(postId);
+            if (val == 1){
+              post.likesCount--;
+            } else {
+              post.dislikesCount--;
+            }
+          } else { // If switching from opposite reaction
+            if (currentReaction !== undefined){
+              if (currentReaction == 1){
+                post.likesCount--; // +?
+              } else {
+                post.dislikesCount--;
+              }
+            }
+            this.userReactions.set(postId, val);
+            if (val === 1){
+              post.likesCount++;
+            } else {
+              post.dislikesCount++;
+            }
+          }
+          
+        }, 
+        error: (err) => {
+            console.log('❌ Failed to toggle reaction:', err);
+        }
+      });
+  }
+
+    // Check if post is liked by user
+  isLiked(postId: number): boolean {
+    return this.userReactions.get(postId) === 1;
+  }
+
+  // Check if post is disliked by user
+  isDisliked(postId: number): boolean {
+    return this.userReactions.get(postId) === -1;
+  }
+
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);

@@ -52,8 +52,22 @@
 
       <!-- Post footer with engagement stats -->
       <div class="post-footer">
-      <fa-icon [icon]="faThumbsUp"></fa-icon> {{ postResponse.likesCount }} likes
-      <fa-icon [icon]="faThumbsDown"></fa-icon> {{ postResponse.dislikesCount }} dislikes
+        <button
+          class="reaction-btn"
+          [class.active]="isLiked(postResponse.post.id)"
+          (click)="toggleLike(postResponse.post.id)"
+          >
+          <fa-icon [icon]="faThumbsUp"></fa-icon> 
+          {{ postResponse.likesCount }} likes
+        </button>
+        <button
+          class="reaction-btn"
+          [class.active]="isDisliked(postResponse.post.id)"
+          (click)="toggleDislike(postResponse.post.id)"
+          > 
+          <fa-icon [icon]="faThumbsDown"></fa-icon> 
+          {{ postResponse.dislikesCount }} dislikes
+        </button>
         <span class="stat">
           💬 {{ postResponse.commentsCount }} comments
         </span>
