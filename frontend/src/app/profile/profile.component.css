@@ -1,0 +1,148 @@
+/* Main profile container */
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Header with back button */
+.profile-header {
+  margin-bottom: 2rem;
+}
+
+.back-btn {
+  padding: 0.5rem 1.5rem;
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.back-btn:hover {
+  background-color: #5a6268;
+}
+
+/* User Info Card */
+.user-card {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+/* User Avatar Circle */
+.user-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* User Details */
+.user-details {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 1.8rem;
+  margin: 0 0 0.5rem 0;
+  color: #222;
+}
+
+.user-username {
+  font-size: 1rem;
+  color: #666;
+  margin: 0 0 0.5rem 0;
+}
+
+.post-count {
+  font-size: 0.9rem;
+  color: #999;
+  margin: 0;
+}
+
+/* Posts Section */
+.posts-section {
+  margin-top: 2rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+/* Posts List */
+.posts-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Loading state */
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Error message */
+.error {
+  background-color: #fee;
+  color: #c00;
+  padding: 1rem;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* No posts message */
+.no-posts {
+  text-align: center;
+  padding: 3rem;
+  color: #999;
+  font-size: 1.1rem;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 600px) {
+  .profile-container {
+    padding: 1rem;
+  }
+
+  .user-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .user-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+  }
+
+  .user-name {
+    font-size: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+  }
+}

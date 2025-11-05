@@ -21,11 +21,11 @@ public class PostLikeController{
     @PostMapping
     public ResponseEntity<?> toggleLike(@RequestHeader("Authorization") String authHeader, 
             @PathVariable Long postId,
-            @RequestParam int vale) {
+            @RequestParam int value) {
         String token = authHeader.replace("Bearer ", "");
         String username = jwtUtil.extractUsername(token);
 
-        PostLike result = postLikeService.toggleLike(username, postId, vale);
+        PostLike result = postLikeService.toggleLike(username, postId, value);
 
         if (result == null){
             return ResponseEntity.ok("reaction removed");

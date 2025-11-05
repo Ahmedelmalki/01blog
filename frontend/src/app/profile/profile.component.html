@@ -1,0 +1,54 @@
+<!-- Profile Container -->
+<div class="profile-container">
+  
+  <!-- Header -->
+  <div class="profile-header">
+    <button class="back-btn" (click)="goToFeed()">← Back to Feed</button>
+  </div>
+
+  <!-- User Info Card -->
+  <div *ngIf="!isLoadingUser && userInfo" class="user-card">
+    <div class="user-avatar">
+      {{ userInfo.firstname.charAt(0) }}{{ userInfo.lastname.charAt(0) }}
+    </div>
+    <div class="user-details">
+      <h1 class="user-name">{{ userInfo.firstname }} {{ userInfo.lastname }}</h1>
+      <p class="user-username">@{{ userInfo.username }}</p>
+      <p class="post-count">{{ posts.length }} {{ posts.length === 1 ? 'post' : 'posts' }}</p>
+    </div>
+  </div>
+
+  <!-- Loading User Info -->
+  <div *ngIf="isLoadingUser" class="loading">
+    <p>Loading profile...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <!-- Posts Section -->
+  <div class="posts-section">
+    <h2 class="section-title">Posts</h2>
+
+    <!-- Loading Posts -->
+    <div *ngIf="isLoadingPosts" class="loading">
+      <p>Loading posts...</p>
+    </div>
+
+    <!-- No Posts Message -->
+    <div *ngIf="!isLoadingPosts && posts.length === 0 && !errorMessage" class="no-posts">
+      <p>No posts yet.</p>
+    </div>
+
+    <!-- Posts List using reusable PostCardComponent -->
+    <div *ngIf="!isLoadingPosts && posts.length > 0" class="posts-list">
+      <app-post-card 
+        *ngFor="let post of posts" 
+        [postResponse]="post"
+        (reactionChanged)="onReactionChanged($event)"
+      ></app-post-card>
+    </div>
+  </div>
+</div>

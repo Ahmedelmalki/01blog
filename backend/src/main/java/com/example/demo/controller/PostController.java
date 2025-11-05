@@ -32,7 +32,7 @@ public class PostController {
         return ResponseEntity.ok(savedPost);
     }
 
-        // Get all posts (feed)
+    // Get all posts (feed)
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPosts() {
         List<PostResponse> posts = postService.getAllPosts();

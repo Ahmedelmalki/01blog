@@ -1,11 +1,13 @@
 <!-- Feed Container -->
 <div class="feed-container">
   
-  <!-- Header with logout button -->
+  <!-- Header with create post and logout buttons -->
   <div class="feed-header">
     <h1>Feed</h1>
-    <button class="logout-btn" (click)="logout()">Logout</button>
-    <button class="create-btn" routerLink="/post/create">+ Create Post</button>
+    <div class="header-actions">
+      <button class="create-btn" routerLink="/post/create">+ Create Post</button>
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </div>
   </div>
 
   <!-- Loading spinner while fetching posts -->
@@ -26,52 +28,11 @@
       <p>No posts yet. Be the first to post!</p>
     </div>
 
-    <!-- Loop through each post -->
-    <div *ngFor="let postResponse of posts" class="post-card">
-      
-      <!-- Post header with author info -->
-      <div class="post-header">
-        <div class="author-info">
-          <span class="author-name">
-            {{ postResponse.post.author.firstname }} {{ postResponse.post.author.lastname }}
-          </span>
-          <span class="username">@{{ postResponse.post.author.username }}</span>
-        </div>
-      </div>
-
-      <!-- Post title -->
-      <h2 class="post-title">{{ postResponse.post.title }}</h2>
-
-      <!-- Post content -->
-      <p class="post-content">{{ postResponse.post.content }}</p>
-
-      <!-- Post media (image) if exists -->
-      <div *ngIf="postResponse.post.mediaLink" class="post-media">
-        <img [src]="postResponse.post.mediaLink" [alt]="postResponse.post.title">
-      </div>
-
-      <!-- Post footer with engagement stats -->
-      <div class="post-footer">
-        <button
-          class="reaction-btn"
-          [class.active]="isLiked(postResponse.post.id)"
-          (click)="toggleLike(postResponse.post.id)"
-          >
-          <fa-icon [icon]="faThumbsUp"></fa-icon> 
-          {{ postResponse.likesCount }} likes
-        </button>
-        <button
-          class="reaction-btn"
-          [class.active]="isDisliked(postResponse.post.id)"
-          (click)="toggleDislike(postResponse.post.id)"
-          > 
-          <fa-icon [icon]="faThumbsDown"></fa-icon> 
-          {{ postResponse.dislikesCount }} dislikes
-        </button>
-        <span class="stat">
-          💬 {{ postResponse.commentsCount }} comments
-        </span>
-      </div>
-    </div>
+    <!-- Loop through each post and render PostCardComponent -->
+    <app-post-card 
+      *ngFor="let post of posts" 
+      [postResponse]="post"
+      (reactionChanged)="onReactionChanged($event)"
+    ></app-post-card>
   </div>
 </div>
