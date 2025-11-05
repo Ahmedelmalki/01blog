@@ -12,31 +12,24 @@ import { Router } from '@angular/router';
   styleUrls: ['./create.component.css']
 })
 export class CreateComponent {
-  // Form fields matching the Post model
   title = '';
   content = '';
-  mediaLink = ''; // Will store uploaded file URL or external URL
-  
-  // File upload state
+  mediaLink = '';
   selectedFile: File | null = null;
   isUploading = false;
   uploadProgress = 0;
-  
-  // UI state
   isSubmitting = false;
   successMessage: string | null = null;
   errorMessage: string | null = null;
-  
-  // Media preview
   mediaPreview: string | null = null;
   mediaType: 'image' | 'video' | null = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   // Handle file selection from input
   onFileSelected(event: any) {
     const file = event.target.files[0];
-    
+
     if (!file) {
       return;
     }
@@ -47,7 +40,6 @@ export class CreateComponent {
       return;
     }
 
-    // Validate file size (10MB for images, 50MB for videos)
     const maxSize = file.type.startsWith('image/') ? 10 * 1024 * 1024 : 50 * 1024 * 1024;
     if (file.size > maxSize) {
       const maxSizeMB = file.type.startsWith('image/') ? '10MB' : '50MB';
@@ -57,25 +49,13 @@ export class CreateComponent {
 
     this.selectedFile = file;
     this.errorMessage = null;
-    
-    // Determine media type
     this.mediaType = file.type.startsWith('image/') ? 'image' : 'video';
-    
-    // Create preview
+
     const reader = new FileReader();
     reader.onload = (e: any) => {
       this.mediaPreview = e.target.result;
     };
     reader.readAsDataURL(file);
-  }
-
-  // Validate file type
-  isValidFileType(type: string): boolean {
-    const validTypes = [
-      'image/jpeg', 'image/jpg', 'image/png', 'image/gif',
-      'video/mp4', 'video/webm', 'video/quicktime'
-    ];
-    return validTypes.includes(type);
   }
 
   // Upload file to backend
@@ -107,11 +87,11 @@ export class CreateComponent {
         'http://localhost:8080/api/files/upload',
         formData,
         { headers }
-      ).toPromise();
+      ).toPromise(); // the code editor says that this method is deprecated
 
       this.isUploading = false;
       console.log('✅ File uploaded:', response);
-      
+
       // Return the full URL with domain for consistency
       return `http://localhost:8080${response.url}`;
     } catch (error: any) {
@@ -122,18 +102,6 @@ export class CreateComponent {
     }
   }
 
-  // Remove selected file
-  removeFile() {
-    this.selectedFile = null;
-    this.mediaPreview = null;
-    this.mediaType = null;
-    this.mediaLink = '';
-  }
-
-  // Validate form before submission
-  isFormValid(): boolean {
-    return this.title.trim().length > 0 && this.content.trim().length > 0;
-  }
 
   // Submit new post to backend
   async createPost() {
@@ -178,6 +146,9 @@ export class CreateComponent {
       'Content-Type': 'application/json'
     });
 
+    console.log("headres ==>", headers);
+
+
     // POST request to create post
     this.http.post('http://localhost:8080/posts', postPayload, { headers })
       .subscribe({
@@ -185,11 +156,9 @@ export class CreateComponent {
           console.log('✅ Post created successfully:', response);
           this.successMessage = 'Post created successfully!';
           this.isSubmitting = false;
-          
-          // Clear form
+
           this.clearForm();
-          
-          // Redirect to feed after 1.5 seconds
+
           setTimeout(() => {
             this.router.navigate(['/feed']);
           }, 1500);
@@ -197,7 +166,7 @@ export class CreateComponent {
         error: (err) => {
           console.error('❌ Failed to create post:', err);
           this.isSubmitting = false;
-          
+
           if (err.status === 401) {
             this.errorMessage = 'Session expired. Please login again.';
             localStorage.removeItem('token');
@@ -211,7 +180,26 @@ export class CreateComponent {
       });
   }
 
-  // Clear form fields
+  // =========== HELPERS ===========
+  isValidFileType(type: string): boolean {
+    const validTypes = [
+      'image/jpeg', 'image/jpg', 'image/png', 'image/gif',
+      'video/mp4', 'video/webm', 'video/quicktime'
+    ];
+    return validTypes.includes(type);
+  }
+
+  removeFile() {
+    this.selectedFile = null;
+    this.mediaPreview = null;
+    this.mediaType = null;
+    this.mediaLink = '';
+  }
+
+  isFormValid(): boolean {
+    return this.title.trim().length > 0 && this.content.trim().length > 0;
+  }
+
   clearForm() {
     this.title = '';
     this.content = '';
@@ -221,7 +209,6 @@ export class CreateComponent {
     this.mediaType = null;
   }
 
-  // Cancel and go back to feed
   cancel() {
     this.router.navigate(['/feed']);
   }

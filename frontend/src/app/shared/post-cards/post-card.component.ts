@@ -4,24 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
-
-interface PostResponse {
-  post: {
-    id: number;
-    title: string;
-    content: string;
-    mediaLink: string;
-    author: {
-      id: number;
-      username: string;
-      firstname: string;
-      lastname: string;
-    };
-  };
-  likesCount: number;
-  dislikesCount: number;
-  commentsCount: number;
-}
+import { PostResponse } from '../../models/post.models';
 
 @Component({
   selector: 'app-post-card',
@@ -42,22 +25,18 @@ export class PostCardComponent {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-
   toggleLike() {
     this.toggleReaction(1);
   }
-
 
   toggleDislike() {
     this.toggleReaction(-1);
   }
 
-
   toggleReaction(val: number) {
     const token = localStorage.getItem('token');
     console.log("token :", token);
     
-
     if (!token) {
       this.router.navigate(['/login']);
       return;
@@ -66,7 +45,6 @@ export class PostCardComponent {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
 
     this.http.post(
       `http://localhost:8080/posts/${this.postResponse.post.id}/like?value=${val}`,
@@ -84,10 +62,7 @@ export class PostCardComponent {
           } else {
             this.postResponse.dislikesCount--;
           }
-        }
-
-        else {
-
+        }else {
           if (currentReaction !== undefined) {
             if (currentReaction === 1) {
               this.postResponse.likesCount--;
@@ -96,7 +71,6 @@ export class PostCardComponent {
             }
           }
 
-
           this.userReaction = val;
           if (val === 1) {
             this.postResponse.likesCount++;
@@ -104,7 +78,6 @@ export class PostCardComponent {
             this.postResponse.dislikesCount++;
           }
         }
-
 
         this.reactionChanged.emit({
           postId: this.postResponse.post.id,
@@ -117,16 +90,13 @@ export class PostCardComponent {
     });
   }
 
-
   isLiked(): boolean {
     return this.userReaction === 1;
   }
 
-
   isDisliked(): boolean {
     return this.userReaction === -1;
   }
-
 
   isVideo(url: string): boolean {
     if (!url) return false;
