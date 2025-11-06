@@ -26,7 +26,6 @@ export class CreateComponent {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  // Handle file selection from input
   onFileSelected(event: any) {
     const file = event.target.files[0];
 
@@ -34,7 +33,6 @@ export class CreateComponent {
       return;
     }
 
-    // Validate file type
     if (!this.isValidFileType(file.type)) {
       this.errorMessage = 'Invalid file type. Only images (jpg, png, gif) and videos (mp4, webm, mov) are allowed.';
       return;
@@ -92,7 +90,6 @@ export class CreateComponent {
       this.isUploading = false;
       console.log('✅ File uploaded:', response);
 
-      // Return the full URL with domain for consistency
       return `http://localhost:8080${response.url}`;
     } catch (error: any) {
       console.error('❌ File upload failed:', error);
@@ -143,7 +140,6 @@ export class CreateComponent {
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
     });
 
     console.log("headres ==>", headers);

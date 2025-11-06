@@ -35,11 +35,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             
             if (jwtUtil.isTokenValid(token)) {
                 String username = jwtUtil.extractUsername(token);
+                System.out.println("✅ Token VALID! Username: " + username);
                 
                 UsernamePasswordAuthenticationToken authentication = 
                     new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
                 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else{
+                System.out.println("❌ Token is INVALID or EXPIRED"); 
             }
         }
         

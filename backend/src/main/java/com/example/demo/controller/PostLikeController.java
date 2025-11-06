@@ -24,6 +24,7 @@ public class PostLikeController{
             @RequestParam int value) {
         String token = authHeader.replace("Bearer ", "");
         String username = jwtUtil.extractUsername(token);
+        System.out.println("============\n\n"+username+"liked your shit"+"============\n\n");
 
         PostLike result = postLikeService.toggleLike(username, postId, value);
 

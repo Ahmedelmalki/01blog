@@ -33,7 +33,8 @@ public class SecurityConfig {
             .cors(cors -> {})
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/files/upload").authenticated() // Upload requires auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // just for debugging
+                .requestMatchers(HttpMethod.POST, "/api/files/upload").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()   
                 .requestMatchers("/posts/**").authenticated()
                 .requestMatchers("/comments/**").authenticated()

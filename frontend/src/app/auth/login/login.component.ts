@@ -30,13 +30,10 @@ export class LoginComponent {
       .subscribe({
         next: (res: any) => {
           console.log('Login successful:', res);
-          
-          // Store token if your backend returns one
           if (res.token) {
             localStorage.setItem('token', res.token);
           }
           
-          // Navigate to feed or dashboard
           this.router.navigate(['/feed']);
         },
         error: (err) => {

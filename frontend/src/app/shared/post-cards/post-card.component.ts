@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
@@ -14,7 +14,7 @@ import { PostResponse } from '../../models/post.models';
   styleUrls: ['./post-card.component.css']
 })
 
-export class PostCardComponent {
+export class PostCardComponent implements OnInit{
   faThumbsUp = faThumbsUp;
   faThumbsDown = faThumbsDown;
 
@@ -24,6 +24,11 @@ export class PostCardComponent {
   userReaction: number | undefined = undefined;
 
   constructor(private http: HttpClient, private router: Router) { }
+
+  ngOnInit() { // ########### new shit
+    this.userReaction = this.postResponse.userReaction ?? undefined;
+    console.log(`Post ${this.postResponse.post.id} initialized with reaction:`, this.userReaction);
+  }
 
   toggleLike() {
     this.toggleReaction(1);
@@ -35,7 +40,6 @@ export class PostCardComponent {
 
   toggleReaction(val: number) {
     const token = localStorage.getItem('token');
-    console.log("token :", token);
     
     if (!token) {
       this.router.navigate(['/login']);
@@ -52,8 +56,11 @@ export class PostCardComponent {
       { headers }
     ).subscribe({
       next: () => {
-        const currentReaction = this.userReaction;
 
+
+      console.log("liked your shit");
+
+        const currentReaction = this.userReaction;
 
         if (currentReaction === val) {
           this.userReaction = undefined;

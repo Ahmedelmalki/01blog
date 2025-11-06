@@ -14,6 +14,7 @@ export interface PostResponse {
     likesCount: number;
     dislikesCount: number;
     commentsCount: number;
+    userReaction?: number;
 }
 
 export interface UserInfo {

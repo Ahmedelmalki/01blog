@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +20,7 @@ export class RegisterComponent {
   successMessage: string | null = null;
   errorMessage: string | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   register() {
     this.successMessage = null;
@@ -39,6 +40,7 @@ export class RegisterComponent {
           console.log('✅ Registration successful:', res);
           this.successMessage = 'Registration successful!';
           this.clearForm();
+          this.router.navigate(['/feed']);
         },
         error: (err) => {
           console.error('❌ Registration failed:', err);

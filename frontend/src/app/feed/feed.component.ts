@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
-import { PostCardComponent } from '../shared/post-cards/post-card.component'; 
+import { PostCardComponent } from '../shared/post-cards/post-card.component';
 import { PostResponse } from '../models/post.models';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, RouterLink, PostCardComponent], 
+  imports: [CommonModule, RouterLink, PostCardComponent],
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.css']
 })
@@ -17,7 +17,7 @@ export class FeedComponent implements OnInit {
   isLoading = true;
   errorMessage: string | null = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit() {
     this.loadPosts();
@@ -28,7 +28,7 @@ export class FeedComponent implements OnInit {
     this.errorMessage = null;
 
     const token = localStorage.getItem('token');
-    
+
     if (!token) {
       this.router.navigate(['/login']);
       return;
@@ -38,6 +38,11 @@ export class FeedComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     });
 
+    console.log("sending shit >>>>>>>>>>", headers);
+    console.log(token);
+    
+
+
     this.http.get<PostResponse[]>('http://localhost:8080/posts', { headers })
       .subscribe({
         next: (data) => {
@@ -46,10 +51,12 @@ export class FeedComponent implements OnInit {
           this.isLoading = false;
         },
         error: (err) => {
-          console.error('❌ Failed to load posts:', err);
+          console.error('❌ Failed to load posts:', err); // here 
+          console.error('❌ Error status:', err.status);  // ADD THIS
+          console.error('❌ Error message:', err.message);  // ADD THIS
           this.errorMessage = 'Failed to load posts. Please try again.';
           this.isLoading = false;
-          
+
           if (err.status === 401) {
             localStorage.removeItem('token');
             this.router.navigate(['/login']);
