@@ -63,9 +63,12 @@
       {{ postResponse.dislikesCount }}
     </button>
 
-    <!-- Comments Count -->
+    <!-- Comments Count (non-clickable, just display) -->
     <span class="stat">
       💬 {{ postResponse.commentsCount }} comments
     </span>
   </div>
+
+  <!-- Comments Component -->
+  <app-comments [postId]="postResponse.post.id"></app-comments>
 </div>

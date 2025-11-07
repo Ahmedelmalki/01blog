@@ -23,3 +23,17 @@ export interface UserInfo {
   lastname: string;
   email: string;
 }
+
+export interface Comment {
+  id: number;
+  content: string;
+  author: {
+    id: number;
+    username: string;
+    firstname: string;
+    lastname: string;
+  };
+  post: {
+    id: number;
+  };
+}

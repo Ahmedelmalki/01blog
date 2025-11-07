@@ -7,10 +7,11 @@ import com.example.demo.util.*;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 
 @RestController
-@RequestMapping("/comments")
+// @RequestMapping("/comments")
 @CrossOrigin(origins = "http://localhost:4200")
 public class CommentController {
     private final CommentService commentService;
@@ -20,16 +21,21 @@ public class CommentController {
         this.commentService = commentService;
         this.jwtUtil = jwtUtil;
     }
-    @PostMapping
-    public ResponseEntity<Comment> createComment(@RequestHeader("Authorization") String authHeader, @RequestBody CommentRequest request) {
-    String token = authHeader.replace("Bearer ", "");
-    String username = jwtUtil.extractUsername(token);
+    @PostMapping("/comments")
+    public ResponseEntity<Comment> createComment(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody CommentRequest request) {
+        
+        String token = authHeader.replace("Bearer ", "");
+        String username = jwtUtil.extractUsername(token);
 
-    Comment saved = commentService.createComment(
-        username,
-       request
-    );
+        Comment saved = commentService.createComment(username, request);
+        return ResponseEntity.ok(saved);
+    }
 
-    return ResponseEntity.ok(saved);
+    @GetMapping("/post/{postId}/comments")
+    public ResponseEntity<List<Comment>> getCommentsByPost(@PathVariable Long postId) {
+        List<Comment> comments = commentService.getCommentsByPostId(postId);
+        return ResponseEntity.ok(comments);
     }
 }

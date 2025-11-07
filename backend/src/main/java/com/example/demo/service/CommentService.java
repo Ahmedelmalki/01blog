@@ -9,6 +9,7 @@ import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
+import java.util.List;
 
 @Service 
 public class CommentService {
@@ -16,7 +17,10 @@ public class CommentService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
-    public CommentService(PostRepository postRepository, UserRepository userRepository, CommentRepository commentRepository){
+    public CommentService(
+            PostRepository postRepository,
+            UserRepository userRepository,
+            CommentRepository commentRepository){
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
@@ -35,5 +39,11 @@ public class CommentService {
         Comment comment = new Comment(request.getContent(), post, user);
 
         return commentRepository.save(comment);
+    }
+
+    public List<Comment> getCommentsByPostId(Long postId){
+        Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
+        return commentRepository.findByPostOrderByIdDesc(post);
     }
 }

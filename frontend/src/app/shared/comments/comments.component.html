@@ -1,0 +1,71 @@
+<!-- Comments Section -->
+<div class="comments-section">
+  
+  <!-- Toggle Button -->
+  <button 
+    class="comments-toggle-btn"
+    (click)="toggleComments()"
+  >
+    <span class="icon">💬</span>
+    <span>{{ isExpanded ? 'Hide' : 'Show' }} Comments</span>
+  </button>
+
+  <!-- Expanded Comments Container -->
+  <div *ngIf="isExpanded" class="comments-container">
+    
+    <!-- New Comment Form -->
+    <div class="comment-form">
+      <textarea
+        [(ngModel)]="newCommentContent"
+        placeholder="Write a comment..."
+        rows="3"
+        maxlength="500"
+        class="comment-input"
+        (keypress)="onKeyPress($event)"
+        [disabled]="isSubmitting"
+      ></textarea>
+      
+      <div class="form-footer">
+        <small class="char-count">{{ newCommentContent.length }}/500</small>
+        <button 
+          class="submit-btn"
+          (click)="submitComment()"
+          [disabled]="isSubmitting || !newCommentContent.trim()"
+        >
+          <span *ngIf="!isSubmitting">Post Comment</span>
+          <span *ngIf="isSubmitting">Posting...</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading">
+      <p>Loading comments...</p>
+    </div>
+
+    <!-- Comments List -->
+    <div *ngIf="!isLoading" class="comments-list">
+      
+      <!-- No Comments Message -->
+      <div *ngIf="comments.length === 0" class="no-comments">
+        <p>No comments yet. Be the first to comment!</p>
+      </div>
+
+      <!-- Individual Comments -->
+      <div *ngFor="let comment of comments" class="comment-item">
+        <div class="comment-header">
+          <span class="comment-author">
+            {{ comment.author.firstname }} {{ comment.author.lastname }}
+          </span>
+          <span class="comment-username">@{{ comment.author.username }}</span>
+        </div>
+        <p class="comment-content">{{ comment.content }}</p>
+      </div>
+    </div>
+  </div>
+</div>
