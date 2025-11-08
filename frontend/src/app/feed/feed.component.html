@@ -32,7 +32,6 @@
     <app-post-card 
       *ngFor="let post of posts" 
       [postResponse]="post"
-      (reactionChanged)="onReactionChanged($event)"
     ></app-post-card>
   </div>
 </div>

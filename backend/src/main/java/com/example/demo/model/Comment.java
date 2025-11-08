@@ -1,7 +1,5 @@
 package com.example.demo.model;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -15,7 +13,7 @@ public class Comment{
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id", nullable = false)
     @JsonIgnoreProperties({"comments", "author"})
     private Post post;

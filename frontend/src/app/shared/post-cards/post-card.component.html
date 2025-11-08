@@ -1,13 +1,10 @@
 <!-- Single Post Card -->
 <div class="post-card">
-  
+
   <!-- Post header with author info -->
   <div class="post-header">
     <div class="author-info">
-      <a 
-        [routerLink]="['/profile', postResponse.post.author.username]"
-        class="author-link"
-      >
+      <a [routerLink]="['/profile', postResponse.post.author.username]" class="author-link">
         <span class="author-name">
           {{ postResponse.post.author.firstname }} {{ postResponse.post.author.lastname }}
         </span>
@@ -25,50 +22,24 @@
   <!-- Post media (image or video) if exists -->
   <div *ngIf="postResponse.post.mediaLink" class="post-media">
     <!-- Video -->
-    <video 
-      *ngIf="isVideo(postResponse.post.mediaLink)"
-      [src]="postResponse.post.mediaLink" 
-      controls
-      class="post-video"
-    ></video>
-    
+    <video *ngIf="isVideo(postResponse.post.mediaLink)" [src]="postResponse.post.mediaLink" controls
+      class="post-video"></video>
+
     <!-- Image -->
-    <img 
-      *ngIf="!isVideo(postResponse.post.mediaLink)"
-      [src]="postResponse.post.mediaLink" 
-      [alt]="postResponse.post.title"
-      class="post-image"
-    >
+    <img *ngIf="!isVideo(postResponse.post.mediaLink)" [src]="postResponse.post.mediaLink"
+      [alt]="postResponse.post.title" class="post-image">
   </div>
 
   <!-- Post footer with engagement stats -->
   <div class="post-footer">
-    <!-- Like Button -->
-    <button
-      class="reaction-btn"
-      [class.active]="isLiked()"
-      (click)="toggleLike()"
-    >
-      <fa-icon [icon]="faThumbsUp"></fa-icon> 
-      {{ postResponse.likesCount }}
-    </button>
 
-    <!-- Dislike Button -->
-    <button
-      class="reaction-btn"
-      [class.active]="isDisliked()"
-      (click)="toggleDislike()"
-    > 
-      <fa-icon [icon]="faThumbsDown"></fa-icon> 
-      {{ postResponse.dislikesCount }}
-    </button>
-
-    <!-- Comments Count (non-clickable, just display) -->
-    <span class="stat">
-      💬 {{ postResponse.commentsCount }} comments
-    </span>
+    <!-- Reusable Likes Component -->
+    <app-likes entityType="post" [entityId]="postResponse.post.id" [likesCount]="postResponse.likesCount"
+      [dislikesCount]="postResponse.dislikesCount" [userReaction]="postResponse.userReaction"></app-likes>
   </div>
 
   <!-- Comments Component -->
-  <app-comments [postId]="postResponse.post.id"></app-comments>
+  <app-comments [postId]="postResponse.post.id" [commentsCount]="postResponse.commentsCount">
+  </app-comments>
+
 </div>

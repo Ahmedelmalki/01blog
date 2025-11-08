@@ -1,0 +1,50 @@
+/* Likes Container */
+.likes-container {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* Reaction Buttons */
+.reaction-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #555;
+  transition: all 0.2s;
+}
+
+.reaction-btn:hover {
+  background-color: #e8e8e8;
+  transform: translateY(-1px);
+}
+
+/* Active state */
+.reaction-btn.active {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.reaction-btn.active:hover {
+  background-color: #0056b3;
+}
+
+/* Count styling */
+.count {
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .reaction-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}

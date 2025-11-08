@@ -4,16 +4,20 @@ import { FormsModule } from "@angular/forms";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { Comment } from "../../models/post.models";
+import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
+import { faComment } from "@fortawesome/free-solid-svg-icons";
 
 @Component({
     selector: 'app-comments',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, FontAwesomeModule],
     templateUrl: './comments.component.html',
     styleUrl: './comments.component.css',
 })
 export class CommentsComponent implements OnInit {
-    @Input() postId!: number; // why !
+    @Input() postId!: number;
+    @Input() commentsCount: number = 0;
+    faComment = faComment;
     comments: Comment[] = [];
     newCommentContent = '';
     isExpanded = false;
@@ -105,8 +109,8 @@ export class CommentsComponent implements OnInit {
         });
     }
 
-    onKeyPress(event: KeyboardEvent){
-        if (event.key === 'Enter'&& !event.shiftKey){
+    onKeyPress(event: KeyboardEvent) {
+        if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
             this.submitComment();
         }

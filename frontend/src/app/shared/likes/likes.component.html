@@ -1,0 +1,25 @@
+<!-- Like/Dislike Buttons Container -->
+<div class="likes-container">
+  <!-- Like Button -->
+  <button
+    class="reaction-btn"
+    [class.active]="isLiked()"
+    (click)="toggleLike()"
+    title="Like"
+  >
+    <fa-icon [icon]="faThumbsUp"></fa-icon>
+    <span class="count">{{ localLikesCount }}</span>
+  </button>
+
+  <!-- Dislike Button -->
+  <button
+    class="reaction-btn"
+    [class.active]="isDisliked()"
+    (click)="toggleDislike()"
+    title="Dislike"
+  >
+    <fa-icon [icon]="faThumbsDown"></fa-icon>
+    <span class="count">{{ localDislikesCount }}</span>
+  </button>
+  
+</div>

@@ -11,7 +11,6 @@ import java.util.List;
 
 
 @RestController
-// @RequestMapping("/comments")
 @CrossOrigin(origins = "http://localhost:4200")
 public class CommentController {
     private final CommentService commentService;
@@ -33,7 +32,7 @@ public class CommentController {
         return ResponseEntity.ok(saved);
     }
 
-    @GetMapping("/post/{postId}/comments")
+    @GetMapping("/posts/{postId}/comments")
     public ResponseEntity<List<Comment>> getCommentsByPost(@PathVariable Long postId) {
         List<Comment> comments = commentService.getCommentsByPostId(postId);
         return ResponseEntity.ok(comments);
