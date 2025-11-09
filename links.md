@@ -15,3 +15,5 @@ https://docs.spring.io/spring-framework/reference/core/beans/basics.html
 
 later:
 https://github.com/angular/angular/discussions/50719
+https://www.learnrxjs.io/?source=post_page-----5e89d159a4e6---------------------------------------
+https://itnext.io/mastering-injectable-services-a-comprehensive-guide-6c2c0f5f48a2
