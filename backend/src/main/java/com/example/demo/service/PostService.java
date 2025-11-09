@@ -45,7 +45,7 @@ public class PostService {
     public List<PostResponse> getAllPosts(String username) {
         return postRepository.findAll().stream()
             .map(post -> buildPostResponse(post, username))
-            .collect(Collectors.toList());
+            .collect(Collectors.toList());// why collect
     }
 
     public PostResponse getPostById(Long id, String username) {
@@ -54,7 +54,6 @@ public class PostService {
         return buildPostResponse(post, username);
     }
 
-    // Get all posts by a specific user
     public List<PostResponse> getPostsByUsername(String username, String requestingUsername) {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
@@ -64,7 +63,6 @@ public class PostService {
             .collect(Collectors.toList());
     }
 
-    // Helper method to build PostResponse with aggregated data
     private PostResponse buildPostResponse(Post post,String username) {
         int likesCount = postLikeRepository.countByPostAndValue(post, 1);
         int dislikesCount = postLikeRepository.countByPostAndValue(post, -1);
@@ -72,7 +70,7 @@ public class PostService {
         
         Integer userReaction = null;
         if (username != null){
-            Optional<User> userOpt = userRepository.findByUsername(username);
+            Optional<User> userOpt = userRepository.findByUsername(username); // what optional does here
             if (userOpt.isPresent()){
                 Optional<PostLike> userLike = postLikeRepository.findByPostAndAuthor(post, userOpt.get());
                 userReaction = userLike.map(PostLike::getValue).orElse(null);
@@ -80,5 +78,33 @@ public class PostService {
         }
 
         return new PostResponse(post, likesCount, dislikesCount, commentsCount, userReaction);
+    }
+
+    public void deleltePost(Long postId, String username){
+        Post post = postRepository.findById(postId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
+        if (!post.getAuthor().getUsername().equals(username)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "you can only delete your posts");
+        }
+        postRepository.delete(post);
+    }   
+
+    public PostResponse updatePost(Long postId, String username, Post updatedPost){
+        Post post = postRepository.findById(postId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
+        if (!post.getAuthor().getUsername().equals(username)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "you can only delete your posts");
+        }
+        if (updatedPost.getTitle() != null){
+            post.setTitle(updatedPost.getTitle());
+        }
+        if (updatedPost.getContent() != null){
+            post.setContent(updatedPost.getContent());
+        }
+        if (updatedPost.getMediaLink() != null){
+            post.setMediaLink(updatedPost.getMediaLink());
+        }
+        Post savedPost = postRepository.save(post);
+        return buildPostResponse(savedPost, username);
     }
 }
