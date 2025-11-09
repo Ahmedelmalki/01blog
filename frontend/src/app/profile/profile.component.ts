@@ -66,7 +66,7 @@ export class ProfileComponent implements OnInit {
       { headers }
     ).subscribe({
       next: (data) => {
-        console.log('✅ User posts loaded:', data);
+        console.log('User posts loaded:', data);
         this.posts = data;
         this.isLoadingPosts = false;
         
@@ -81,7 +81,7 @@ export class ProfileComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error('❌ Failed to load user posts:', err);
+        console.error('Failed to load user posts:', err);
         this.errorMessage = 'Failed to load user profile. Please try again.';
         this.isLoadingPosts = false;
         this.isLoadingUser = false;

@@ -1,22 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
+import { DarkModeService } from '../../services/dark-mode.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FontAwesomeModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   username = '';
   password = '';
   errorMessage: string | null = null;
+  isDarkMode = false;
+  faMoon = faMoon;
+  faSun = faSun;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private darkModeService: DarkModeService) { }
+
+  ngOnInit() {
+    this.darkModeService.darkMode$.subscribe(isDark => {
+      this.isDarkMode = isDark;
+    });
+  }
+
+  toggleDarkMode() {
+    this.darkModeService.toggleDarkMode();
+  }
 
   login() {
     this.errorMessage = null;
@@ -33,7 +49,7 @@ export class LoginComponent {
           if (res.token) {
             localStorage.setItem('token', res.token);
           }
-          
+
           this.router.navigate(['/feed']);
         },
         error: (err) => {

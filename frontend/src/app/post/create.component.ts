@@ -1,208 +1,200 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
-@Component({
+@Component({ // decorator
   selector: 'app-create',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.css']
 })
-export class CreateComponent {
-  title = '';
-  content = '';
-  mediaLink = '';
+export class CreateComponent implements OnInit {
+  post = {
+    title: '',
+    content: '',
+    mediaLink: ''
+  };
+
+  isLoading = false;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
   selectedFile: File | null = null;
   isUploading = false;
-  uploadProgress = 0;
-  isSubmitting = false;
-  successMessage: string | null = null;
-  errorMessage: string | null = null;
-  mediaPreview: string | null = null;
-  mediaType: 'image' | 'video' | null = null;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  isEditMode = false;
+  postId: number | null = null;
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
-    if (!file) {
-      return;
-    }
-
-    if (!this.isValidFileType(file.type)) {
-      this.errorMessage = 'Invalid file type. Only images (jpg, png, gif) and videos (mp4, webm, mov) are allowed.';
-      return;
-    }
-
-    const maxSize = file.type.startsWith('image/') ? 10 * 1024 * 1024 : 50 * 1024 * 1024;
-    if (file.size > maxSize) {
-      const maxSizeMB = file.type.startsWith('image/') ? '10MB' : '50MB';
-      this.errorMessage = `File size exceeds maximum limit of ${maxSizeMB}`;
-      return;
-    }
-
-    this.selectedFile = file;
-    this.errorMessage = null;
-    this.mediaType = file.type.startsWith('image/') ? 'image' : 'video';
-
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      this.mediaPreview = e.target.result;
-    };
-    reader.readAsDataURL(file);
+  // lifecycle hook
+  ngOnInit() {
+    // In Angular, the subscribe() method is used to initiate the execution 
+    // of an Observable and establish a connection between the Observable and an Observer
+    this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.isEditMode = true;
+        this.postId = +params['id'];
+        this.loadPost();
+      }
+    });
   }
 
-  // Upload file to backend
-  async uploadFile(): Promise<string | null> {
-    if (!this.selectedFile) {
-      return null;
-    }
-
-    this.isUploading = true;
-    this.uploadProgress = 0;
-
+  loadPost() {
     const token = localStorage.getItem('token');
     if (!token) {
       this.router.navigate(['/login']);
-      return null;
+      return;
     }
-
-    // Create FormData for file upload
-    const formData = new FormData();
-    formData.append('file', this.selectedFile);
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
+    this.http.get<any>(`http://localhost:8080/posts/${this.postId}`, { headers })
+      .subscribe({
+        next: (response) => {
+          this.post.title = response.post.title;
+          this.post.content = response.post.content;
+          this.post.mediaLink = response.post.mediaLink || '';
+          console.log('Post loaded for editing:', response);
+        },
+        error: (err) => {
+          console.error('Failed to load post:', err);
+          this.errorMessage = 'Failed to load post. Please try again.';
+          if (err.status === 401) {
+            localStorage.removeItem('token');
+            this.router.navigate(['/login']);
+          } else if (err.status === 403) {
+            this.errorMessage = 'You can only edit your own posts.';
+            setTimeout(() => this.router.navigate(['/feed']), 2000);
+          }
+        }
+      });
+    }
+    ifFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      console.log('File selected:', file.name);
+    }
+  }
+
+  async uploadFile(): Promise<string | null> {
+    if (!this.selectedFile) return null;
+
+    this.isUploading = true;
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      this.router.navigate(['/login']);
+      return null;
+    }
+
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+
     try {
-      // Upload file
-      const response: any = await this.http.post(
-        'http://localhost:8080/api/files/upload',
-        formData,
-        { headers }
-      ).toPromise(); // the code editor says that this method is deprecated
+      const response = await firstValueFrom(
+        this.http.post<{ url: string }>(
+          'http://localhost:8080/api/files/upload', // @RequestMapping("/api/files")
+          formData,
+          {
+            headers: new HttpHeaders({
+              'Authorization': `Bearer ${token}`
+            })
+          }
+        )
+      );
 
       this.isUploading = false;
-      console.log('✅ File uploaded:', response);
-
-      return `http://localhost:8080${response.url}`;
+      console.log(' File uploaded:', response.url);
+      return response.url;
     } catch (error: any) {
-      console.error('❌ File upload failed:', error);
+      console.error('File upload failed:', error);
       this.isUploading = false;
-      this.errorMessage = error.error?.message || 'Failed to upload file';
+      this.errorMessage = 'Failed to upload file. Please try again.';
+
+      if (error.status === 401) {
+        localStorage.removeItem('token');
+        this.router.navigate(['/login']);
+      }
       return null;
     }
   }
 
-
-  // Submit new post to backend
-  async createPost() {
-    // Reset messages
-    this.successMessage = null;
-    this.errorMessage = null;
-
-    // Validate form
-    if (!this.isFormValid()) {
+  async onSubmit() {
+    if (!this.post.title.trim() || !this.post.content.trim()) {
       this.errorMessage = 'Title and content are required.';
       return;
     }
 
-    // Get JWT token
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    // Upload file if selected
+    if (this.selectedFile) {
+      const uploadedUrl = await this.uploadFile();
+      if (uploadedUrl) {
+        this.post.mediaLink = uploadedUrl;
+      } else {
+        // Upload failed, stop the submission
+        this.isLoading = false;
+        return;
+      }
+    }
+
     const token = localStorage.getItem('token');
     if (!token) {
       this.router.navigate(['/login']);
       return;
     }
 
-    // Upload file if selected
-    if (this.selectedFile) {
-      const uploadedUrl = await this.uploadFile();
-      if (!uploadedUrl) {
-        return; // Upload failed, error already shown
-      }
-      this.mediaLink = uploadedUrl;
-    }
-
-    // Set loading state
-    this.isSubmitting = true;
-
-    // Prepare post payload
-    const postPayload = {
-      title: this.title.trim(),
-      content: this.content.trim(),
-      mediaLink: this.mediaLink.trim() || null
-    };
-
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
     });
 
-    console.log("headres ==>", headers);
+    const url = this.isEditMode
+      ? `http://localhost:8080/posts/${this.postId}`
+      : 'http://localhost:8080/posts';
 
+    const method = this.isEditMode ? 'put' : 'post';
 
-    // POST request to create post
-    this.http.post('http://localhost:8080/posts', postPayload, { headers })
-      .subscribe({
-        next: (response: any) => {
-          console.log('✅ Post created successfully:', response);
-          this.successMessage = 'Post created successfully!';
-          this.isSubmitting = false;
+    this.http.request(method, url, {
+      body: this.post,
+      headers
+    }).subscribe({
+      next: (response) => {
+        console.log(`✅ Post ${this.isEditMode ? 'updated' : 'created'}:`, response);
+        this.successMessage = `Post ${this.isEditMode ? 'updated' : 'created'} successfully!`;
+        this.isLoading = false;
 
-          this.clearForm();
+        setTimeout(() => {
+          this.router.navigate(['/feed']);
+        }, 1500);
+      },
+      error: (err) => {
+        console.error(`❌ Failed to ${this.isEditMode ? 'update' : 'create'} post:`, err);
+        this.errorMessage = `Failed to ${this.isEditMode ? 'update' : 'create'} post. Please try again.`;
+        this.isLoading = false;
 
-          setTimeout(() => {
-            this.router.navigate(['/feed']);
-          }, 1500);
-        },
-        error: (err) => {
-          console.error('❌ Failed to create post:', err);
-          this.isSubmitting = false;
-
-          if (err.status === 401) {
-            this.errorMessage = 'Session expired. Please login again.';
-            localStorage.removeItem('token');
-            setTimeout(() => {
-              this.router.navigate(['/login']);
-            }, 2000);
-          } else {
-            this.errorMessage = err.error?.message || 'Failed to create post. Please try again.';
-          }
+        if (err.status === 401) {
+          localStorage.removeItem('token');
+          this.router.navigate(['/login']);
+        } else if (err.status === 403) {
+          this.errorMessage = 'You can only edit your own posts.';
         }
-      });
-  }
-
-  // =========== HELPERS ===========
-  isValidFileType(type: string): boolean {
-    const validTypes = [
-      'image/jpeg', 'image/jpg', 'image/png', 'image/gif',
-      'video/mp4', 'video/webm', 'video/quicktime'
-    ];
-    return validTypes.includes(type);
-  }
-
-  removeFile() {
-    this.selectedFile = null;
-    this.mediaPreview = null;
-    this.mediaType = null;
-    this.mediaLink = '';
-  }
-
-  isFormValid(): boolean {
-    return this.title.trim().length > 0 && this.content.trim().length > 0;
-  }
-
-  clearForm() {
-    this.title = '';
-    this.content = '';
-    this.mediaLink = '';
-    this.selectedFile = null;
-    this.mediaPreview = null;
-    this.mediaType = null;
+      }
+    });
   }
 
   cancel() {

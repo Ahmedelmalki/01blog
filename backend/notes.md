@@ -57,3 +57,15 @@ A Java servlet is a Java class that extends the capabilities of servers hosting 
  They are managed by a servlet container (such as Apache Tomcat), which handles lifecycle management, request routing, and resource allocation, allowing servlets to efficiently handle multiple concurrent requests.
  The servlet lifecycle includes initialization via the init method, servicing requests through the service method, and cleanup via the destroy method
 ```
+
+```
+Modules (NgModule):
+The old Angular structure where every component, directive, and pipe must be declared inside a module (like AppModule). You organize features in separate modules (e.g., UserModule, AuthModule) and import them into others.
+
+Standalone components:
+A newer, simpler approach (Angular 14+) where components don’t need to be declared in a module. Instead, they are self-contained — you just mark them with standalone: true and directly import other standalone components or Angular features inside them.
+
+👉 In essence:
+Modules = grouped structure (traditional, modular).
+Standalone = self-contained, modularity built into the component itself.
+```

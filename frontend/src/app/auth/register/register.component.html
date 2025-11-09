@@ -1,6 +1,9 @@
 <div class="register-container">
   <h2>Create Account</h2>
-
+  <button class="dark-mode-btn" (click)="toggleDarkMode()"
+    [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+    <fa-icon [icon]="isDarkMode ? faSun : faMoon"></fa-icon>
+  </button>
   <form (ngSubmit)="register()" #registerForm="ngForm">
     <input type="text" placeholder="First Name" name="firstname" [(ngModel)]="firstname" required>
     <input type="text" placeholder="Last Name" name="lastname" [(ngModel)]="lastname" required>

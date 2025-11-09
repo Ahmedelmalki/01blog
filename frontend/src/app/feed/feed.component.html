@@ -1,6 +1,6 @@
 <!-- Feed Container -->
 <div class="feed-container">
-  
+
   <!-- Header with create post and logout buttons -->
   <div class="feed-header">
     <h1>Feed</h1>
@@ -8,6 +8,10 @@
       <button class="create-btn" routerLink="/post/create">+ Create Post</button>
       <button class="logout-btn" (click)="logout()">Logout</button>
     </div>
+    <button class="dark-mode-btn" (click)="toggleDarkMode()"
+      [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+      <fa-icon [icon]="isDarkMode ? faSun : faMoon"></fa-icon>
+    </button>
   </div>
 
   <!-- Loading spinner while fetching posts -->
@@ -22,16 +26,13 @@
 
   <!-- Display posts if loaded successfully -->
   <div *ngIf="!isLoading && !errorMessage" class="posts-list">
-    
+
     <!-- Message if no posts exist -->
     <div *ngIf="posts.length === 0" class="no-posts">
       <p>No posts yet. Be the first to post!</p>
     </div>
 
     <!-- Loop through each post and render PostCardComponent -->
-    <app-post-card 
-      *ngFor="let post of posts" 
-      [postResponse]="post"
-    ></app-post-card>
+    <app-post-card *ngFor="let post of posts" [postResponse]="post"></app-post-card>
   </div>
 </div>

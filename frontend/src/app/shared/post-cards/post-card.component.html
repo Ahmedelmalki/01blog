@@ -11,34 +11,41 @@
         <span class="username">@{{ postResponse.post.author.username }}</span>
       </a>
     </div>
+    
+    <!-- Three-dots menu button (only show if user is the author) -->
+    <div class="menu-container" *ngIf="canModifyPost()">
+      <button class="menu-btn" (click)="toggleMenu($event)">⋮</button>
+      
+      <!-- Dropdown menu -->
+      <div class="menu-dropdown" [class.show]="showMenu">
+        <button class="menu-item update-btn" (click)="onUpdate()">
+          <span class="menu-icon">✏️</span>
+          Update
+        </button>
+        <button class="menu-item delete-btn" (click)="onDelete()">
+          <span class="menu-icon">🗑️</span>
+          Delete
+        </button>
+      </div>
+    </div>
   </div>
 
-  <!-- Post title -->
   <h2 class="post-title">{{ postResponse.post.title }}</h2>
-
-  <!-- Post content -->
   <p class="post-content">{{ postResponse.post.content }}</p>
 
-  <!-- Post media (image or video) if exists -->
   <div *ngIf="postResponse.post.mediaLink" class="post-media">
-    <!-- Video -->
     <video *ngIf="isVideo(postResponse.post.mediaLink)" [src]="postResponse.post.mediaLink" controls
       class="post-video"></video>
-
-    <!-- Image -->
     <img *ngIf="!isVideo(postResponse.post.mediaLink)" [src]="postResponse.post.mediaLink"
       [alt]="postResponse.post.title" class="post-image">
   </div>
 
   <!-- Post footer with engagement stats -->
   <div class="post-footer">
-
-    <!-- Reusable Likes Component -->
     <app-likes entityType="post" [entityId]="postResponse.post.id" [likesCount]="postResponse.likesCount"
       [dislikesCount]="postResponse.dislikesCount" [userReaction]="postResponse.userReaction"></app-likes>
   </div>
-
-  <!-- Comments Component -->
+  
   <app-comments [postId]="postResponse.post.id" [commentsCount]="postResponse.commentsCount">
   </app-comments>
 

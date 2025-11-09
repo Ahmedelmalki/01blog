@@ -1,1 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+/* Smooth transitions for all interactive elements */
+body.dark-mode * {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}

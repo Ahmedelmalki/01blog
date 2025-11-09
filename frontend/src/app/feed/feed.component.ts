@@ -4,11 +4,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { PostCardComponent } from '../shared/post-cards/post-card.component';
 import { PostResponse } from '../models/post.models';
+import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import { DarkModeService } from '../services/dark-mode.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, RouterLink, PostCardComponent],
+  imports: [CommonModule, RouterLink, PostCardComponent, FontAwesomeModule],
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.css']
 })
@@ -16,11 +19,20 @@ export class FeedComponent implements OnInit {
   posts: PostResponse[] = [];
   isLoading = true;
   errorMessage: string | null = null;
+  isDarkMode = false;
+  faMoon = faMoon;
+  faSun = faSun;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient,
+    private router: Router,
+    private darkModeService: DarkModeService
+  ) { }
 
   ngOnInit() {
     this.loadPosts();
+    this.darkModeService.darkMode$.subscribe(isDark => {
+      this.isDarkMode = isDark;
+    })
   }
 
   loadPosts() {
@@ -38,11 +50,6 @@ export class FeedComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     });
 
-    console.log("sending shit >>>>>>>>>>", headers);
-    console.log(token);
-    
-
-
     this.http.get<PostResponse[]>('http://localhost:8080/posts', { headers })
       .subscribe({
         next: (data) => {
@@ -51,9 +58,7 @@ export class FeedComponent implements OnInit {
           this.isLoading = false;
         },
         error: (err) => {
-          console.error('❌ Failed to load posts:', err); // here 
-          console.error('❌ Error status:', err.status);  // ADD THIS
-          console.error('❌ Error message:', err.message);  // ADD THIS
+          console.error('Failed to load posts:', err);
           this.errorMessage = 'Failed to load posts. Please try again.';
           this.isLoading = false;
 
@@ -67,6 +72,10 @@ export class FeedComponent implements OnInit {
 
   onReactionChanged(event: { postId: number, value: number }) {
     console.log(`Post ${event.postId} reaction changed to ${event.value}`);
+  }
+
+  toggleDarkMode(){
+    this.darkModeService.toggleDarkMode();
   }
 
   logout() {

@@ -1,6 +1,9 @@
 <div class="login-container">
   <h2>Welcome Back</h2>
-
+  <button class="dark-mode-btn" (click)="toggleDarkMode()"
+    [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+    <fa-icon [icon]="isDarkMode ? faSun : faMoon"></fa-icon>
+  </button>
   <form (ngSubmit)="login()" #loginForm="ngForm">
     <input type="text" placeholder="Username" name="username" [(ngModel)]="username" required>
     <input type="password" placeholder="Password" name="password" [(ngModel)]="password" required>

@@ -21,7 +21,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody User user) {
-        System.out.println(user.toString()); // remove later
         User savedUser = authService.register(user);
         return ResponseEntity.ok(new UserResponse(savedUser));
     }

@@ -1,158 +1,87 @@
-<!-- Create Post Container -->
 <div class="create-container">
   
-  <!-- Header -->
   <div class="create-header">
-    <h1>Create New Post</h1>
-    <button class="cancel-btn" (click)="cancel()">Back to Feed</button>
+    <h1>{{ isEditMode ? 'Edit Post' : 'Create New Post' }}</h1>
+    <button class="back-btn" (click)="cancel()">← Cancel</button>
   </div>
 
   <!-- Success Message -->
   <div *ngIf="successMessage" class="success-message">
-    <p>✅ {{ successMessage }}</p>
+    {{ successMessage }}
   </div>
 
   <!-- Error Message -->
   <div *ngIf="errorMessage" class="error-message">
-    <p>❌ {{ errorMessage }}</p>
+    {{ errorMessage }}
   </div>
 
-  <!-- Create Post Form -->
-  <form (ngSubmit)="createPost()" #postForm="ngForm" class="post-form">
+  <form (ngSubmit)="onSubmit()" class="create-form">
     
-    <!-- Title Input -->
     <div class="form-group">
       <label for="title">Title *</label>
       <input 
         type="text" 
-        id="title"
-        name="title"
-        placeholder="Enter post title..."
-        [(ngModel)]="title"
+        id="title" 
+        name="title" 
+        [(ngModel)]="post.title" 
+        placeholder="Enter post title"
         required
-        maxlength="200"
-        class="form-input"
+        [disabled]="isLoading || isUploading"
       >
-      <small class="char-count">{{ title.length }}/200</small>
     </div>
 
-    <!-- Content Textarea -->
     <div class="form-group">
       <label for="content">Content *</label>
       <textarea 
-        id="content"
-        name="content"
+        id="content" 
+        name="content" 
+        [(ngModel)]="post.content" 
         placeholder="What's on your mind?"
-        [(ngModel)]="content"
-        required
         rows="8"
-        maxlength="5000"
-        class="form-textarea"
+        required
+        [disabled]="isLoading || isUploading"
       ></textarea>
-      <small class="char-count">{{ content.length }}/5000</small>
     </div>
 
-    <!-- File Upload Section -->
     <div class="form-group">
-      <label>Media (Optional)</label>
-      
-      <!-- File Input -->
-      <div class="file-upload-wrapper">
-        <input 
-          type="file" 
-          id="fileInput"
-          accept="image/*,video/*"
-          (change)="onFileSelected($event)"
-          class="file-input"
-          #fileInput
-        >
-        <button 
-          type="button" 
-          class="btn-upload"
-          (click)="fileInput.click()"
-          [disabled]="isUploading || isSubmitting"
-        >
-          📁 Choose Image or Video
-        </button>
-      </div>
-      
-      <small class="help-text">
-        Max 10MB for images, 50MB for videos (jpg, png, gif, mp4, webm, mov)
-      </small>
-
-      <!-- Selected File Info -->
-      <div *ngIf="selectedFile" class="file-info">
-        <span class="file-name">📎 {{ selectedFile.name }}</span>
-        <span class="file-size">({{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB)</span>
-        <button 
-          type="button" 
-          class="btn-remove"
-          (click)="removeFile()"
-          [disabled]="isUploading || isSubmitting"
-        >
-          ✕
-        </button>
-      </div>
-
-      <!-- Upload Progress -->
-      <div *ngIf="isUploading" class="upload-progress">
-        <p>Uploading file...</p>
-      </div>
-    </div>
-
-    <!-- Media Preview -->
-    <div *ngIf="mediaPreview" class="media-preview">
-      <p class="preview-label">Preview:</p>
-      
-      <!-- Image Preview -->
-      <img 
-        *ngIf="mediaType === 'image'"
-        [src]="mediaPreview" 
-        alt="Preview"
-        class="preview-image"
+      <label for="media">Media (Image/Video)</label>
+      <input 
+        type="file" 
+        id="media" 
+        (change)="ifFileSelected($event)"
+        accept="image/*,video/*"
+        [disabled]="isLoading || isUploading"
       >
-      
-      <!-- Video Preview -->
-      <video 
-        *ngIf="mediaType === 'video'"
-        [src]="mediaPreview"
-        controls
-        class="preview-video"
-      ></video>
+      <small *ngIf="selectedFile">Selected: {{ selectedFile.name }}</small>
+      <small *ngIf="post.mediaLink && !selectedFile" class="current-media">
+        Current media: {{ post.mediaLink }}
+      </small>
     </div>
 
-    <!-- Form Actions -->
     <div class="form-actions">
       <button 
         type="button" 
-        class="btn-secondary"
-        (click)="clearForm()"
-        [disabled]="isSubmitting || isUploading"
+        class="cancel-btn" 
+        (click)="cancel()"
+        [disabled]="isLoading || isUploading"
       >
-        Clear
+        Cancel
       </button>
-      
       <button 
         type="submit" 
-        class="btn-primary"
-        [disabled]="!postForm.valid || isSubmitting || isUploading"
+        class="submit-btn"
+        [disabled]="isLoading || isUploading || !post.title.trim() || !post.content.trim()"
       >
-        <span *ngIf="!isSubmitting && !isUploading">Create Post</span>
-        <span *ngIf="isUploading">Uploading...</span>
-        <span *ngIf="isSubmitting && !isUploading">Creating...</span>
+        <span *ngIf="!isLoading && !isUploading">
+          {{ isEditMode ? '✓ Update Post' : '+ Create Post' }}
+        </span>
+        <span *ngIf="isUploading">Uploading file...</span>
+        <span *ngIf="isLoading && !isUploading">
+          {{ isEditMode ? 'Updating...' : 'Creating...' }}
+        </span>
       </button>
     </div>
+
   </form>
 
-  <!-- Tips Section -->
-  <div class="tips-section">
-    <h3>💡 Tips for great posts:</h3>
-    <ul>
-      <li>Write a clear and engaging title</li>
-      <li>Keep your content informative and concise</li>
-      <li>Upload high-quality images and videos</li>
-      <li>Supported formats: JPG, PNG, GIF for images | MP4, WebM, MOV for videos</li>
-      <li>Images up to 10MB, videos up to 50MB</li>
-    </ul>
-  </div>
 </div>

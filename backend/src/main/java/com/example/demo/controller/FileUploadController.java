@@ -44,8 +44,8 @@ public class FileUploadController {
 
         try {
             Path uploadsPath = Paths.get(uploadsDir);
-        System.out.println("📁 Upload directory: " + uploadsPath.toAbsolutePath());
-        System.out.println("📁 Directory exists: " + Files.exists(uploadsPath));
+            System.out.println("📁 Upload directory: " + uploadsPath.toAbsolutePath());
+            System.out.println("📁 Directory exists: " + Files.exists(uploadsPath));
             if (!Files.exists(uploadsPath)){
                 Files.createDirectories(uploadsPath);
             }
@@ -57,7 +57,7 @@ public class FileUploadController {
 
             System.out.println("✅ File saved successfully!");
 
-            String fileUrl = "/api/files/"+ uf;
+            String fileUrl = "http://localhost:8080/api/files/"+ uf;
             Map<String, String> response = new HashMap<>();
             response.put("filename", uf);
             response.put("originalFilename", originalFilename);

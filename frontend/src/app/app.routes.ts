@@ -12,5 +12,6 @@ export const routes: Routes = [
   { path: 'feed', component: FeedComponent },
   { path: 'post/create', component: CreateComponent },
   { path: 'profile/:username', component: ProfileComponent }, 
+  { path: 'post/edit/:id', component: CreateComponent }, 
   { path: '**', redirectTo: '/login' }
 ];

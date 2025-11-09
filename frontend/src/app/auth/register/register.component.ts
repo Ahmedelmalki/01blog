@@ -1,17 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
+import { DarkModeService } from '../../services/dark-mode.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FontAwesomeModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit{ // will it work without implementing oninit????
   firstname = '';
   lastname = '';
   username = '';
@@ -19,8 +23,22 @@ export class RegisterComponent {
   password = '';
   successMessage: string | null = null;
   errorMessage: string | null = null;
+  isDarkMode = false;
+  faMoon = faMoon;
+  faSun = faSun;
 
-  constructor(private http: HttpClient, private router: Router) {}
+
+  constructor(private http: HttpClient, private router: Router, private darkModeService: DarkModeService) { }
+
+  ngOnInit() {
+    this.darkModeService.darkMode$.subscribe(isDark => {
+      this.isDarkMode = isDark;
+    });
+  }
+
+  toggleDarkMode() {
+    this.darkModeService.toggleDarkMode();
+  }
 
   register() {
     this.successMessage = null;
