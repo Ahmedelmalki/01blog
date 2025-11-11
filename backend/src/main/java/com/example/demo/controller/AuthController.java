@@ -1,19 +1,17 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.User;
-import com.example.demo.payload.AuthResponse;
-import com.example.demo.payload.LoginRequest;
-import com.example.demo.payload.UserResponse;
+import com.example.demo.payload.*;
 import com.example.demo.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:4200")
-@RestController
+@RestController // why
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthService authService; // why final change it later
 
     public AuthController(AuthService authService) {
         this.authService = authService;

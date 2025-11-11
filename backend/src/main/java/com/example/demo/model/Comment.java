@@ -1,10 +1,12 @@
 package com.example.demo.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})// what does this shit do
 @Table(name = "comments")
+@Data
 public class Comment{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,14 +35,4 @@ public class Comment{
         this.post = post;
         this.author = author;
     }
-
-    public Long getId() {return id;}
-    public String getContent() {return content;}
-    public void setContent(String content) {this.content = content;}
-    
-    public Post getPost() {return post;}
-    public void setPost(Post post) {this.post = post;}
-
-    public User getAuthor() {return author;}
-    public void setAuthor(User author) {this.author = author;}
 }
