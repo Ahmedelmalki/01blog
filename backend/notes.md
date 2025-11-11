@@ -69,3 +69,14 @@ A newer, simpler approach (Angular 14+) where components don’t need to be decl
 Modules = grouped structure (traditional, modular).
 Standalone = self-contained, modularity built into the component itself.
 ```
+
+**wtf is DispatcherServlet**
+```
+The DispatcherServlet is a front controller in the Spring MVC framework that handles all incoming HTTP requests, acting as the central dispatcher for a web application. It routes these requests to the appropriate Spring MVC controllers, orchestrates the request-handling process, and integrates other components like view resolvers to produce the final response. 
+Key functions of the DispatcherServlet:
+Handles all requests: It is the single entry point for every request to the web application, ensuring a centralized way to manage incoming traffic.
+Routes requests: It uses information from the request to determine which controller is responsible for handling it, much like a traffic director.
+Manages the request lifecycle: It coordinates the entire process, from handling the initial request to preparing and rendering the final response.
+Integrates with other components: It works with other components in the Spring MVC framework, such as handler adapters, handler mappings, and view resolvers, to process the request and generate the correct view.
+Component of the Spring MVC architecture: It is a core and essential part of the Spring MVC framework's architecture, responsible for the request-handling logic
+```

@@ -6,41 +6,54 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+                    HttpServletRequest request,
+                    HttpServletResponse response,
+                    FilterChain filterChain)
+                    throws ServletException, IOException {
         
-            System.out.println("🔍 Request URI: " + request.getRequestURI());
             String authHeader = request.getHeader("Authorization");
-            System.out.println("🔍 Auth Header: " + authHeader);
         
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             
             if (jwtUtil.isTokenValid(token)) {
                 String username = jwtUtil.extractUsername(token);
-                System.out.println("✅ Token VALID! Username: " + username);
+                
+                 User user = userRepository.findByUsername(username).orElse(null);
+            if (user != null) {
+                List<SimpleGrantedAuthority> authorities = user.getRoles().stream()
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                    .collect(Collectors.toList());
                 
                 UsernamePasswordAuthenticationToken authentication = 
-                    new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+                    new UsernamePasswordAuthenticationToken(username, null, authorities);
                 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
             } else{
                 System.out.println("❌ Token is INVALID or EXPIRED"); 
             }

@@ -1,38 +1,24 @@
 package com.example.demo.service;
 
-import com.example.demo.model.Post;
-import com.example.demo.model.PostLike;
-import com.example.demo.model.User;
-import com.example.demo.payload.PostResponse;
-import com.example.demo.repository.PostRepository;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.repository.PostLikeRepository;
-import com.example.demo.repository.CommentRepository;
+import com.example.demo.model.*;
+import com.example.demo.payload.*;
+import com.example.demo.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.*;
 
 @Service
+@AllArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PostLikeRepository postLikeRepository;
     private final CommentRepository commentRepository;
-
-    public PostService(PostRepository postRepository, 
-                      UserRepository userRepository,
-                      PostLikeRepository postLikeRepository,
-                      CommentRepository commentRepository) {
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-        this.postLikeRepository = postLikeRepository;
-        this.commentRepository = commentRepository;
-    }
 
     public PostResponse createPost(String username, Post post) {
         User user = userRepository.findByUsername(username)

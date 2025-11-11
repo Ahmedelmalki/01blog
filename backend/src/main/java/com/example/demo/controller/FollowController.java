@@ -28,7 +28,6 @@ public class FollowController {
             @RequestHeader("Authorization") String authHeader,
             @PathVariable String username) {
         
-        System.out.println("==============\n entered follow post handler \n ============");
         String token = authHeader.replace("Bearer ", "").trim();
         String followerUsername = jwtUtil.extractUsername(token);
 

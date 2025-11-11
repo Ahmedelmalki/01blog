@@ -3,27 +3,20 @@ package com.example.demo.service;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.util.JwtUtil;
-
 import java.util.HashSet;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import lombok.*;
 
+@AllArgsConstructor
 @Service
 public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-
-    public AuthService(UserRepository userRepository, 
-                      PasswordEncoder passwordEncoder,
-                      JwtUtil jwtUtil) {
-         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-    }
 
     public User register(User user) {
         if(userRepository.existsByEmail(user.getEmail())) {
@@ -42,6 +35,9 @@ public class AuthService {
             user.getRoles().add("USER");
         }
 
+        if (user.getUsername().equals("admin") || user.getEmail().equals("admin@example.com")) {
+        user.getRoles().add("ADMIN");
+        }
 
         return userRepository.save(user);
     }

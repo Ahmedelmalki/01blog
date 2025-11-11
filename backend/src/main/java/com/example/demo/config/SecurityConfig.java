@@ -3,6 +3,7 @@ package com.example.demo.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,6 +19,7 @@ import java.util.*;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity  // to enable @PreAuthorize
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -55,7 +57,9 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // just for debugging
                 .requestMatchers(HttpMethod.POST, "/api/files/upload").authenticated()
-                .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()   
+                .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/reports").authenticated()  // Anyone can report
+                .requestMatchers(HttpMethod.GET, "/reports/**").hasRole("ADMIN")  // Only admins can view   
                 .requestMatchers("/posts/**").authenticated()
                 .requestMatchers("/comments/**").authenticated()
                 .requestMatchers("/likes/**").authenticated()
@@ -65,7 +69,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  // ← Add this
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); 
 
         return http.build();
     }

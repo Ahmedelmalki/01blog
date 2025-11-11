@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})// what does this shit do
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})// Keeps JSON clean (only your actual fields) and
+// Prevents serialization errors when sending entities to the client
 @Table(name = "comments")
 @Data
 public class Comment{

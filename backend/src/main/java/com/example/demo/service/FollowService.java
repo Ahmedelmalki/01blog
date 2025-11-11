@@ -6,22 +6,15 @@ import org.springframework.web.server.ResponseStatusException;
 import com.example.demo.repository.*;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import com.example.demo.model.*;
+import lombok.*;
 
 @Service
+@AllArgsConstructor
 public class FollowService {
 
     private final UserRepository userRepo;
     private final FollowRepository followRepo;
-
-    public FollowService(
-            UserRepository userRepo,
-            FollowRepository followRepo
-        ){
-        this.userRepo = userRepo;
-        this.followRepo = followRepo;
-    }    
     
     // ========== GETING FOLLOWERS AND FOLLOWEES COUNT
     public int getFollowerCount(String username){
