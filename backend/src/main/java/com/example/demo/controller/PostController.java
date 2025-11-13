@@ -4,28 +4,24 @@ import com.example.demo.model.Post;
 import com.example.demo.service.PostService;
 import org.springframework.http.ResponseEntity;
 import com.example.demo.util.JwtUtil;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.payload.PostResponse;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/posts")
 @CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class PostController {
 
     private final PostService postService;
     private final JwtUtil jwtUtil;
 
-    public PostController(PostService postService, JwtUtil jwtUtil) {
-        this.postService = postService;
-        this.jwtUtil = jwtUtil;
-    }
-
    @PostMapping
     public ResponseEntity<PostResponse> createPost( 
             @RequestHeader("Authorization") String authHeader,
-            @RequestBody Post post) {
+            @RequestBody Post post){
 
         String token = authHeader.replace("Bearer ", "").trim();
         String username = jwtUtil.extractUsername(token);
@@ -35,7 +31,8 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPosts(
-            @RequestHeader("Authorization") String authHeader) {
+            @RequestHeader("Authorization") String authHeader){
+
         String token = authHeader.replace("Bearer", "").trim();
         String un = jwtUtil.extractUsername(token);
         List<PostResponse> posts = postService.getAllPosts(un);
@@ -45,7 +42,8 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPostById(
             @PathVariable Long id,
-            @RequestHeader("Authorization") String authHeader) {
+            @RequestHeader("Authorization") String authHeader){
+
         String token = authHeader.replace("Bearer ", "").trim();
         String username = jwtUtil.extractUsername(token);
         PostResponse post = postService.getPostById(id, username);
@@ -55,7 +53,8 @@ public class PostController {
     @GetMapping("/user/{username}")
     public ResponseEntity<List<PostResponse>> getPostsByUser(
             @PathVariable String username,
-            @RequestHeader("Authorization") String authHeader) {
+            @RequestHeader("Authorization") String authHeader){
+
         String token = authHeader.replace("Bearer ", "").trim();
         String requestingUsername = jwtUtil.extractUsername(token);
         List<PostResponse> posts = postService.getPostsByUsername(username, requestingUsername);
@@ -66,11 +65,10 @@ public class PostController {
     public ResponseEntity<PostResponse> updatePost(
             @PathVariable Long id,
             @RequestHeader("Authorization") String authHeader,
-            @RequestBody Post updatedPost
-    ){
+            @RequestBody Post updatedPost){
+
         String token = authHeader.replace("Bearer ", "").trim();
         String requestingUsername = jwtUtil.extractUsername(token);
-
         PostResponse response = postService.updatePost(id, requestingUsername, updatedPost);
         return ResponseEntity.ok(response);
     }
@@ -78,9 +76,9 @@ public class PostController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePost(
             @PathVariable Long id,
-            @RequestHeader("Authorization") String authHeader
-    ){
-                    String token = authHeader.replace("Bearer ", "").trim();
+            @RequestHeader("Authorization") String authHeader){
+
+        String token = authHeader.replace("Bearer ", "").trim();
         String requestingUsername = jwtUtil.extractUsername(token);
         postService.deleltePost(id, requestingUsername);
         return ResponseEntity.ok().body(Map.of("message", "Post deleted successfully"));

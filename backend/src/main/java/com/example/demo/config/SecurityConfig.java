@@ -59,7 +59,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/files/upload").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/reports").authenticated()  // Anyone can report
-                .requestMatchers(HttpMethod.GET, "/reports/**").hasRole("ADMIN")  // Only admins can view   
+                .requestMatchers(HttpMethod.GET, "/reports/**").hasRole("ADMIN")  // Only admins can view
+                .requestMatchers("/admin/**").hasRole("ADMIN")   
                 .requestMatchers("/posts/**").authenticated()
                 .requestMatchers("/comments/**").authenticated()
                 .requestMatchers("/likes/**").authenticated()

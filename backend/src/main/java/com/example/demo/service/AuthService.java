@@ -28,6 +28,7 @@ public class AuthService {
         user.setUsername(user.getUsername().trim());
         user.setEmail(user.getEmail().trim());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setState(1);
         if(user.getRoles() == null) {
             user.setRoles(new HashSet<>());
         }

@@ -4,25 +4,22 @@ import com.example.demo.model.Report;
 import com.example.demo.payload.ReportRequest;
 import com.example.demo.service.ReportService;
 import com.example.demo.util.JwtUtil;
+
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/reports")
 @CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class ReportController {
 
     private final ReportService reportService;
     private final JwtUtil jwtUtil;
-
-    public ReportController(ReportService reportService, JwtUtil jwtUtil) {
-        this.reportService = reportService;
-        this.jwtUtil = jwtUtil;
-    }
 
     // Create a report - Available to ALL authenticated users
     @PostMapping

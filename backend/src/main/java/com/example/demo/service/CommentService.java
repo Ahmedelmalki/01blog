@@ -23,6 +23,10 @@ public class CommentService {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
+        if (user.getState() == -1) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are banned and cannot create comments");
+        }
+
         Post post = postRepository.findById(request.getPostId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
 

@@ -3,19 +3,17 @@ package com.example.demo.controller;
 import com.example.demo.model.User;
 import com.example.demo.payload.*;
 import com.example.demo.service.AuthService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController // why
 @RequestMapping("/auth")
+@AllArgsConstructor
 public class AuthController {
 
     private final AuthService authService; // why final change it later
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody User user) {

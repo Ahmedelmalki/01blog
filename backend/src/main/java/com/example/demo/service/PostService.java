@@ -23,6 +23,11 @@ public class PostService {
     public PostResponse createPost(String username, Post post) {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        if (user.getState() == -1) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are banned and cannot create posts");
+        }
+
         post.setAuthor(user);
         Post savedPost = postRepository.save(post);
         return buildPostResponse(savedPost, username);    

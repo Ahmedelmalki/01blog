@@ -4,7 +4,7 @@ import com.example.demo.model.Comment;
 import com.example.demo.payload.CommentRequest;
 import com.example.demo.service.CommentService;
 import com.example.demo.util.*;
-
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -12,14 +12,11 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class CommentController {
     private final CommentService commentService;
     private final JwtUtil jwtUtil;
 
-    public CommentController(CommentService commentService, JwtUtil jwtUtil){
-        this.commentService = commentService;
-        this.jwtUtil = jwtUtil;
-    }
     @PostMapping("/comments")
     public ResponseEntity<Comment> createComment(
             @RequestHeader("Authorization") String authHeader,
