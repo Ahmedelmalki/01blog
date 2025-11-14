@@ -217,6 +217,11 @@
   margin-left: auto;
 }
 
+.timestamp {
+  font-size: 0.75rem;
+  color: #999;
+}
+
 /* Responsive design for mobile */
 @media (max-width: 600px) {
   .post-card {

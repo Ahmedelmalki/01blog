@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTO.*;
 import com.example.demo.model.User;
-import com.example.demo.payload.*;
 import com.example.demo.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

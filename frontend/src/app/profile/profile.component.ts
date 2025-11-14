@@ -21,10 +21,10 @@ export class ProfileComponent implements OnInit {
   username: string = '';
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -38,7 +38,7 @@ export class ProfileComponent implements OnInit {
   }
 
   loadCurrentUserProfile() {
-    const token = localStorage.getItem('token');    
+    const token = localStorage.getItem('token');
     if (!token) {
       this.router.navigate(['/login']);
       return;
@@ -46,7 +46,7 @@ export class ProfileComponent implements OnInit {
 
     this.router.navigate(['/feed']);
   }
-  
+
   loadUserPosts() {
     this.isLoadingPosts = true;
     this.errorMessage = null;
@@ -60,22 +60,22 @@ export class ProfileComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     });
 
-    
+
     this.http.get<PostResponse[]>(
-      `http://localhost:8080/posts/user/${this.username}`, 
+      `http://localhost:8080/posts/user/${this.username}`,
       { headers }
     ).subscribe({
       next: (data) => {
         console.log('User posts loaded:', data);
         this.posts = data;
         this.isLoadingPosts = false;
-        
+
         if (data.length > 0) {
           this.userInfo = {
-            username: data[0].post.author.username,
-            firstname: data[0].post.author.firstname,
-            lastname: data[0].post.author.lastname,
-            email: '' 
+            username: data[0].author,  // Changed from data[0].post.author
+            firstname: '',
+            lastname: '',
+            email: ''
           };
           this.isLoadingUser = false;
         }
@@ -85,7 +85,7 @@ export class ProfileComponent implements OnInit {
         this.errorMessage = 'Failed to load user profile. Please try again.';
         this.isLoadingPosts = false;
         this.isLoadingUser = false;
-        
+
         if (err.status === 401) {
           localStorage.removeItem('token');
           this.router.navigate(['/login']);
@@ -97,7 +97,7 @@ export class ProfileComponent implements OnInit {
   onReactionChanged(event: { postId: number, value: number }) {
     console.log(`Post ${event.postId} reaction changed to ${event.value}`);
   }
- 
+
   goToFeed() {
     this.router.navigate(['/feed']);
   }

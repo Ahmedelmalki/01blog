@@ -1,10 +1,10 @@
 import { Component, Input, Output, OnInit, EventEmitter, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
-import { PostResponse } from '../../models/post.models';
 import { CommentsComponent } from '../comments/comments.component';
 import { LikesComponent } from '../likes/likes.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { PostResponse } from '../../models/post.models';
 
 @Component({
   selector: 'app-post-card',
@@ -43,7 +43,7 @@ export class PostCardComponent implements OnInit {
 
   canModifyPost(): boolean {
     return this.currentUsername ===
-      this.postResponse.post.author.username;
+      this.postResponse.author;
   }
 
   toggleMenu(event: Event){
@@ -54,7 +54,7 @@ export class PostCardComponent implements OnInit {
   onUpdate(){
     console.log('update post');
     this.showMenu = false;
-    this.router.navigate(['/post/edit', this.postResponse.post.id]);
+    this.router.navigate(['/post/edit', this.postResponse.id]);
   }
 
   onDelete(){
@@ -77,12 +77,12 @@ export class PostCardComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     });
 
-    this.http.delete(`http://localhost:8080/posts/${this.postResponse.post.id}`, { headers })
+    this.http.delete(`http://localhost:8080/posts/${this.postResponse.id}`, { headers })
       .subscribe({
         next: () => {
           console.log('✅ Post deleted successfully');
           // Emit event to parent component to remove post from list
-          this.postDeleted.emit(this.postResponse.post.id);
+          this.postDeleted.emit(this.postResponse.id);
         },
         error: (err) => {
           console.error('❌ Failed to delete post:', err);

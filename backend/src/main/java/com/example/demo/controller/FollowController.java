@@ -7,7 +7,7 @@ import com.example.demo.util.JwtUtil;
 import lombok.AllArgsConstructor;
 import java.util.*;
 import java.util.stream.Collectors;
-import com.example.demo.payload.*;
+import com.example.demo.DTO.*;
 import com.example.demo.model.*;
 
 @RestController

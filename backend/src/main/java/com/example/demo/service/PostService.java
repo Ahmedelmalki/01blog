@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.DTO.*;
 import com.example.demo.model.*;
-import com.example.demo.payload.*;
 import com.example.demo.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,7 +20,7 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
     private final CommentRepository commentRepository;
 
-    public PostResponse createPost(String username, Post post) {
+    public PostDTO createPost(String username, Post post) {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -33,19 +33,19 @@ public class PostService {
         return buildPostResponse(savedPost, username);    
     }
 
-    public List<PostResponse> getAllPosts(String username) {
+    public List<PostDTO> getAllPosts(String username) {
         return postRepository.findAll().stream()
             .map(post -> buildPostResponse(post, username))
             .collect(Collectors.toList());// why collect
     }
 
-    public PostResponse getPostById(Long id, String username) {
+    public PostDTO getPostById(Long id, String username) {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
         return buildPostResponse(post, username);
     }
 
-    public List<PostResponse> getPostsByUsername(String username, String requestingUsername) {
+    public List<PostDTO> getPostsByUsername(String username, String requestingUsername) {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         
@@ -54,35 +54,19 @@ public class PostService {
             .collect(Collectors.toList());
     }
 
-    private PostResponse buildPostResponse(Post post,String username) {
-        int likesCount = postLikeRepository.countByPostAndValue(post, 1);
-        int dislikesCount = postLikeRepository.countByPostAndValue(post, -1);
-        int commentsCount = commentRepository.countByPost(post);
-        
-        Integer userReaction = null;
-        if (username != null){
-            Optional<User> userOpt = userRepository.findByUsername(username); // what optional does here
-            if (userOpt.isPresent()){
-                Optional<PostLike> userLike = postLikeRepository.findByPostAndAuthor(post, userOpt.get());
-                userReaction = userLike.map(PostLike::getValue).orElse(null);
-            }
-        }
-
-        return new PostResponse(post, likesCount, dislikesCount, commentsCount, userReaction);
-    }
-
+    
     public void deleltePost(Long postId, String username){
         Post post = postRepository.findById(postId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
         if (!post.getAuthor().getUsername().equals(username)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "you can only delete your posts");
         }
         postRepository.delete(post);
     }   
-
-    public PostResponse updatePost(Long postId, String username, Post updatedPost){
+    
+    public PostDTO updatePost(Long postId, String username, Post updatedPost){
         Post post = postRepository.findById(postId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
         if (!post.getAuthor().getUsername().equals(username)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "you can only delete your posts");
         }
@@ -97,5 +81,33 @@ public class PostService {
         }
         Post savedPost = postRepository.save(post);
         return buildPostResponse(savedPost, username);
+    }
+
+    // ==============   HELPER ===========
+    private PostDTO buildPostResponse(Post post,String username) {
+        int likesCount = postLikeRepository.countByPostAndValue(post, 1);
+        int dislikesCount = postLikeRepository.countByPostAndValue(post, -1);
+        int commentsCount = commentRepository.countByPost(post);
+        
+        Integer userReaction = null;
+        if (username != null){
+            Optional<User> userOpt = userRepository.findByUsername(username); // what optional does here
+            if (userOpt.isPresent()){
+                Optional<PostLike> userLike = postLikeRepository.findByPostAndAuthor(post, userOpt.get());
+                userReaction = userLike.map(PostLike::getValue).orElse(null);
+            }
+        }
+
+        return new PostDTO(
+            post.getId(),
+            post.getTitle(),
+            post.getContent(),
+            post.getMediaLink(),
+            post.getAuthor().getUsername(),
+            post.getCreatedAt(),
+            likesCount,
+            dislikesCount,
+            commentsCount,
+            userReaction);
     }
 }

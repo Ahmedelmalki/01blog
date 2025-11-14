@@ -1,4 +1,4 @@
-package com.example.demo.payload;
+package com.example.demo.DTO;
 
 import com.example.demo.model.Post;
 

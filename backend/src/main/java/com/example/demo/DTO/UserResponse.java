@@ -1,10 +1,12 @@
-package com.example.demo.payload;
+package com.example.demo.DTO;
 
 import com.example.demo.model.User;
 import java.util.Set;
 import lombok.*;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponse {
     private Long id;
     private String username;

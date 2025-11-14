@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTO.ReportRequest;
 import com.example.demo.model.Report;
-import com.example.demo.payload.ReportRequest;
 import com.example.demo.service.ReportService;
 import com.example.demo.util.JwtUtil;
 

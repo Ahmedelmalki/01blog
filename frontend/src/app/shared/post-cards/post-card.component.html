@@ -4,18 +4,21 @@
   <!-- Post header with author info -->
   <div class="post-header">
     <div class="author-info">
-      <a [routerLink]="['/profile', postResponse.post.author.username]" class="author-link">
-        <span class="author-name">
+      <a [routerLink]="['/profile', postResponse.author]" class="author-link">
+        <!-- <span class="author-name">
           {{ postResponse.post.author.firstname }} {{ postResponse.post.author.lastname }}
+        </span> -->
+        <span class="username">@{{ postResponse.author }}</span>
+        <span class="timestamp" *ngIf="postResponse.createdAt">
+          {{ postResponse.createdAt | date:'short' }}
         </span>
-        <span class="username">@{{ postResponse.post.author.username }}</span>
       </a>
     </div>
-    
+
     <!-- Three-dots menu button (only show if user is the author) -->
     <div class="menu-container" *ngIf="canModifyPost()">
       <button class="menu-btn" (click)="toggleMenu($event)">⋮</button>
-      
+
       <!-- Dropdown menu -->
       <div class="menu-dropdown" [class.show]="showMenu">
         <button class="menu-item update-btn" (click)="onUpdate()">
@@ -30,23 +33,20 @@
     </div>
   </div>
 
-  <h2 class="post-title">{{ postResponse.post.title }}</h2>
-  <p class="post-content">{{ postResponse.post.content }}</p>
+  <h2 class="post-title">{{ postResponse.title }}</h2>
+  <p class="post-content">{{ postResponse.content }}</p>
 
-  <div *ngIf="postResponse.post.mediaLink" class="post-media">
-    <video *ngIf="isVideo(postResponse.post.mediaLink)" [src]="postResponse.post.mediaLink" controls
-      class="post-video"></video>
-    <img *ngIf="!isVideo(postResponse.post.mediaLink)" [src]="postResponse.post.mediaLink"
-      [alt]="postResponse.post.title" class="post-image">
+  <div *ngIf="postResponse.mediaLink" class="post-media">
+    <video *ngIf="isVideo(postResponse.mediaLink)" [src]="postResponse.mediaLink" controls class="post-video"></video>
+    <img *ngIf="!isVideo(postResponse.mediaLink)" [src]="postResponse.mediaLink" [alt]="postResponse.title"
+      class="post-image">
   </div>
 
   <!-- Post footer with engagement stats -->
-  <div class="post-footer">
-    <app-likes entityType="post" [entityId]="postResponse.post.id" [likesCount]="postResponse.likesCount"
-      [dislikesCount]="postResponse.dislikesCount" [userReaction]="postResponse.userReaction"></app-likes>
-  </div>
-  
-  <app-comments [postId]="postResponse.post.id" [commentsCount]="postResponse.commentsCount">
+  <app-likes entityType="post" [entityId]="postResponse.id" [likesCount]="postResponse.likesCount"
+    [dislikesCount]="postResponse.dislikesCount" [userReaction]="postResponse.userReaction ?? undefined"></app-likes>
+
+  <app-comments [postId]="postResponse.id" [commentsCount]="postResponse.commentsCount">
   </app-comments>
 
 </div>

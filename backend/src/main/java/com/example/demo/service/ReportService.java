@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.DTO.ReportRequest;
 import com.example.demo.model.*;
-import com.example.demo.payload.ReportRequest;
 import com.example.demo.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

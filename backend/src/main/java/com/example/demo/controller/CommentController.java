@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTO.CommentRequest;
 import com.example.demo.model.Comment;
-import com.example.demo.payload.CommentRequest;
 import com.example.demo.service.CommentService;
 import com.example.demo.util.*;
 import lombok.AllArgsConstructor;

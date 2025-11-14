@@ -1,8 +1,8 @@
 
 package com.example.demo.service;
 
+import com.example.demo.DTO.CommentRequest;
 import com.example.demo.model.*;
-import com.example.demo.payload.CommentRequest;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.PostRepository; // responsible for saving shit
 import com.example.demo.repository.UserRepository;
