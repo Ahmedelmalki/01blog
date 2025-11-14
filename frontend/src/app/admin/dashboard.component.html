@@ -1,0 +1,142 @@
+<!-- src/app/admin/dashboard.component.html -->
+<div class="dashboard-container">
+  
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1>Admin Dashboard</h1>
+    <button class="back-btn" (click)="goBack()">← Back to Feed</button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <p>Loading reports...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <!-- Dashboard Grid -->
+  <div *ngIf="!loading && !errorMessage" class="dashboard-grid">
+    
+    <!-- User Reports Section -->
+    <div class="reports-section">
+      <div class="section-header">
+        <h2>👤 Reported Users</h2>
+        <span class="count-badge">{{ userReports.length }}</span>
+      </div>
+
+      <div class="reports-list">
+        <!-- No Reports Message -->
+        <div *ngIf="userReports.length === 0" class="no-reports">
+          <p>No reported users</p>
+        </div>
+
+        <!-- User Report Cards -->
+        <div *ngFor="let report of userReports" class="report-card">
+          <div class="report-summary" (click)="toggleUserReport(report.id)">
+            <div class="report-info">
+              <div class="user-avatar">
+                {{ getUserInitials(report.reportedUser) }}
+              </div>
+              <div class="report-details">
+                <h3 class="reported-name">
+                  {{ report.reportedUser.firstname }} {{ report.reportedUser.lastname }}
+                  <span *ngIf="isUserBanned(report.reportedUser.state)" class="banned-badge">BANNED</span>
+                </h3>
+                <p class="reported-username">@{{ report.reportedUser.username }}</p>
+                <p class="reporter-info">Reported by @{{ report.reporter.username }}</p>
+              </div>
+            </div>
+            <button class="expand-btn">
+              {{ expandedUserReport === report.id ? '▲' : '▼' }}
+            </button>
+          </div>
+
+          <!-- Expanded Details -->
+          <div *ngIf="expandedUserReport === report.id" class="report-expanded">
+            <div class="reason-section">
+              <h4>Reason for Report:</h4>
+              <p class="reason-text">{{ report.reason }}</p>
+              <p class="report-date">Reported on: {{ report.createdAt | date:'medium' }}</p>
+            </div>
+            
+            <div class="action-buttons">
+              <button 
+                *ngIf="!isUserBanned(report.reportedUser.state)"
+                class="btn ban-btn" 
+                (click)="banUser(report.reportedUser.id)">
+                🚫 Ban User
+              </button>
+              <button 
+                *ngIf="isUserBanned(report.reportedUser.state)"
+                class="btn unban-btn" 
+                (click)="unbanUser(report.reportedUser.id)">
+                ✅ Unban User
+              </button>
+              <button 
+                class="btn delete-btn" 
+                (click)="deleteUser(report.reportedUser.id)">
+                🗑️ Delete User
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post Reports Section -->
+    <div class="reports-section">
+      <div class="section-header">
+        <h2>📝 Reported Posts</h2>
+        <span class="count-badge">{{ postReports.length }}</span>
+      </div>
+
+      <div class="reports-list">
+        <!-- No Reports Message -->
+        <div *ngIf="postReports.length === 0" class="no-reports">
+          <p>No reported posts</p>
+        </div>
+
+        <!-- Post Report Cards -->
+        <div *ngFor="let report of postReports" class="report-card">
+          <div class="report-summary" (click)="togglePostReport(report.id)">
+            <div class="report-info">
+              <div class="post-icon">📄</div>
+              <div class="report-details">
+                <h3 class="reported-name">{{ report.reportedPost.title }}</h3>
+                <p class="post-author">By @{{ report.reportedPost.author.username }}</p>
+                <p class="reporter-info">Reported by @{{ report.reporter.username }}</p>
+              </div>
+            </div>
+            <button class="expand-btn">
+              {{ expandedPostReport === report.id ? '▲' : '▼' }}
+            </button>
+          </div>
+
+          <!-- Expanded Details -->
+          <div *ngIf="expandedPostReport === report.id" class="report-expanded">
+            <div class="reason-section">
+              <h4>Post Content:</h4>
+              <p class="post-content">{{ report.reportedPost.content }}</p>
+              
+              <h4>Reason for Report:</h4>
+              <p class="reason-text">{{ report.reason }}</p>
+              <p class="report-date">Reported on: {{ report.createdAt | date:'medium' }}</p>
+            </div>
+            
+            <div class="action-buttons">
+              <button 
+                class="btn delete-btn" 
+                (click)="deletePost(report.reportedPost.id)">
+                🗑️ Delete Post
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

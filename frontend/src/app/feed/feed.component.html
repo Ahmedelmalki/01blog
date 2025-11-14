@@ -6,6 +6,7 @@
     <h1>Feed</h1>
     <div class="header-actions">
       <button class="create-btn" routerLink="/post/create">+ Create Post</button>
+       <button *ngIf="isAdmin" class="dashboard-btn" routerLink="/admin/dashboard">📊 Dashboard</button>
       <button class="logout-btn" (click)="logout()">Logout</button>
     </div>
     <button class="dark-mode-btn" (click)="toggleDarkMode()"

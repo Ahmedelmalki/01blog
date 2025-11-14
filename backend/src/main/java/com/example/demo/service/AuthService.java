@@ -42,6 +42,7 @@ public class AuthService {
 
         return userRepository.save(user);
     }
+    
     public String login(String username, String password) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));

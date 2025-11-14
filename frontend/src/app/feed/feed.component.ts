@@ -22,6 +22,7 @@ export class FeedComponent implements OnInit {
   isDarkMode = false;
   faMoon = faMoon;
   faSun = faSun;
+  isAdmin = false;
 
   constructor(private http: HttpClient,
     private router: Router,
@@ -33,6 +34,24 @@ export class FeedComponent implements OnInit {
     this.darkModeService.darkMode$.subscribe(isDark => {
       this.isDarkMode = isDark;
     })
+    this.checkAdminStatus();
+  }
+
+  checkAdminStatus() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        console.log("role ==>", payload.roles);
+
+        // Check if user has ADMIN role
+        if (payload.roles && Array.isArray(payload.roles)) {
+          this.isAdmin = payload.roles.includes('ADMIN');
+        }
+      } catch (e) {
+        console.error('Failed to decode token', e);
+      }
+    }
   }
 
   loadPosts() {
@@ -74,7 +93,7 @@ export class FeedComponent implements OnInit {
     console.log(`Post ${event.postId} reaction changed to ${event.value}`);
   }
 
-  toggleDarkMode(){
+  toggleDarkMode() {
     this.darkModeService.toggleDarkMode();
   }
 

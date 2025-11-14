@@ -4,6 +4,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { FeedComponent } from './feed/feed.component';
 import { CreateComponent } from './post/create.component';
 import { ProfileComponent } from './profile/profile.component';
+import { DashboardComponent } from './admin/dashboard.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -11,7 +12,8 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'feed', component: FeedComponent },
   { path: 'post/create', component: CreateComponent },
-  { path: 'profile/:username', component: ProfileComponent }, 
-  { path: 'post/edit/:id', component: CreateComponent }, 
+  { path: 'profile/:username', component: ProfileComponent },
+  { path: 'post/edit/:id', component: CreateComponent },
+  { path: 'admin/dashboard', component: DashboardComponent },
   { path: '**', redirectTo: '/login' }
 ];
