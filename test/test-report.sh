@@ -8,12 +8,12 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # ========== CONFIGURATION ==========
-USER_TOKEN="eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJycnJyIiwiaWF0IjoxNzYyODk5Nzg4LCJleHAiOjE3NjI5ODYxODh9.ZX6kHeh9a0yMxHk6McmhP9nDn6SOzYJTPXQV9CryJZnB5AsciBTUSrSTjsD7nv17"
-ADMIN_TOKEN="eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2Mjg5OTYxNSwiZXhwIjoxNzYyOTg2MDE1fQ.fj9KNdkH1WQhoZzYK9v2-kYazX7CFFhqy10p8mappVuRDjcePuzZfbSGjAgnXtZY"  # ⚠️ You need an admin token for GET requests
+ADMIN_TOKEN="eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2MzMzMTMzOCwiZXhwIjoxNzYzNDE3NzM4fQ.ufcc2P21Hc_zbgg4u_BxRtHmxs_QoHhkdDylX2G1ppqqCMD4KusuSzTG6ygBoCaA"
+USER_TOKEN="eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJubm5uIiwiaWF0IjoxNzYzMzMxMzY4LCJleHAiOjE3NjM0MTc3Njh9.0IrtAh8kjMBMktJKUz2vpjOWeQmKiAFYDmqQO-OJTGB6zGbUTET5oaqOI-DKSxUm"  # ⚠️ You need an admin token for GET requests
 BASE_URL="http://localhost:8080"
-CURRENT_USER="rrrr"       # The user who owns the token
-TARGET_USER_ID="21"        # User ID to report
-TARGET_POST_ID="2"        # Post ID to report
+CURRENT_USER="nnnn"       # The user who owns the token
+TARGET_USER_ID="14"        # User ID to report
+TARGET_POST_ID="6"        # Post ID to report
 # ====================================
 
 echo -e "${BLUE}╔════════════════════════════════════╗${NC}"
@@ -54,7 +54,7 @@ echo -e "\n\n"
 
 # Test 3: Try to report both user and post (should fail)
 echo -e "${GREEN}3. ${RED}[SHOULD FAIL]${GREEN} Attempting to report both user AND post...${NC}"
-curl -X POST "$BASE_URL/reports" \
+curl  -X POST "$BASE_URL/reports" \
   -H "Authorization: Bearer $USER_TOKEN" \
   -H "Content-Type: application/json" \
   -d "{
@@ -66,7 +66,7 @@ echo -e "\n\n"
 
 # Test 4: Try to report without specifying target (should fail)
 echo -e "${GREEN}4. ${RED}[SHOULD FAIL]${GREEN} Attempting to report without target...${NC}"
-curl -X POST "$BASE_URL/reports" \
+curl  -X POST "$BASE_URL/reports" \
   -H "Authorization: Bearer $USER_TOKEN" \
   -H "Content-Type: application/json" \
   -d "{
@@ -98,7 +98,7 @@ echo -e "\n\n"
 
 # Test 7: Regular user tries to view all reports (should fail - 403)
 echo -e "${GREEN}7. ${RED}[SHOULD FAIL - 403 Forbidden]${GREEN} Regular user trying to view all reports...${NC}"
-curl -X GET "$BASE_URL/reports" \
+curl  -X GET "$BASE_URL/reports" \
   -H "Authorization: Bearer $USER_TOKEN"
 echo -e "\n\n"
 
@@ -138,7 +138,7 @@ else
 
     # Test 11: Admin views reports for non-existent user (should return empty or 404)
     echo -e "${GREEN}11. Admin checking reports for non-existent user (ID: 99999)...${NC}"
-    curl -X GET "$BASE_URL/reports/user/99999" \
+    curl  -X GET "$BASE_URL/reports/user/99999" \
       -H "Authorization: Bearer $ADMIN_TOKEN"
     echo -e "\n\n"
 fi

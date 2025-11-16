@@ -15,6 +15,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Configuration
@@ -22,9 +25,9 @@ import java.util.*;
 @EnableMethodSecurity  // to enable @PreAuthorize
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final MyJWT jwtAuthenticationFilter;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(MyJWT jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
@@ -70,6 +73,18 @@ public class SecurityConfig {
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
+            .exceptionHandling(ex -> ex
+            .accessDeniedHandler((req, res, accessDeniedException)-> {
+                res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                res.setContentType("application/json");
+                res.getWriter().write(
+                     "{\"timestamp\":\"" + LocalDateTime.now() + "\"," +
+                    "\"status\":403," +
+                    "\"error\":\"Forbidden\"," +
+                    "\"message\":\"Access denied: You don't have permission to access this resource\"}"
+
+                );
+            }))
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); 
 
         return http.build();

@@ -49,7 +49,3 @@ public class AdminController {
         return adminService.unbanUser(userId);
     }
 }
-
-// PUT : ban user
-// DELET: delete user
-// DELET: delet post
