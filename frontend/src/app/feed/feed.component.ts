@@ -35,6 +35,9 @@ export class FeedComponent implements OnInit {
       this.isDarkMode = isDark;
     })
     this.checkAdminStatus();
+
+    // const appHeader = document.getElementById('app-header'); // later
+    // appHeader?.style.display = 'none';
   }
 
   checkAdminStatus() {
