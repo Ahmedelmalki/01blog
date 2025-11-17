@@ -1,19 +1,68 @@
 <div class="register-container">
-  <h2>Create Account</h2>
-  <button class="dark-mode-btn" (click)="toggleDarkMode()"
-    [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
-    <fa-icon [icon]="isDarkMode ? faSun : faMoon"></fa-icon>
-  </button>
+  <div class="header-with-theme">
+    <h2>Create Account</h2>
+    <button class="dark-mode-btn" (click)="toggleDarkMode()"
+      [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+      <fa-icon [icon]="isDarkMode ? faSun : faMoon"></fa-icon>
+    </button>
+  </div>
+
   <form (ngSubmit)="register()" #registerForm="ngForm">
+    
+    <!-- Profile Picture Section -->
+    <div class="profile-pic-section">
+      <div class="profile-preview">
+        <!-- Show uploaded image preview -->
+        <img *ngIf="previewUrl" [src]="previewUrl" alt="Profile preview" class="preview-image">
+        
+        <!-- Show Gmail-style avatar if no image -->
+        <div *ngIf="!previewUrl" class="avatar-placeholder" [style.background-color]="getAvatarColor()">
+          {{ getInitial() }}
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <label for="profilePic" class="upload-label">
+          <span class="upload-icon">📷</span>
+          {{ selectedFile ? 'Change Photo' : 'Upload Photo' }}
+        </label>
+        <input 
+          type="file" 
+          id="profilePic" 
+          (change)="onFileSelected($event)"
+          accept="image/*"
+          class="file-input"
+          [disabled]="isUploading"
+        >
+        <button 
+          *ngIf="previewUrl" 
+          type="button" 
+          class="remove-btn" 
+          (click)="removeProfilePic()"
+          [disabled]="isUploading"
+        >
+          Remove
+        </button>
+      </div>
+      <small class="helper-text">Optional - Max 5MB</small>
+    </div>
+
     <input type="text" placeholder="First Name" name="firstname" [(ngModel)]="firstname" required>
     <input type="text" placeholder="Last Name" name="lastname" [(ngModel)]="lastname" required>
     <input type="text" placeholder="Username" name="username" [(ngModel)]="username" required>
     <input type="email" placeholder="Email" name="email" [(ngModel)]="email" required>
     <input type="password" placeholder="Password" name="password" [(ngModel)]="password" required>
 
-    <button type="submit" [disabled]="!registerForm.valid">Register</button>
+    <button type="submit" [disabled]="!registerForm.valid || isUploading">
+      <span *ngIf="!isUploading">Register</span>
+      <span *ngIf="isUploading">Uploading...</span>
+    </button>
   </form>
 
   <p *ngIf="successMessage" class="success">{{ successMessage }}</p>
   <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+  <div class="login-link">
+    <p>Already have an account? <a routerLink="/login">Login</a></p>
+  </div>
 </div>

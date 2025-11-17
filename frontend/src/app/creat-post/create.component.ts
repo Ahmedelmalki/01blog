@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
-@Component({ // decorator
+@Component({ 
   selector: 'app-create',
   standalone: true,
   imports: [CommonModule, FormsModule],
@@ -36,8 +36,6 @@ export class CreateComponent implements OnInit {
 
   // lifecycle hook
   ngOnInit() {
-    // In Angular, the subscribe() method is used to initiate the execution 
-    // of an Observable and establish a connection between the Observable and an Observer
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEditMode = true;
@@ -87,7 +85,7 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  async uploadFile(): Promise<string | null> {
+  async uploadFile(): Promise<string | null> { 
     if (!this.selectedFile) return null;
 
     this.isUploading = true;
@@ -104,7 +102,7 @@ export class CreateComponent implements OnInit {
     try {
       const response = await firstValueFrom(
         this.http.post<{ url: string }>(
-          'http://localhost:8080/api/files/upload', // @RequestMapping("/api/files")
+          'http://localhost:8080/api/files/upload',
           formData,
           {
             headers: new HttpHeaders({

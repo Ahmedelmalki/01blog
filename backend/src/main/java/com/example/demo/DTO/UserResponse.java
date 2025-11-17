@@ -14,6 +14,7 @@ public class UserResponse {
     private String lastname;
     private String email;
     private Set<String> roles;
+    private String profileLink;
 
     public UserResponse(User user) {
         this.id = user.getId();
@@ -22,5 +23,6 @@ public class UserResponse {
         this.lastname = user.getLastname();
         this.email = user.getEmail();
         this.roles = user.getRoles();
+        this.profileLink = user.getProfileLink();
     }
 }

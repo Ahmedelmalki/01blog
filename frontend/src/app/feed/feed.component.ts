@@ -72,7 +72,7 @@ export class FeedComponent implements OnInit {
     this.http.get<PostResponse[]>('http://localhost:8080/posts', { headers })
       .subscribe({
         next: (data) => {
-          console.log('✅ Posts loaded:', data);
+          console.log('✅ Posts loaded ===============>', data[0].authorProfileLink);
           this.posts = data;
           this.isLoading = false;
         },

@@ -48,6 +48,101 @@ h2 {
   margin-bottom: 1.5rem;
 }
 
+/* Profile Picture Section */
+.profile-pic-section {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.profile-preview {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-label {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.upload-label:hover {
+  background-color: #0056b3;
+}
+
+.upload-icon {
+  font-size: 1rem;
+}
+
+.remove-btn {
+  padding: 0.5rem 1rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.remove-btn:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.remove-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.helper-text {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* Form inputs */
 input {
   display: block;
   width: 100%;
@@ -83,6 +178,7 @@ button[type="submit"]:disabled {
 .error {
   color: red;
   margin-top: 1rem;
+  font-size: 0.9rem;
 }
 
 .login-link {
@@ -118,6 +214,22 @@ button[type="submit"]:disabled {
 :host-context(.dark-mode) .dark-mode-btn:hover {
   background-color: #3c3c3c;
   border-color: #555;
+}
+
+:host-context(.dark-mode) .profile-preview {
+  border-color: #555;
+}
+
+:host-context(.dark-mode) .upload-label {
+  background-color: #0d6efd;
+}
+
+:host-context(.dark-mode) .upload-label:hover {
+  background-color: #0b5ed7;
+}
+
+:host-context(.dark-mode) .helper-text {
+  color: #aaa;
 }
 
 :host-context(.dark-mode) input {

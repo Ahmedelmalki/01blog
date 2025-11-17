@@ -4,6 +4,7 @@ export interface PostResponse {
     content: string;
     mediaLink: string;
     author: string;
+    authorProfileLink?: string;
     createdAt: Date | null;
     likesCount: number;
     dislikesCount: number;

@@ -26,6 +26,9 @@ public class User {
     @Column(unique = false, nullable = false)
     private String lastname;
 
+    @Column(name = "profile_link")
+    private String profileLink;
+
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -49,5 +52,13 @@ public class User {
         this.password = password;
         this.state = 1;  // Default to active
         this.roles = new HashSet<>();
+    }
+
+    public void setProfileLink(String profileLink) {
+        if (profileLink != null && !profileLink.trim().isEmpty()) {
+            this.profileLink = profileLink;
+        } else {
+            this.profileLink = null;  // Store NULL instead of empty string
+        }
     }
 }

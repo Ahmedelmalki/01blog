@@ -97,13 +97,27 @@ public class PostService {
                 userReaction = userLike.map(PostLike::getValue).orElse(null);
             }
         }
-
+        System.out.println("===================================================\n\n"+post.getAuthor().getProfileLink());
+/*export interface PostResponse {
+    id: number;
+    title: string;
+    content: string;
+    mediaLink: string;
+    author: string;
+    authorProfileLink?: string;
+    createdAt: Date | null;
+    likesCount: number;
+    dislikesCount: number;
+    commentsCount: number;
+    userReaction?: number | null;
+}*/
         return new PostDTO(
             post.getId(),
             post.getTitle(),
             post.getContent(),
             post.getMediaLink(),
             post.getAuthor().getUsername(),
+            post.getAuthor().getProfileLink(),
             post.getCreatedAt(),
             likesCount,
             dislikesCount,

@@ -12,6 +12,7 @@ public class PostDTO {
     private String content;
     private String mediaLink;
     private String author;
+    private String authorProfileLink;
     private LocalDateTime createdAt;
     private int likesCount;
     private int dislikesCount;

@@ -5,13 +5,26 @@
   <div class="post-header">
     <div class="author-info">
       <a [routerLink]="['/profile', postResponse.author]" class="author-link">
-        <!-- <span class="author-name">
-          {{ postResponse.post.author.firstname }} {{ postResponse.post.author.lastname }}
-        </span> -->
-        <span class="username">@{{ postResponse.author }}</span>
-        <span class="timestamp" *ngIf="postResponse.createdAt">
-          {{ postResponse.createdAt | date:'short' }}
-        </span>
+        <!-- Profile Picture -->
+        <div class="author-avatar">
+          <img *ngIf="postResponse.authorProfileLink" 
+               [src]="postResponse.authorProfileLink" 
+               [alt]="postResponse.author"
+               class="profile-image">
+          <div *ngIf="!postResponse.authorProfileLink" 
+               class="avatar-placeholder" 
+               [style.background-color]="getAvatarColor(postResponse.author)">
+            {{ getInitial(postResponse.author) }}
+          </div>
+        </div>
+
+        <!-- Author Details -->
+        <div class="author-details">
+          <span class="username">@{{ postResponse.author }}</span>
+          <span class="timestamp" *ngIf="postResponse.createdAt">
+            {{ postResponse.createdAt | date:'short' }}
+          </span>
+        </div>
       </a>
     </div>
 

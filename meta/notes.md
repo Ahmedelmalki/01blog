@@ -127,3 +127,13 @@ In Spring’s terminology:
 Baeldung on Kotlin
 When you declare a class (via annotations or configuration) for Spring to pick up and manage, you’re turning that class into a bean.
 ```
+
+```
+Simple definition
+DSL = a specialized syntax that makes a complicated task readable and easy.
+Examples:
+SQL is a DSL for databases
+HTML is a DSL for documents
+Regex is a DSL for pattern matching
+Spring Security config is a DSL for security rules
+```

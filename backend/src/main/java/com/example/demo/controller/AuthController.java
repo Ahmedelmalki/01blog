@@ -8,12 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:4200")
-@RestController // why
+@RestController 
 @RequestMapping("/auth")
 @AllArgsConstructor
 public class AuthController {
 
-    private final AuthService authService; // why final change it later
+    private final AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody User user) {

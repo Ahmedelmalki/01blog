@@ -59,6 +59,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // just for debugging
+                .requestMatchers(HttpMethod.POST, "/api/files/upload/public").permitAll() // For registration
                 .requestMatchers(HttpMethod.POST, "/api/files/upload").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/reports").authenticated()  // Anyone can report

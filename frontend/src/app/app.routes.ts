@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { FeedComponent } from './feed/feed.component';
-import { CreateComponent } from './post/create.component';
+import { CreateComponent } from './creat-post/create.component';
 import { ProfileComponent } from './profile/profile.component';
 import { DashboardComponent } from './admin/dashboard.component';
 
