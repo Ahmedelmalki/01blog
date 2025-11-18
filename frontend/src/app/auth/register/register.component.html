@@ -23,7 +23,7 @@
 
       <div class="profile-actions">
         <label for="profilePic" class="upload-label">
-          <span class="upload-icon">📷</span>
+          <fa-icon [icon]="faCamera"></fa-icon>
           {{ selectedFile ? 'Change Photo' : 'Upload Photo' }}
         </label>
         <input 
@@ -41,6 +41,7 @@
           (click)="removeProfilePic()"
           [disabled]="isUploading"
         >
+        <fa-icon [icon]="faTrash"></fa-icon>
           Remove
         </button>
       </div>

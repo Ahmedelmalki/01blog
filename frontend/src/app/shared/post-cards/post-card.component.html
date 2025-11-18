@@ -7,23 +7,12 @@
       <a [routerLink]="['/profile', postResponse.author]" class="author-link">
         <!-- Profile Picture -->
         <div class="author-avatar">
-          <img *ngIf="postResponse.authorProfileLink" 
-               [src]="postResponse.authorProfileLink" 
-               [alt]="postResponse.author"
-               class="profile-image">
-          <div *ngIf="!postResponse.authorProfileLink" 
-               class="avatar-placeholder" 
-               [style.background-color]="getAvatarColor(postResponse.author)">
-            {{ getInitial(postResponse.author) }}
+          <img *ngIf="postResponse.authorProfileLink" [src]="postResponse.authorProfileLink" [alt]="postResponse.author"
+            class="profile-image">
+          <div *ngIf="!postResponse.authorProfileLink" class="avatar-placeholder"
+            [style.background-color]="avatarService.getAvatarColor(postResponse.author)">
+            {{ avatarService.getInitial(postResponse.author) }}
           </div>
-        </div>
-
-        <!-- Author Details -->
-        <div class="author-details">
-          <span class="username">@{{ postResponse.author }}</span>
-          <span class="timestamp" *ngIf="postResponse.createdAt">
-            {{ postResponse.createdAt | date:'short' }}
-          </span>
         </div>
       </a>
     </div>

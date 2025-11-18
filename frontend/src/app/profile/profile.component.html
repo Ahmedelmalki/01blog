@@ -1,37 +1,44 @@
-<!-- Profile Container -->
+<!-- profile/profile.component.html -->
 <div class="profile-container">
-  
-  <!-- Header -->
-  <div class="profile-header">
-    <button class="back-btn" (click)="goToFeed()">← Back to Feed</button>
-  </div>
 
-  <!-- User Info Card -->
-  <div *ngIf="!isLoadingUser && userInfo" class="user-card">
-    <div class="user-avatar">
-      {{ userInfo.firstname.charAt(0) }}{{ userInfo.lastname.charAt(0) }}
+  <!-- Fixed Header Section -->
+  <div class="fixed-header">
+    <!-- Back Button -->
+    <div class="profile-header">
+      <button class="back-btn" (click)="goToFeed()">← Back to Feed</button>
     </div>
-    <div class="user-details">
-      <h1 class="user-name">{{ userInfo.firstname }} {{ userInfo.lastname }}</h1>
-      <p class="user-username">@{{ userInfo.username }}</p>
-      <p class="post-count">{{ posts.length }} {{ posts.length === 1 ? 'post' : 'posts' }}</p>
+
+    <!-- User Info Card (Fixed) -->
+    <div *ngIf="!isLoadingUser && userInfo" class="user-card">
+      <div class="author-avatar">
+        <img *ngIf="userInfo.profileLink" [src]="userInfo.profileLink" [alt]="userInfo.username" class="profile-image">
+        <div *ngIf="!userInfo.profileLink" [style.background-color]="avatarService.getAvatarColor(username)">
+          {{avatarService.getInitial(username) }}
+        </div>
+      </div>
+      <div class="user-details">
+        <h1 class="user-name">{{ userInfo.firstname }} {{ userInfo.lastname }}</h1>
+        <p class="user-username">@{{ userInfo.username }}</p>
+        <p class="post-count">{{ posts.length }} {{ posts.length === 1 ? 'post' : 'posts' }}</p>
+      </div>
     </div>
-  </div>
 
-  <!-- Loading User Info -->
-  <div *ngIf="isLoadingUser" class="loading">
-    <p>Loading profile...</p>
-  </div>
+    <!-- Loading User Info -->
+    <div *ngIf="isLoadingUser" class="loading">
+      <p>Loading profile...</p>
+    </div>
 
-  <!-- Error Message -->
-  <div *ngIf="errorMessage" class="error">
-    <p>{{ errorMessage }}</p>
-  </div>
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error">
+      <p>{{ errorMessage }}</p>
+    </div>
 
-  <!-- Posts Section -->
-  <div class="posts-section">
+    <!-- Posts Section Title -->
     <h2 class="section-title">Posts</h2>
+  </div>
 
+  <!-- Scrollable Posts Section -->
+  <div class="posts-wrapper">
     <!-- Loading Posts -->
     <div *ngIf="isLoadingPosts" class="loading">
       <p>Loading posts...</p>
@@ -42,12 +49,9 @@
       <p>No posts yet.</p>
     </div>
 
-    <!-- Posts List using reusable PostCardComponent -->
+    <!-- Posts List -->
     <div *ngIf="!isLoadingPosts && posts.length > 0" class="posts-list">
-      <app-post-card 
-        *ngFor="let post of posts" 
-        [postResponse]="post"
-      ></app-post-card>
+      <app-post-card *ngFor="let post of posts" [postResponse]="post"></app-post-card>
     </div>
   </div>
 </div>

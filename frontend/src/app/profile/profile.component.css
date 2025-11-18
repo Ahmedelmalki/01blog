@@ -1,13 +1,25 @@
+/* profile/profile.component.css */
+
 /* Main profile container */
 .profile-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Fixed Header Section (contains back button, user card, section title) */
+.fixed-header {
+  flex-shrink: 0;
+  padding: 2rem 2rem 0 2rem;
+  background-color: #f8f9fa;
 }
 
 /* Header with back button */
 .profile-header {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .back-btn {
@@ -28,28 +40,44 @@
 /* User Info Card */
 .user-card {
   display: flex;
-  gap: 2rem;
+  gap: 1.2rem;
   align-items: center;
   background-color: #fff;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  margin-bottom: 2rem;
+  padding: 1.2rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  margin-bottom: 1rem;
 }
 
 /* User Avatar Circle */
-.user-avatar {
-  width: 100px;
-  height: 100px;
+.author-avatar {
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid #e0e0e0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.75rem;
   font-weight: bold;
-  color: #fff;
-  flex-shrink: 0;
+  text-transform: uppercase;
 }
 
 /* User Details */
@@ -58,40 +86,46 @@
 }
 
 .user-name {
-  font-size: 1.8rem;
-  margin: 0 0 0.5rem 0;
+  font-size: 1.3rem;
+  margin: 0 0 0.3rem 0;
   color: #222;
 }
 
 .user-username {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #666;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.3rem 0;
 }
 
 .post-count {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #999;
   margin: 0;
 }
 
-/* Posts Section */
-.posts-section {
-  margin-top: 2rem;
-}
-
+/* Section Title */
 .section-title {
   font-size: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   color: #333;
   border-bottom: 2px solid #eee;
   padding-bottom: 0.5rem;
+}
+
+/* Scrollable Posts Wrapper */
+.posts-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 2rem 2rem 2rem;
+  background-color: #f8f9fa;
 }
 
 /* Posts List */
 .posts-list {
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 1rem;
 }
 
 /* Loading state */
@@ -120,10 +154,94 @@
   font-size: 1.1rem;
 }
 
+/* Custom scrollbar styling */
+.posts-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.posts-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.posts-wrapper::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.posts-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Dark Mode Styles */
+:host-context(.dark-mode) .profile-container {
+  background-color: #1a1a1a;
+}
+
+:host-context(.dark-mode) .fixed-header {
+  background-color: #1a1a1a;
+}
+
+:host-context(.dark-mode) .user-card {
+  background-color: #2c2c2c;
+  border-color: #444;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+:host-context(.dark-mode) .author-avatar {
+  border-color: #555;
+}
+
+:host-context(.dark-mode) .user-name {
+  color: #fff;
+}
+
+:host-context(.dark-mode) .user-username {
+  color: #bbb;
+}
+
+:host-context(.dark-mode) .post-count {
+  color: #888;
+}
+
+:host-context(.dark-mode) .section-title {
+  color: #fff;
+  border-bottom-color: #444;
+}
+
+:host-context(.dark-mode) .posts-wrapper {
+  background-color: #1a1a1a;
+}
+
+:host-context(.dark-mode) .loading,
+:host-context(.dark-mode) .no-posts {
+  color: #bbb;
+}
+
+:host-context(.dark-mode) .error {
+  background-color: #4a1515;
+  color: #ff6b6b;
+}
+
+:host-context(.dark-mode) .posts-wrapper::-webkit-scrollbar-track {
+  background: #2c2c2c;
+}
+
+:host-context(.dark-mode) .posts-wrapper::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+:host-context(.dark-mode) .posts-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
 /* Responsive design for mobile */
 @media (max-width: 600px) {
-  .profile-container {
-    padding: 1rem;
+  .fixed-header {
+    padding: 1rem 1rem 0 1rem;
+  }
+
+  .posts-wrapper {
+    padding: 0 1rem 1rem 1rem;
   }
 
   .user-card {
@@ -132,9 +250,12 @@
     padding: 1.5rem;
   }
 
-  .user-avatar {
+  .author-avatar {
     width: 80px;
     height: 80px;
+  }
+
+  .avatar-placeholder {
     font-size: 2rem;
   }
 

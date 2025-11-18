@@ -156,3 +156,9 @@ class Observable {
     }
 }   
 ```
+
+```
+📌 TL;DR
+
+AOP lets you add common behaviors (like logging, security, transactions) to many parts of your app without editing each method — like applying a building-wide rule instead of editing every room.
+```

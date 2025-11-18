@@ -18,6 +18,7 @@ export interface UserInfo {
   firstname: string;
   lastname: string;
   email: string;
+  profileLink?: string;
 }
 
 export interface Comment {
@@ -41,6 +42,7 @@ export interface UserReport {
     username: string;
     firstname: string;
     lastname: string;
+    profileLink: string,
     state: number;
   };
   reporter: {

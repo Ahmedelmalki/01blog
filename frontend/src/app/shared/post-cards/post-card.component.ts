@@ -5,8 +5,9 @@ import { CommentsComponent } from '../comments/comments.component';
 import { LikesComponent } from '../likes/likes.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PostResponse } from '../../models/post.models';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'; 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFlag, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { AvatarService } from '../../services/avatar.service';
 
 @Component({
   selector: 'app-post-card',
@@ -26,7 +27,12 @@ export class PostCardComponent implements OnInit {
   faPen = faPen;
   faTrash = faTrash;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    public avatarService: AvatarService
+  ) { }
+
   ngOnInit() {
     const token = localStorage.getItem('token');
     if (token) {
@@ -56,39 +62,39 @@ export class PostCardComponent implements OnInit {
     return this.currentUsername !== this.postResponse.author && this.currentUsername !== '';
   }
 
-  toggleMenu(event: Event){
+  toggleMenu(event: Event) {
     event.stopPropagation();
     this.showMenu = !this.showMenu;
   }
 
-  onUpdate(){
+  onUpdate() {
     console.log('update post');
     this.showMenu = false;
     this.router.navigate(['/post/edit', this.postResponse.id]);
   }
 
-  onDelete(){
+  onDelete() {
     console.log('delete post');
     this.showMenu = false;
-    if (confirm('Are you sure you want to delete this post? This action cannot be undone.')){
+    if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
       this.deletePost();
     }
   }
 
-    onReport() {
+  onReport() {
     console.log('Report post');
     this.showMenu = false;
-    
+
     const reason = prompt('Please provide a reason for reporting this post:');
-    
+
     if (reason && reason.trim()) {
       this.reportPost(reason.trim());
     }
   }
 
-   private reportPost(reason: string) {
+  private reportPost(reason: string) {
     const token = localStorage.getItem('token');
-    
+
     if (!token) {
       this.router.navigate(['/login']);
       return;
@@ -114,7 +120,7 @@ export class PostCardComponent implements OnInit {
         error: (err) => {
           console.error('❌ Failed to report post:', err);
           alert('Failed to submit report. Please try again.');
-          
+
           if (err.status === 401) {
             localStorage.removeItem('token');
             this.router.navigate(['/login']);
@@ -125,7 +131,7 @@ export class PostCardComponent implements OnInit {
 
   private deletePost() {
     const token = localStorage.getItem('token');
-    
+
     if (!token) {
       this.router.navigate(['/login']);
       return;
@@ -145,7 +151,7 @@ export class PostCardComponent implements OnInit {
         error: (err) => {
           console.error('❌ Failed to delete post:', err);
           alert('Failed to delete post. Please try again.');
-          
+
           if (err.status === 401) {
             localStorage.removeItem('token');
             this.router.navigate(['/login']);
@@ -158,34 +164,5 @@ export class PostCardComponent implements OnInit {
   @HostListener('document:click')
   closeMenu() {
     this.showMenu = false;
-  }
-
-   /**
-   * Get initial letter for avatar placeholder
-   */
-  getInitial(username: string): string {
-    return username ? username.charAt(0).toUpperCase() : '?';
-  }
-
-  /**
-   * Generate consistent color based on username
-   */
-  getAvatarColor(username: string): string {
-    if (!username) return '#6c757d';
-    
-    // Generate hash from username
-    let hash = 0;
-    for (let i = 0; i < username.length; i++) {
-      hash = username.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    
-    // Color palette
-    const colors = [
-      '#e57373', '#f06292', '#ba68c8', '#9575cd',
-      '#7986cb', '#64b5f6', '#4fc3f7', '#4dd0e1',
-      '#4db6ac', '#81c784', '#aed581', '#ff8a65'
-    ];
-    
-    return colors[Math.abs(hash) % colors.length];
   }
 }

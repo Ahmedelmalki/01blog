@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PostCardComponent } from '../shared/post-cards/post-card.component';
 import { PostResponse, UserInfo } from '../models/post.models';
+import { AvatarService } from '../services/avatar.service';
 
 @Component({
   selector: 'app-profile',
@@ -23,7 +24,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public avatarService: AvatarService
   ) { }
 
   ngOnInit() {
@@ -75,7 +77,8 @@ export class ProfileComponent implements OnInit {
             username: data[0].author,  // Changed from data[0].post.author
             firstname: '',
             lastname: '',
-            email: ''
+            email: '',
+            profileLink: data[0].authorProfileLink, 
           };
           this.isLoadingUser = false;
         }

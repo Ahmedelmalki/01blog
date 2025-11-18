@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { UserReport, PostReport } from '../models/post.models';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { AvatarService } from '../services/avatar.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,7 +27,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    public avatarService: AvatarService
   ) {}
 
   ngOnInit() {
