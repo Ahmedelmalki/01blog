@@ -1,0 +1,101 @@
+/* Base button styles */
+.follow-btn {
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+/* Size variants */
+.btn-small {
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+}
+
+.btn-medium {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+}
+
+.btn-large {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+}
+
+/* Default state - Not following */
+.follow-btn:not(.following) {
+    background-color: #007bff;
+    color: white;
+}
+
+.follow-btn:not(.following):hover:not(:disabled) {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+/* Following state */
+.follow-btn.following {
+    background-color: #e8e8e8;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.follow-btn.following:hover:not(:disabled) {
+    background-color: #ffebee;
+    color: #c62828;
+    border-color: #ffcdd2;
+}
+
+.follow-btn.following:hover:not(:disabled)::after {
+    content: ' ✓';
+}
+
+/* Disabled state */
+.follow-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Loading animation */
+.follow-btn:disabled span {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Dark mode styles */
+:host-context(.dark-mode) .follow-btn:not(.following) {
+    background-color: #0056b3;
+}
+
+:host-context(.dark-mode) .follow-btn:not(.following):hover:not(:disabled) {
+    background-color: #004085;
+}
+
+:host-context(.dark-mode) .follow-btn.following {
+    background-color: #3c3c3c;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+:host-context(.dark-mode) .follow-btn.following:hover:not(:disabled) {
+    background-color: #4a1515;
+    color: #ff6b6b;
+    border-color: #8b0000;
+}
+
+/* Focus styles for accessibility */
+.follow-btn:focus-visible {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+:host-context(.dark-mode) .follow-btn:focus-visible {
+    outline-color: #0056b3;
+}

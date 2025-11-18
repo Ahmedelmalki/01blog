@@ -8,11 +8,17 @@ import { PostResponse } from '../../models/post.models';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFlag, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { AvatarService } from '../../services/avatar.service';
+import { FollowButtonComponent } from '../follow/follow-button.component';
 
 @Component({
   selector: 'app-post-card',
   standalone: true,
-  imports: [CommonModule, RouterLink, CommentsComponent, LikesComponent, FontAwesomeModule],
+  imports: [CommonModule,
+    RouterLink,
+    CommentsComponent,
+    LikesComponent,
+    FontAwesomeModule,
+    FollowButtonComponent],
   templateUrl: './post-card.component.html',
   styleUrls: ['./post-card.component.css']
 })

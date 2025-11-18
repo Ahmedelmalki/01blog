@@ -21,6 +21,9 @@
         <p class="user-username">@{{ userInfo.username }}</p>
         <p class="post-count">{{ posts.length }} {{ posts.length === 1 ? 'post' : 'posts' }}</p>
       </div>
+      <!-- todo: add follow-button -->
+       <app-follow-button [username]="username" size="large"></app-follow-button>
+      <!-- and followres/following count -->
     </div>
 
     <!-- Loading User Info -->

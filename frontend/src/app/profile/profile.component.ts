@@ -5,11 +5,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { PostCardComponent } from '../shared/post-cards/post-card.component';
 import { PostResponse, UserInfo } from '../models/post.models';
 import { AvatarService } from '../services/avatar.service';
+import { FollowButtonComponent } from '../shared/follow/follow-button.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, PostCardComponent],
+  imports: [CommonModule,
+    PostCardComponent,
+    FollowButtonComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
@@ -78,7 +81,7 @@ export class ProfileComponent implements OnInit {
             firstname: '',
             lastname: '',
             email: '',
-            profileLink: data[0].authorProfileLink, 
+            profileLink: data[0].authorProfileLink,
           };
           this.isLoadingUser = false;
         }

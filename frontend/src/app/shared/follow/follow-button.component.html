@@ -1,0 +1,15 @@
+<button 
+    *ngIf="shouldShowButton()"
+    class="follow-btn"
+    [class.following]="isFollowing"
+    [class.btn-small]="size === 'small'"
+    [class.btn-medium]="size === 'medium'"
+    [class.btn-large]="size === 'large'"
+    [disabled]="isLoading"
+    (click)="toggleFollow()">
+    
+    <span *ngIf="!isLoading">
+        {{ isFollowing ? 'Following' : 'Follow' }}
+    </span>
+    <span *ngIf="isLoading">...</span>
+</button>
