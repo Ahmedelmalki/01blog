@@ -9,11 +9,11 @@ NC='\033[0m' # No Color
 
 # ========== CONFIGURATION ==========
 ADMIN_TOKEN="eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc2MzMzMTMzOCwiZXhwIjoxNzYzNDE3NzM4fQ.ufcc2P21Hc_zbgg4u_BxRtHmxs_QoHhkdDylX2G1ppqqCMD4KusuSzTG6ygBoCaA"
-USER_TOKEN="eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJubm5uIiwiaWF0IjoxNzYzMzMxMzY4LCJleHAiOjE3NjM0MTc3Njh9.0IrtAh8kjMBMktJKUz2vpjOWeQmKiAFYDmqQO-OJTGB6zGbUTET5oaqOI-DKSxUm"  # ⚠️ You need an admin token for GET requests
+USER_TOKEN="eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6InJycnIiLCJpYXQiOjE3NjM0MTA0MjIsImV4cCI6MTc2MzQ5NjgyMn0.xP7ECMTTCdzsMTACN0-TEbwFvCNJtGPy7ap45CMMjJPOjQMo5T-2doJZaANz6_4s"  # ⚠️ You need an admin token for GET requests
 BASE_URL="http://localhost:8080"
-CURRENT_USER="nnnn"       # The user who owns the token
-TARGET_USER_ID="14"        # User ID to report
-TARGET_POST_ID="6"        # Post ID to report
+CURRENT_USER="rrrr"       # The user who owns the token
+TARGET_USER_ID="3"        # User ID to report
+TARGET_POST_ID="2"        # Post ID to report
 # ====================================
 
 echo -e "${BLUE}╔════════════════════════════════════╗${NC}"

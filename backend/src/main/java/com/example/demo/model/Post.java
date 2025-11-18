@@ -35,6 +35,16 @@ public class Post {
     @JsonIgnoreProperties({"reportedPost"})
     private List<Report> reports = new ArrayList<>();
 
+    // ✅ CASCADE DELETE for comments
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"post"})
+    private List<Comment> comments = new ArrayList<>();
+
+    // ✅ CASCADE DELETE for post likes
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"post", "user"})
+    private List<PostLike> likes = new ArrayList<>();
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

@@ -21,13 +21,13 @@ public class ReportController {
     private final ReportService reportService;
     private final JwtUtil jwtUtil;
 
-    // Create a report - Available to ALL authenticated users
+    // done
     @PostMapping
     public ResponseEntity<Map<String, String>> createReport(
             @RequestHeader("Authorization") String authHeader,
             @RequestBody ReportRequest request) {
             
-        String token = authHeader.replace("Bearer ", "");
+        String token = authHeader.replace("Bearer ", "").trim();
         String username = jwtUtil.extractUsername(token);
 
         Report report = reportService.createReport(username, request);
@@ -43,7 +43,7 @@ public class ReportController {
     public ResponseEntity<List<Report>> getAllReports(
             @RequestHeader("Authorization") String authHeader) {
         
-        String token = authHeader.replace("Bearer ", "");
+        String token = authHeader.replace("Bearer ", "").trim();
         String username = jwtUtil.extractUsername(token);
         if (!isAdmin(username)) {
             return ResponseEntity.status(403).build();
@@ -60,7 +60,7 @@ public class ReportController {
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Long userId) {
         
-        String token = authHeader.replace("Bearer ", "");
+        String token = authHeader.replace("Bearer ", "").trim();
         String username = jwtUtil.extractUsername(token);
         
         if (!isAdmin(username)) {
@@ -78,7 +78,7 @@ public class ReportController {
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Long postId) {
         
-        String token = authHeader.replace("Bearer ", "");
+        String token = authHeader.replace("Bearer ", "").trim();
         String username = jwtUtil.extractUsername(token);
         
         if (!isAdmin(username)) {

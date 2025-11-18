@@ -36,7 +36,7 @@ public class Report {
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reported_post", nullable = true)
-    @JsonIgnoreProperties({"author", "comments"})
+    @JsonIgnoreProperties({"comments"})
     private Post reportedPost;
     // ======== END MAIN FIELDS ======
     

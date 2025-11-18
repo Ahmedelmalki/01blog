@@ -5,11 +5,13 @@ import { CommentsComponent } from '../comments/comments.component';
 import { LikesComponent } from '../likes/likes.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PostResponse } from '../../models/post.models';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'; 
+import { faFlag, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-post-card',
   standalone: true,
-  imports: [CommonModule, RouterLink, CommentsComponent, LikesComponent],
+  imports: [CommonModule, RouterLink, CommentsComponent, LikesComponent, FontAwesomeModule],
   templateUrl: './post-card.component.html',
   styleUrls: ['./post-card.component.css']
 })
@@ -20,6 +22,9 @@ export class PostCardComponent implements OnInit {
 
   showMenu = false;
   currentUsername: string = '';
+  faFlag = faFlag;
+  faPen = faPen;
+  faTrash = faTrash;
 
   constructor(private http: HttpClient, private router: Router) { }
   ngOnInit() {
@@ -46,6 +51,11 @@ export class PostCardComponent implements OnInit {
       this.postResponse.author;
   }
 
+  // Check if user can report (not their own post)
+  canReportPost(): boolean {
+    return this.currentUsername !== this.postResponse.author && this.currentUsername !== '';
+  }
+
   toggleMenu(event: Event){
     event.stopPropagation();
     this.showMenu = !this.showMenu;
@@ -63,6 +73,54 @@ export class PostCardComponent implements OnInit {
     if (confirm('Are you sure you want to delete this post? This action cannot be undone.')){
       this.deletePost();
     }
+  }
+
+    onReport() {
+    console.log('Report post');
+    this.showMenu = false;
+    
+    const reason = prompt('Please provide a reason for reporting this post:');
+    
+    if (reason && reason.trim()) {
+      this.reportPost(reason.trim());
+    }
+  }
+
+   private reportPost(reason: string) {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const reportRequest = {
+      reason: reason,
+      reportedUserId: null,  // Not reporting a user, just a post
+      reportedPostId: this.postResponse.id
+    };
+
+    this.http.post('http://localhost:8080/reports', reportRequest, { headers })
+      .subscribe({
+        next: (response: any) => {
+          console.log('✅ Post reported successfully:', response);
+          alert('Thank you for your report. Our team will review it shortly.');
+        },
+        error: (err) => {
+          console.error('❌ Failed to report post:', err);
+          alert('Failed to submit report. Please try again.');
+          
+          if (err.status === 401) {
+            localStorage.removeItem('token');
+            this.router.navigate(['/login']);
+          }
+        }
+      });
   }
 
   private deletePost() {

@@ -3,44 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-
-interface UserReport {
-  id: number;
-  reportedUser: {
-    id: number;
-    username: string;
-    firstname: string;
-    lastname: string;
-    state: number;
-  };
-  reporter: {
-    username: string;
-  };
-  reason: string;
-  createdAt: string;
-}
-
-interface PostReport {
-  id: number;
-  reportedPost: {
-    id: number;
-    title: string;
-    content: string;
-    author: {
-      username: string;
-    };
-  };
-  reporter: {
-    username: string;
-  };
-  reason: string;
-  createdAt: string;
-}
+import { UserReport, PostReport } from '../models/post.models';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FontAwesomeModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -51,6 +21,8 @@ export class DashboardComponent implements OnInit {
   expandedPostReport: number | null = null;
   loading = true;
   errorMessage: string | null = null;
+  faTrash = faTrash;
+  
 
   constructor(
     private http: HttpClient,
@@ -78,6 +50,8 @@ export class DashboardComponent implements OnInit {
     this.http.get<any[]>('http://localhost:8080/reports', { headers })
       .subscribe({
         next: (data) => {
+          console.log("======== entered!!! =======");
+          
           // Separate user and post reports
           this.userReports = data.filter(r => r.reportedUser !== null);
           this.postReports = data.filter(r => r.reportedPost !== null);

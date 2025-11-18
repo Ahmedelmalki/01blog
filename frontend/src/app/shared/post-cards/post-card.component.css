@@ -385,3 +385,13 @@
     font-size: 0.85rem;
   }
 }
+
+.report-btn:hover {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+:host-context(.dark-mode) .report-btn:hover {
+  background-color: #4a3f1f;
+  color: #ffc107;
+}

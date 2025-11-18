@@ -51,7 +51,8 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
 
-        return jwtUtil.generateToken(username);
+        // System.out.println("---------------------------\n"+jwtUtil.generateToken(user));
+        return jwtUtil.generateToken(user);
     }
 
     public User getUserByUsername(String username) {

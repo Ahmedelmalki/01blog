@@ -18,6 +18,7 @@ public class AdminService {
     
     // delete post
     public ResponseEntity<?> deletePost(Long postId){
+        System.out.println("0000000000000000000000000000000000000000000000000");
         Post post = postRepo.findById(postId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
         

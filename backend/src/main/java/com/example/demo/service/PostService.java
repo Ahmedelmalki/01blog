@@ -97,7 +97,7 @@ public class PostService {
                 userReaction = userLike.map(PostLike::getValue).orElse(null);
             }
         }
-        System.out.println("===================================================\n\n"+post.getAuthor().getProfileLink());
+        // System.out.println("===================================================\n\n"+post.getAuthor().getProfileLink());
 /*export interface PostResponse {
     id: number;
     title: string;

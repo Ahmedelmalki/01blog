@@ -28,23 +28,35 @@
       </a>
     </div>
 
-    <!-- Three-dots menu button (only show if user is the author) -->
-    <div class="menu-container" *ngIf="canModifyPost()">
+    <!-- Three-dots menu button (show if user can modify OR report) -->
+    <div class="menu-container" *ngIf="canModifyPost() || canReportPost()">
       <button class="menu-btn" (click)="toggleMenu($event)">⋮</button>
 
       <!-- Dropdown menu -->
       <div class="menu-dropdown" [class.show]="showMenu">
-        <button class="menu-item update-btn" (click)="onUpdate()">
-          <span class="menu-icon">✏️</span>
-          Update
-        </button>
-        <button class="menu-item delete-btn" (click)="onDelete()">
-          <span class="menu-icon">🗑️</span>
-          Delete
-        </button>
+        <!-- Show Update/Delete if it's the user's own post -->
+        <ng-container *ngIf="canModifyPost()">
+          <button class="menu-item update-btn" (click)="onUpdate()">
+            <fa-icon [icon]="faPen"></fa-icon>
+            Update
+          </button>
+          <button class="menu-item delete-btn" (click)="onDelete()">
+            <fa-icon [icon]="faTrash"></fa-icon>
+            Delete
+          </button>
+        </ng-container>
+
+        <!-- Show Report if it's NOT the user's post -->
+        <ng-container *ngIf="canReportPost()">
+          <button class="menu-item report-btn" (click)="onReport()">
+            <fa-icon [icon]="faFlag" class="menu-icon"></fa-icon>
+            Report
+          </button>
+        </ng-container>
       </div>
     </div>
   </div>
+
 
   <h2 class="post-title">{{ postResponse.title }}</h2>
   <p class="post-content">{{ postResponse.content }}</p>

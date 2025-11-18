@@ -4,9 +4,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { PostCardComponent } from '../shared/post-cards/post-card.component';
 import { PostResponse } from '../models/post.models';
-import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import { faSun, faMoon, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import { DarkModeService } from '../services/dark-mode.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
+// <i class="fa-solid fa-chart-bar"></i>
 
 @Component({
   selector: 'app-feed',
@@ -22,6 +24,7 @@ export class FeedComponent implements OnInit {
   isDarkMode = false;
   faMoon = faMoon;
   faSun = faSun;
+  faChartBar = faChartBar;
   isAdmin = false;
 
   constructor(private http: HttpClient,
@@ -36,26 +39,30 @@ export class FeedComponent implements OnInit {
     })
     this.checkAdminStatus();
 
-    // const appHeader = document.getElementById('app-header'); // later
-    // appHeader?.style.display = 'none';
   }
 
-  checkAdminStatus() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log("role ==>", payload.roles);
+checkAdminStatus() {
+  const token = localStorage.getItem('token');
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      // console.log("Full payload:", payload); // Log entire payload
+      // console.log("Roles type:", typeof payload.roles); // Check type
+      // console.log("Roles value:", payload.roles); // Check value
+      // console.log("Is array?", Array.isArray(payload.roles)); // Verify it's an array
 
-        // Check if user has ADMIN role
-        if (payload.roles && Array.isArray(payload.roles)) {
-          this.isAdmin = payload.roles.includes('ADMIN');
-        }
-      } catch (e) {
-        console.error('Failed to decode token', e);
+      // Check if user has ADMIN role
+      if (payload.roles && Array.isArray(payload.roles)) {
+        this.isAdmin = payload.roles.includes('ADMIN');
+        // console.log("Is admin?", this.isAdmin);
+      } else {
+        console.warn("Roles not found or not an array");
       }
+    } catch (e) {
+      console.error('Failed to decode token', e);
     }
   }
+}
 
   loadPosts() {
     this.isLoading = true;

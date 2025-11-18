@@ -23,7 +23,7 @@
     <!-- User Reports Section -->
     <div class="reports-section">
       <div class="section-header">
-        <h2>👤 Reported Users</h2>
+        <h2> Reported Users</h2> <!--add icon later-->
         <span class="count-badge">{{ userReports.length }}</span>
       </div>
 
@@ -67,19 +67,20 @@
                 *ngIf="!isUserBanned(report.reportedUser.state)"
                 class="btn ban-btn" 
                 (click)="banUser(report.reportedUser.id)">
-                🚫 Ban User
-              </button>
+                Ban User
+              </button> <!--add icon later-->
               <button 
                 *ngIf="isUserBanned(report.reportedUser.state)"
                 class="btn unban-btn" 
                 (click)="unbanUser(report.reportedUser.id)">
-                ✅ Unban User
-              </button>
-              <button 
+                Unban User
+              </button> <!--add icon later-->
+              <button  
                 class="btn delete-btn" 
                 (click)="deleteUser(report.reportedUser.id)">
-                🗑️ Delete User
-              </button>
+                <fa-icon [icon]="faTrash"></fa-icon>
+                 Delete User
+              </button> <!--add icon later-->
             </div>
           </div>
         </div>
@@ -89,7 +90,7 @@
     <!-- Post Reports Section -->
     <div class="reports-section">
       <div class="section-header">
-        <h2>📝 Reported Posts</h2>
+        <h2>Reported Posts</h2> <!--add icon later-->
         <span class="count-badge">{{ postReports.length }}</span>
       </div>
 
@@ -106,7 +107,7 @@
               <div class="post-icon">📄</div>
               <div class="report-details">
                 <h3 class="reported-name">{{ report.reportedPost.title }}</h3>
-                <p class="post-author">By @{{ report.reportedPost.author.username }}</p>
+                <p class="post-author">By @{{ report.reportedPost.author.username }}</p> <!--here-->
                 <p class="reporter-info">Reported by @{{ report.reporter.username }}</p>
               </div>
             </div>
@@ -126,11 +127,12 @@
               <p class="report-date">Reported on: {{ report.createdAt | date:'medium' }}</p>
             </div>
             
-            <div class="action-buttons">
+            <div class="action-buttons"> 
               <button 
                 class="btn delete-btn" 
                 (click)="deletePost(report.reportedPost.id)">
-                🗑️ Delete Post
+                <fa-icon [icon]="faTrash"></fa-icon>
+                 Delete Post
               </button>
             </div>
           </div>
