@@ -32,6 +32,7 @@ export class PostCardComponent implements OnInit {
   faFlag = faFlag;
   faPen = faPen;
   faTrash = faTrash;
+  followRefreshKey: number = 0;
 
   constructor(
     private http: HttpClient,
@@ -170,5 +171,9 @@ export class PostCardComponent implements OnInit {
   @HostListener('document:click')
   closeMenu() {
     this.showMenu = false;
+  }
+
+  onFollowStatusChanged(){
+    this.followRefreshKey++;
   }
 }

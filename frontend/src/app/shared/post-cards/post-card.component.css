@@ -19,13 +19,13 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 1rem;
 }
 
-.author-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+.author-section {
   flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .author-link {
@@ -35,10 +35,18 @@
   gap: 0.75rem;
   align-items: center;
   transition: opacity 0.2s;
+  flex: 1;
 }
 
 .author-link:hover {
   opacity: 0.7;
+}
+
+/* Right section with follow button and menu */
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 /* Profile Avatar Styles */
@@ -84,22 +92,26 @@
   font-weight: bold;
   font-size: 1rem;
   color: #333;
+  margin: 0;
 }
 
 .username {
   font-size: 0.95rem;
   color: #333;
   font-weight: 600;
+  margin: 0;
 }
 
 .timestamp {
   font-size: 0.75rem;
   color: #999;
+  margin: 0;
 }
 
 /* Three-dots menu */
 .menu-container {
   position: relative;
+  flex-shrink: 0;
 }
 
 .menu-btn {
@@ -180,6 +192,11 @@
 .delete-btn:hover {
   background-color: #ffebee;
   color: #c62828;
+}
+
+.report-btn:hover {
+  background-color: #fff3cd;
+  color: #856404;
 }
 
 /* Post title */
@@ -321,6 +338,11 @@
   color: #ff6b6b;
 }
 
+:host-context(.dark-mode) .report-btn:hover {
+  background-color: #4a3f1f;
+  color: #ffc107;
+}
+
 :host-context(.dark-mode) .post-title {
   color: #fff;
 }
@@ -363,6 +385,14 @@
     padding: 1rem;
   }
 
+  .post-header {
+    flex-direction: column;
+  }
+
+  .author-section {
+    width: 100%;
+  }
+
   .author-avatar {
     width: 40px;
     height: 40px;
@@ -384,14 +414,9 @@
     padding: 0.4rem 0.8rem;
     font-size: 0.85rem;
   }
-}
 
-.report-btn:hover {
-  background-color: #fff3cd;
-  color: #856404;
-}
-
-:host-context(.dark-mode) .report-btn:hover {
-  background-color: #4a3f1f;
-  color: #ffc107;
+  .right-section {
+    width: 100%;
+    justify-content: flex-end;
+  }
 }

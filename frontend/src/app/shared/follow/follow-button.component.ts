@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
 import { Router } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
@@ -13,6 +13,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 export class FollowButtonComponent implements OnInit {
     @Input() username!: string;
     @Input() size: 'small' | 'medium' | 'large' = 'medium';
+    @Output() followStatusChanged = new EventEmitter<boolean>();
 
     isFollowing: boolean = false;
     isLoading: boolean = false;
@@ -23,7 +24,7 @@ export class FollowButtonComponent implements OnInit {
         private router: Router
     ) { }
 
-    ngOnInit(): void {
+    ngOnInit() {
         this.getCurrentUsername();
         if (this.username && this.username !== this.currentUsername) {
             this.checkFollowStatus()
