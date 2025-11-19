@@ -40,6 +40,9 @@ public class User {
     @Column(name = "role")
     private Set<String> roles = new HashSet<>();
 
+    @Transient
+    private String captchaToken;
+
     // ======= STATE =======
     @Column(name = "state")
     private int  state = 1;

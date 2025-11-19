@@ -8,13 +8,13 @@
   </div>
 
   <form (ngSubmit)="register()" #registerForm="ngForm">
-    
+
     <!-- Profile Picture Section -->
     <div class="profile-pic-section">
       <div class="profile-preview">
         <!-- Show uploaded image preview -->
         <img *ngIf="previewUrl" [src]="previewUrl" alt="Profile preview" class="preview-image">
-        
+
         <!-- Show Gmail-style avatar if no image -->
         <div *ngIf="!previewUrl" class="avatar-placeholder" [style.background-color]="getAvatarColor()">
           {{ getInitial() }}
@@ -26,22 +26,11 @@
           <fa-icon [icon]="faCamera"></fa-icon>
           {{ selectedFile ? 'Change Photo' : 'Upload Photo' }}
         </label>
-        <input 
-          type="file" 
-          id="profilePic" 
-          (change)="onFileSelected($event)"
-          accept="image/*"
-          class="file-input"
-          [disabled]="isUploading"
-        >
-        <button 
-          *ngIf="previewUrl" 
-          type="button" 
-          class="remove-btn" 
-          (click)="removeProfilePic()"
-          [disabled]="isUploading"
-        >
-        <fa-icon [icon]="faTrash"></fa-icon>
+        <input type="file" id="profilePic" (change)="onFileSelected($event)" accept="image/*" class="file-input"
+          [disabled]="isUploading">
+        <button *ngIf="previewUrl" type="button" class="remove-btn" (click)="removeProfilePic()"
+          [disabled]="isUploading">
+          <fa-icon [icon]="faTrash"></fa-icon>
           Remove
         </button>
       </div>
@@ -53,6 +42,11 @@
     <input type="text" placeholder="Username" name="username" [(ngModel)]="username" required>
     <input type="email" placeholder="Email" name="email" [(ngModel)]="email" required>
     <input type="password" placeholder="Password" name="password" [(ngModel)]="password" required>
+
+    <div class="captcha-container">
+      <re-captcha [siteKey]="siteKey" (resolved)="onCaptchaResolved($event)"
+        [theme]="isDarkMode ? 'dark' : 'light'"></re-captcha>
+    </div>
 
     <button type="submit" [disabled]="!registerForm.valid || isUploading">
       <span *ngIf="!isUploading">Register</span>

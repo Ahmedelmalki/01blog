@@ -7,11 +7,17 @@ import { faMoon, faSun, faCamera, faTrash } from '@fortawesome/free-solid-svg-ic
 import { DarkModeService } from '../../services/dark-mode.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { firstValueFrom } from 'rxjs';
+import { RecaptchaModule } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, FontAwesomeModule, RouterLink],
+  imports: [CommonModule,
+    FormsModule,
+    FontAwesomeModule,
+    RouterLink,
+    RecaptchaModule
+  ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
@@ -22,7 +28,7 @@ export class RegisterComponent implements OnInit {
   email = '';
   profileLink = '';
   password = '';
-  
+
   successMessage: string | null = null;
   errorMessage: string | null = null;
   isDarkMode = false;
@@ -36,11 +42,18 @@ export class RegisterComponent implements OnInit {
   isUploading = false;
   previewUrl: string | null = null;
 
+  captchaToken: string | null = null;
+  siteKey = '6Ld9ERIsAAAAANXlu6h1WgzSxz5Q9RfiQ7YPd2v2';
+
   constructor(
-    private http: HttpClient, 
-    private router: Router, 
+    private http: HttpClient,
+    private router: Router,
     private darkModeService: DarkModeService
   ) { }
+
+  onCaptchaResolved(captchaResponse: string | null) {
+    this.captchaToken = captchaResponse;
+  }
 
   ngOnInit() {
     this.darkModeService.darkMode$.subscribe(isDark => {
@@ -95,19 +108,19 @@ export class RegisterComponent implements OnInit {
 
   getAvatarColor(): string {
     if (!this.email) return '#6c757d';
-    
+
     // Generate consistent color based on email
     let hash = 0;
     for (let i = 0; i < this.email.length; i++) {
       hash = this.email.charCodeAt(i) + ((hash << 5) - hash);
     }
-    
+
     const colors = [
       '#e57373', '#f06292', '#ba68c8', '#9575cd',
       '#7986cb', '#64b5f6', '#4fc3f7', '#4dd0e1',
       '#4db6ac', '#81c784', '#aed581', '#ff8a65'
     ];
-    
+
     return colors[Math.abs(hash) % colors.length];
   }
 
@@ -145,6 +158,11 @@ export class RegisterComponent implements OnInit {
   }
 
   async register() {
+    if (!this.captchaToken){
+      this.errorMessage = 'please complete the CAPTCHA';
+      return;
+    }
+
     this.successMessage = null;
     this.errorMessage = null;
 
@@ -165,7 +183,8 @@ export class RegisterComponent implements OnInit {
       username: this.username,
       email: this.email,
       password: this.password,
-      profileLink: this.profileLink || '' // Send empty string if no profile pic
+      profileLink: this.profileLink || '', // Send empty string if no profile pic
+      captchaToken: this.captchaToken
     };
 
     this.http.post('http://localhost:8080/auth/register', payload)

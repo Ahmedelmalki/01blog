@@ -4,24 +4,38 @@ import com.example.demo.DTO.*;
 import com.example.demo.model.User;
 import com.example.demo.service.AuthService;
 import lombok.AllArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.demo.service.*;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController 
 @RequestMapping("/auth")
 @AllArgsConstructor
 public class AuthController {
-
     private final AuthService authService;
+    private final RecaptchaService recaptchaService; // ADD THIS
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody User user) {
+    public ResponseEntity<?> register(@RequestBody User user) {
+        // ADD THIS CHECK
+        if (!recaptchaService.verify(user.getCaptchaToken())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse("CAPTCHA verification failed"));
+        }
         User savedUser = authService.register(user);
         return ResponseEntity.ok(new UserResponse(savedUser));
     }
+
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        // ADD THIS CHECK
+        if (!recaptchaService.verify(request.getCaptchaToken())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse("CAPTCHA verification failed"));
+        }
         String token = authService.login(request.getUsername(), request.getPassword());
         User user = authService.getUserByUsername(request.getUsername());
         return ResponseEntity.ok(new AuthResponse(token, new UserResponse(user)));

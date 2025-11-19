@@ -271,3 +271,11 @@ button[type="submit"]:disabled {
 :host-context(.dark-mode) .error {
   color: #ff6b6b;
 }
+
+.captcha-container {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+  transform: scale(0.9);
+  transform-origin: center;
+}
