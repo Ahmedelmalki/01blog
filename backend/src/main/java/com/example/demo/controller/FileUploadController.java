@@ -1,24 +1,22 @@
 package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.apache.tika.Tika;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.nio.file.*;
+import java.util.*;
+
 
 @RestController
 @RequestMapping("/api/files")
 @CrossOrigin(origins = "http://localhost:4200")
 public class FileUploadController {
+
+    private final Tika tika = new Tika();
 
     @Value("${file.upload-dir:uploads}")
     private String uploadDir;
@@ -26,19 +24,11 @@ public class FileUploadController {
     @Value("${server.port:8080}")
     private String serverPort;
 
-    /**
-     * Public upload endpoint for registration (no authentication required)
-     * Limited to profile pictures only
-     */
     @PostMapping("/upload/public")
     public ResponseEntity<?> uploadPublicFile(@RequestParam("file") MultipartFile file) {
         return handleFileUpload(file, true);
     }
-
-    /**
-     * Protected upload endpoint for authenticated users
-     * Can be used for posts, comments, etc.
-     */
+    
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         return handleFileUpload(file, false);
@@ -46,55 +36,46 @@ public class FileUploadController {
 
     private ResponseEntity<?> handleFileUpload(MultipartFile file, boolean isPublic) {
         try {
-            // Validate file
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest()
                     .body(createErrorResponse("Please select a file to upload"));
             }
 
-            // Validate file size (5MB for public, 10MB for authenticated)
             long maxSize = isPublic ? 5 * 1024 * 1024 : 10 * 1024 * 1024;
             if (file.getSize() > maxSize) {
                 return ResponseEntity.badRequest()
                     .body(createErrorResponse("File size must be less than " + (maxSize / 1024 / 1024) + "MB"));
             }
 
-            // Validate file type
-            String contentType = file.getContentType();
-            if (contentType == null || !isValidFileType(contentType, isPublic)) {
+            if (!isValidFileType(file, isPublic)) {
                 return ResponseEntity.badRequest()
                     .body(createErrorResponse(isPublic 
                         ? "Only image files are allowed for profile pictures" 
                         : "Invalid file type"));
             }
 
-            // Create upload directory if it doesn't exist
             Path uploadPath = Paths.get(uploadDir);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
 
-            // Generate unique filename
             String originalFilename = file.getOriginalFilename();
             String extension = originalFilename != null && originalFilename.contains(".") 
                 ? originalFilename.substring(originalFilename.lastIndexOf("."))
                 : "";
             String uniqueFilename = UUID.randomUUID().toString() + extension;
 
-            // Save file
             Path filePath = uploadPath.resolve(uniqueFilename);
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            // Generate URL
             String fileUrl = "http://localhost:" + serverPort + "/api/files/" + uniqueFilename;
 
-            // Return success response
             Map<String, Object> response = new HashMap<>();
             response.put("url", fileUrl);
             response.put("filename", uniqueFilename);
             response.put("originalFilename", originalFilename);
             response.put("size", file.getSize());
-            response.put("contentType", contentType);
+            response.put("contentType", file);
 
             return ResponseEntity.ok(response);
 
@@ -105,13 +86,17 @@ public class FileUploadController {
         }
     }
 
-    private boolean isValidFileType(String contentType, boolean isPublic) {
-        if (isPublic) {
-            // Only images for public uploads (profile pictures)
-            return contentType.startsWith("image/");
-        } else {
-            // Images and videos for authenticated uploads
-            return contentType.startsWith("image/") || contentType.startsWith("video/");
+    private boolean isValidFileType(MultipartFile file, boolean isPublic){
+        try {
+            String detectedType = tika.detect(file.getInputStream());            
+            if (isPublic) {
+                return detectedType.startsWith("image/");
+            } else {
+                return detectedType.startsWith("image/") || detectedType.startsWith("video/");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -121,9 +106,6 @@ public class FileUploadController {
         return error;
     }
 
-    /**
-     * Serve uploaded files
-     */
     @GetMapping("/{filename:.+}")
     public ResponseEntity<?> serveFile(@PathVariable String filename) {
         try {

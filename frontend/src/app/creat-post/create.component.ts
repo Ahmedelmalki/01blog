@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
-@Component({ 
+@Component({
   selector: 'app-create',
   standalone: true,
   imports: [CommonModule, FormsModule],
@@ -31,7 +31,8 @@ export class CreateComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private ngZone: NgZone
   ) { }
 
   // lifecycle hook
@@ -76,8 +77,8 @@ export class CreateComponent implements OnInit {
           }
         }
       });
-    }
-    ifFileSelected(event: any) {
+  }
+  ifFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
@@ -85,7 +86,7 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  async uploadFile(): Promise<string | null> { 
+  async uploadFile(): Promise<string | null> {
     if (!this.selectedFile) return null;
 
     this.isUploading = true;
@@ -116,14 +117,22 @@ export class CreateComponent implements OnInit {
       console.log(' File uploaded:', response.url);
       return response.url;
     } catch (error: any) {
-      console.error('File upload failed:', error);
-      this.isUploading = false;
-      this.errorMessage = 'Failed to upload file. Please try again.';
+      // console.error('File upload failed:', error);
 
-      if (error.status === 401) {
-        localStorage.removeItem('token');
-        this.router.navigate(['/login']);
-      }
+      this.ngZone.run(() => {  // Run inside Angular zone
+        this.isUploading = false;
+
+        if (error.error && error.error.error) {
+          this.errorMessage = error.error.error;
+        } else if (error.status === 401) {
+          this.errorMessage = 'Unauthorized. Please log in again.';
+          localStorage.removeItem('token');
+          this.router.navigate(['/login']);
+        } else {
+          this.errorMessage = 'Failed to upload file. Please try again.';
+        }
+      });
+
       return null;
     }
   }
