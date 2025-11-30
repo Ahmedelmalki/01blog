@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 import java.util.List;
+import org.springframework.data.domain.*;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.*;
 
 @Service
@@ -33,10 +33,10 @@ public class PostService {
         return buildPostResponse(savedPost, username);    
     }
 
-    public List<PostDTO> getAllPosts(String username) {
-        return postRepository.findAll().stream()
-            .map(post -> buildPostResponse(post, username))
-            .collect(Collectors.toList());// why collect
+    public Page<PostDTO> getAllPosts(String username, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Post> postPage = postRepository.findAll(pageable);
+        return postPage.map(post -> buildPostResponse(post, username));
     }
 
     public PostDTO getPostById(Long id, String username) {
@@ -45,13 +45,13 @@ public class PostService {
         return buildPostResponse(post, username);
     }
 
-    public List<PostDTO> getPostsByUsername(String username, String requestingUsername) {
+    public Page<PostDTO> getPostsByUsername(String username, String requestingUsername, int page, int size) {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         
-        return postRepository.findByAuthor(user).stream()
-            .map(post -> buildPostResponse(post, requestingUsername))
-            .collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Post> postsPage = postRepository.findByAuthor(user, pageable);
+        return postsPage.map(post -> buildPostResponse(post, requestingUsername));
     }
 
     
@@ -97,20 +97,7 @@ public class PostService {
                 userReaction = userLike.map(PostLike::getValue).orElse(null);
             }
         }
-        // System.out.println("===================================================\n\n"+post.getAuthor().getProfileLink());
-/*export interface PostResponse {
-    id: number;
-    title: string;
-    content: string;
-    mediaLink: string;
-    author: string;
-    authorProfileLink?: string;
-    createdAt: Date | null;
-    likesCount: number;
-    dislikesCount: number;
-    commentsCount: number;
-    userReaction?: number | null;
-}*/
+
         return new PostDTO(
             post.getId(),
             post.getTitle(),

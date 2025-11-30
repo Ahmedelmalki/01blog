@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
@@ -8,24 +8,38 @@ import { faSun, faMoon, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import { DarkModeService } from '../services/dark-mode.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-// <i class="fa-solid fa-chart-bar"></i>
+interface PostsResponse {
+  posts: PostResponse[]; // here i guess but its not know down in the editor
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  hasNext: boolean;
+}
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, RouterLink, PostCardComponent, FontAwesomeModule],
+  imports: [CommonModule,
+    RouterLink,
+    PostCardComponent,
+    FontAwesomeModule],
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.css']
 })
 export class FeedComponent implements OnInit {
   posts: PostResponse[] = [];
   isLoading = true;
+  isLoadingMore = false;
   errorMessage: string | null = null;
   isDarkMode = false;
   faMoon = faMoon;
   faSun = faSun;
   faChartBar = faChartBar;
   isAdmin = false;
+
+  currentPage = 0;
+  pageSize = 10;
+  hasMorePosts = true;
 
   constructor(private http: HttpClient,
     private router: Router,
@@ -41,32 +55,75 @@ export class FeedComponent implements OnInit {
 
   }
 
-checkAdminStatus() {
-  const token = localStorage.getItem('token');
-  if (token) {
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      // console.log("Full payload:", payload); // Log entire payload
-      // console.log("Roles type:", typeof payload.roles); // Check type
-      // console.log("Roles value:", payload.roles); // Check value
-      // console.log("Is array?", Array.isArray(payload.roles)); // Verify it's an array
+  @HostListener('window:scroll')
+  onScroll() {
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const pageHeight = document.documentElement.scrollHeight;
 
-      // Check if user has ADMIN role
-      if (payload.roles && Array.isArray(payload.roles)) {
-        this.isAdmin = payload.roles.includes('ADMIN');
-        // console.log("Is admin?", this.isAdmin);
-      } else {
-        console.warn("Roles not found or not an array");
-      }
-    } catch (e) {
-      console.error('Failed to decode token', e);
+    if (scrollPosition >= pageHeight - 200 &&
+      !this.isLoadingMore && this.hasMorePosts) {
+      this.loadMorePosts();
     }
   }
-}
+
+  checkAdminStatus() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        // Check if user has ADMIN role
+        if (payload.roles && Array.isArray(payload.roles)) {
+          this.isAdmin = payload.roles.includes('ADMIN');
+          // console.log("Is admin?", this.isAdmin);
+        } else {
+          console.warn("Roles not found or not an array");
+        }
+      } catch (e) {
+        console.error('Failed to decode token', e);
+      }
+    }
+  }
+
+  loadMorePosts() {
+      if (this.isLoadingMore || !this.hasMorePosts){
+        return;
+      }
+
+      this.isLoadingMore = true;
+      this.currentPage++;
+
+      const token = localStorage.getItem('token');
+      if (!token){
+        this.router.navigate(['/login']);
+        return;
+      }
+
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      });
+
+      this.http.get<PostsResponse>(
+      `http://localhost:8080/posts?page=${this.currentPage}&size=${this.pageSize}`, 
+      { headers }
+    ).subscribe({
+      next: (response) => {
+        this.posts = [...this.posts, ...response.posts];
+        this.hasMorePosts = response.hasNext;
+        this.isLoadingMore = false;
+      },
+      error: (err) => {
+        console.error('Failed to load more posts:', err);
+        this.isLoadingMore = false;
+        this.currentPage--; // Revert page increment on error
+      }
+    });
+   }
 
   loadPosts() {
     this.isLoading = true;
     this.errorMessage = null;
+    this.currentPage = 0;
+    this.posts = [];
 
     const token = localStorage.getItem('token');
 
@@ -79,11 +136,11 @@ checkAdminStatus() {
       'Authorization': `Bearer ${token}`
     });
 
-    this.http.get<PostResponse[]>('http://localhost:8080/posts', { headers })
+    this.http.get<PostsResponse>(`http://localhost:8080/posts?page=${this.currentPage}&size=${this.pageSize}`, { headers })
       .subscribe({
-        next: (data) => {
-          console.log('✅ Posts loaded ===============>', data[0].authorProfileLink);
-          this.posts = data;
+        next: (response) => {
+          this.posts = response.posts; // where the fuck did u came with this
+          this.hasMorePosts = response.hasNext; // and this
           this.isLoading = false;
         },
         error: (err) => {

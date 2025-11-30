@@ -6,9 +6,9 @@
     <h1>Feed</h1>
     <div class="header-actions">
       <button class="create-btn" routerLink="/post/create">+ Create Post</button>
-       <button *ngIf="isAdmin" class="dashboard-btn" routerLink="/admin/dashboard">
-      <fa-icon [icon]="faChartBar"></fa-icon> 
-      Dashboard
+      <button *ngIf="isAdmin" class="dashboard-btn" routerLink="/admin/dashboard">
+        <fa-icon [icon]="faChartBar"></fa-icon>
+        Dashboard
       </button>
       <button class="logout-btn" (click)="logout()">Logout</button>
     </div>
@@ -38,5 +38,15 @@
 
     <!-- Loop through each post and render PostCardComponent -->
     <app-post-card *ngFor="let post of posts" [postResponse]="post"></app-post-card>
+    
+    <!-- Loading indicator when fetching more posts -->
+    <div *ngIf="isLoadingMore" class="loading-more">
+      <p>Loading more posts...</p>
+    </div>
+
+    <!-- End of posts message -->
+    <div *ngIf="!hasMorePosts && posts.length > 0" class="end-of-posts">
+      <p>You've reached the end!</p>
+    </div>
   </div>
 </div>

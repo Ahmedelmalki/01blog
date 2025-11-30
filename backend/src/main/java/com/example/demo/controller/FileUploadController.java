@@ -75,7 +75,7 @@ public class FileUploadController {
             response.put("filename", uniqueFilename);
             response.put("originalFilename", originalFilename);
             response.put("size", file.getSize());
-            response.put("contentType", file);
+            response.put("contentType", file.getContentType());
 
             return ResponseEntity.ok(response);
 

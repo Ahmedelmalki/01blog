@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import com.example.demo.util.JwtUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.*;
 
 import java.util.*;
 
@@ -31,13 +32,23 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostDTO>> getAllPosts(
-            @RequestHeader("Authorization") String authHeader){
+    public ResponseEntity<Map<String, Object>> getAllPosts(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
 
         String token = authHeader.replace("Bearer", "").trim();
         String un = jwtUtil.extractUsername(token);
-        List<PostDTO> posts = postService.getAllPosts(un);
-        return ResponseEntity.ok(posts);
+        Page<PostDTO> postsPage = postService.getAllPosts(un, page, size);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("posts", postsPage.getContent());
+        response.put("currentPage", postsPage.getNumber());
+        response.put("totalPages", postsPage.getTotalPages());
+        response.put("totalItems", postsPage.getTotalElements());
+        response.put("hasNext", postsPage.hasNext());
+        
+        return ResponseEntity.ok(response);
     }
  
     @GetMapping("/{id}")
@@ -52,16 +63,26 @@ public class PostController {
     }
 
     @GetMapping("/user/{username}")
-    public ResponseEntity<List<PostDTO>> getPostsByUser(
+    public ResponseEntity<Map<String, Object>> getPostsByUser(
             @PathVariable String username,
-            @RequestHeader("Authorization") String authHeader){
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
 
         String token = authHeader.replace("Bearer ", "").trim();
         String requestingUsername = jwtUtil.extractUsername(token);
-        List<PostDTO> posts = postService.getPostsByUsername(username, requestingUsername);
-        return ResponseEntity.ok(posts);
+        Page<PostDTO> postsPage = postService.getPostsByUsername(username, requestingUsername, page, size);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("posts", postsPage.getContent());
+        response.put("currentPage", postsPage.getNumber());
+        response.put("totalPages", postsPage.getTotalPages());
+        response.put("totalItems", postsPage.getTotalElements());
+        response.put("hasNext", postsPage.hasNext());
+        
+        return ResponseEntity.ok(response);
     }
-
+    
     @PutMapping("/{id}")
     public ResponseEntity<PostDTO> updatePost(
             @PathVariable Long id,

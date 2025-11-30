@@ -1,5 +1,3 @@
-/* feed.component.css */
-
 /* Main feed container */
 .feed-container {
   max-width: 800px;
@@ -80,12 +78,63 @@
   background-color: #333;
 }
 
+.dashboard-btn {
+  padding: 0.5rem 1.5rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.dashboard-btn:hover {
+  background-color: #0056b3;
+}
+
 /* Loading state */
 .loading {
   text-align: center;
   padding: 3rem;
   color: #666;
   font-size: 1.1rem;
+}
+
+/* Loading more indicator */
+.loading-more {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-size: 1rem;
+}
+
+.loading-more::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #666;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* End of posts message */
+.end-of-posts {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+  font-size: 0.95rem;
+  font-style: italic;
 }
 
 /* Error message */
@@ -132,8 +181,18 @@
   border-color: #555;
 }
 
-:host-context(.dark-mode) .loading {
+:host-context(.dark-mode) .loading,
+:host-context(.dark-mode) .loading-more {
   color: #aaa;
+}
+
+:host-context(.dark-mode) .loading-more::before {
+  border-color: #444;
+  border-top-color: #aaa;
+}
+
+:host-context(.dark-mode) .end-of-posts {
+  color: #666;
 }
 
 :host-context(.dark-mode) .error {
@@ -165,20 +224,4 @@
     width: 100%;
     justify-content: space-between;
   }
-}
-
-.dashboard-btn {  /*==== new shit ====*/
-  padding: 0.5rem 1.5rem;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: background-color 0.2s;
-}
-
-.dashboard-btn:hover {
-  background-color: #0056b3;
 }

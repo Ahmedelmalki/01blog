@@ -162,3 +162,11 @@ class Observable {
 
 AOP lets you add common behaviors (like logging, security, transactions) to many parts of your app without editing each method — like applying a building-wide rule instead of editing every room.
 ```
+
+**Unified Modeling Language**
+```
+software system design modeling tool
+UML stands for Unified Modeling Language.
+ It is a standardized modeling language used to visualize, specify, construct, and document the artifacts of software systems and other complex systems.
+ The language provides a set of graphical notations to represent different aspects of a system, such as its structure, behavior, and interactions.
+```
