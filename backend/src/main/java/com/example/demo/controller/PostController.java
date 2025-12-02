@@ -50,6 +50,9 @@ public class PostController {
         
         return ResponseEntity.ok(response);
     }
+
+    // @GetMapping("/following{username}")
+    // public ResponseEntity<Map<String, Object>> getFolloingPosts(){}
  
     @GetMapping("/{id}")
     public ResponseEntity<PostDTO> getPostById(

@@ -6,10 +6,10 @@ import { PostCardComponent } from '../shared/post-cards/post-card.component';
 import { PostResponse } from '../models/post.models';
 import { faSun, faMoon, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import { DarkModeService } from '../services/dark-mode.service';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'; // TODO: remove this shit from here
 
 interface PostsResponse {
-  posts: PostResponse[]; // here i guess but its not know down in the editor
+  posts: PostResponse[]; 
   currentPage: number;
   totalPages: number;
   totalItems: number;
@@ -139,8 +139,8 @@ export class FeedComponent implements OnInit {
     this.http.get<PostsResponse>(`http://localhost:8080/posts?page=${this.currentPage}&size=${this.pageSize}`, { headers })
       .subscribe({
         next: (response) => {
-          this.posts = response.posts; // where the fuck did u came with this
-          this.hasMorePosts = response.hasNext; // and this
+          this.posts = response.posts; 
+          this.hasMorePosts = response.hasNext;
           this.isLoading = false;
         },
         error: (err) => {

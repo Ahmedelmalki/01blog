@@ -11,6 +11,12 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+ * Advice: Action taken by an aspect at a particular join point. Different types of advice include “around”, “before”
+ *  and “after” advice. (Advice types are discussed later.) Many AOP frameworks, including Spring, model an advice as 
+ * an interceptor and maintain a chain of interceptors around the join point.
+*/
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

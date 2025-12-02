@@ -16,7 +16,7 @@ https://itnext.io/mastering-injectable-services-a-comprehensive-guide-6c2c0f5f48
 https://www.itu.dk/~sestoft/javaservlets/servlets/api.html
 
 later:
-https://docs.spring.io/spring-framework/docs/5.2.x/spring-framework-reference/core.html#beans-basics
+https://docs.spring.io/spring-framework/docs/5.2.x/spring-framework-reference/core.html#aop
 https://docs.spring.io/spring-framework/docs/4.3.15.RELEASE/spring-framework-reference/html/aop.html
     wikipedia:
     https://en.wikipedia.org/wiki/Dependency_injection

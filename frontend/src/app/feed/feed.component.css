@@ -16,8 +16,19 @@
 }
 
 .feed-header h1 {
-  font-size: 2rem;
+  font-size: 3rem;
   margin: 0;
+}
+
+@font-face {
+  font-family: "PICKYSIDE\ GRUNGE";
+  src: url("../fonts/PICKYSIDE\ GRUNGE.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.feed-header h1 {
+  font-family: "PICKYSIDE\ GRUNGE", sans-serif;
 }
 
 /* Header action buttons container */
