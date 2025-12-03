@@ -1,28 +1,17 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { FEED_IMPORTS } from './feed.imports';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router, RouterLink } from '@angular/router';
-import { PostCardComponent } from '../shared/post-cards/post-card.component';
+import { Router } from '@angular/router';
 import { PostResponse } from '../models/post.models';
 import { faSun, faMoon, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import { DarkModeService } from '../services/dark-mode.service';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'; // TODO: remove this shit from here
+import { PostsResponse } from '../models/post.models';
 
-interface PostsResponse {
-  posts: PostResponse[];
-  currentPage: number;
-  totalPages: number;
-  totalItems: number;
-  hasNext: boolean;
-}
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule,
-    RouterLink,
-    PostCardComponent,
-    FontAwesomeModule],
+  imports: [FEED_IMPORTS],
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.css']
 })
@@ -147,7 +136,7 @@ export class FeedComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     });
 
-        const endpoint = this.activeTab === 'following' 
+    const endpoint = this.activeTab === 'following'
       ? `http://localhost:8080/posts/following?page=${this.currentPage}&size=${this.pageSize}`
       : `http://localhost:8080/posts?page=${this.currentPage}&size=${this.pageSize}`;
 

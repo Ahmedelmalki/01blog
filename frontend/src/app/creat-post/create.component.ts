@@ -117,9 +117,7 @@ export class CreateComponent implements OnInit {
       console.log(' File uploaded:', response.url);
       return response.url;
     } catch (error: any) {
-      // console.error('File upload failed:', error);
-
-      this.ngZone.run(() => {  // Run inside Angular zone
+      this.ngZone.run(() => {  
         this.isUploading = false;
 
         if (error.error && error.error.error) {

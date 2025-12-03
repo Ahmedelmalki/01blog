@@ -1,16 +1,14 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { FormsModule } from "@angular/forms";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { Comment } from "../../models/post.models";
-import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
+import { COMMENTS_IMPORTS } from "./comments.imports";
 
 @Component({
     selector: 'app-comments',
     standalone: true,
-    imports: [CommonModule, FormsModule, FontAwesomeModule],
+    imports: [COMMENTS_IMPORTS],
     templateUrl: './comments.component.html',
     styleUrl: './comments.component.css',
 })
@@ -54,7 +52,7 @@ export class CommentsComponent implements OnInit {
         this.http.get<Comment[]>(
             `http://localhost:8080/posts/${this.postId}/comments`,
             { headers }
-        ).subscribe({ // what does this actually do 
+        ).subscribe({ 
             next: (data) => {
                 console.log('✅ Comments loaded:', data);
                 this.comments = data;

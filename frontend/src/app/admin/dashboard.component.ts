@@ -1,4 +1,3 @@
-// dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -52,9 +51,6 @@ export class DashboardComponent implements OnInit {
     this.http.get<any[]>('http://localhost:8080/reports', { headers })
       .subscribe({
         next: (data) => {
-          console.log("======== entered!!! =======");
-          
-          // Separate user and post reports
           this.userReports = data.filter(r => r.reportedUser !== null);
           this.postReports = data.filter(r => r.reportedPost !== null);
           this.loading = false;

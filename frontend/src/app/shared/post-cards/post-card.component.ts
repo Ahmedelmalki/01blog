@@ -1,24 +1,15 @@
 import { Component, Input, Output, OnInit, EventEmitter, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
-import { CommentsComponent } from '../comments/comments.component';
-import { LikesComponent } from '../likes/likes.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PostResponse } from '../../models/post.models';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFlag, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { AvatarService } from '../../services/avatar.service';
-import { FollowButtonComponent } from '../follow/follow-button.component';
+import { Router } from '@angular/router';
+import { POST_CARD_IMPORTS } from './post-card.imports';
 
 @Component({
   selector: 'app-post-card',
   standalone: true,
-  imports: [CommonModule,
-    RouterLink,
-    CommentsComponent,
-    LikesComponent,
-    FontAwesomeModule,
-    FollowButtonComponent],
+  imports: [POST_CARD_IMPORTS],
   templateUrl: './post-card.component.html',
   styleUrls: ['./post-card.component.css']
 })
@@ -173,7 +164,7 @@ export class PostCardComponent implements OnInit {
     this.showMenu = false;
   }
 
-  onFollowStatusChanged(){
+  onFollowStatusChanged() {
     this.followRefreshKey++;
   }
 }

@@ -68,3 +68,11 @@ export interface PostReport {
   reason: string;
   createdAt: string;
 }
+
+export interface PostsResponse {
+  posts: PostResponse[];
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  hasNext: boolean;
+}
