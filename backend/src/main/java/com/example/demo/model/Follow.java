@@ -5,6 +5,12 @@ import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
+/*
+That annotation is there only to stop Jackson from choking when it tries to serialize JPA-managed objects.
+When Hibernate loads an entity lazily, it wraps it in a proxy class. That proxy class contains two internal fields:
+hibernateLazyInitializer
+handler
+*/
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "follows", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"follower_id", "following_id"})
@@ -23,7 +29,7 @@ public class Follow {
     private User follower;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "following_id", nullable = false)  // ✅ FIXED
+    @JoinColumn(name = "following_id", nullable = false)  
     @JsonIgnoreProperties({"password", "email", "roles"})
     private User following;
 }

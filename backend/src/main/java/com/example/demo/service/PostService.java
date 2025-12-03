@@ -39,6 +39,15 @@ public class PostService {
         return postPage.map(post -> buildPostResponse(post, username));
     }
 
+    public Page<PostDTO> getFollowingPosts(String username, int page, int size) {
+    User user = userRepository.findByUsername(username)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    
+    Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+    Page<Post> postsPage = postRepository.findPostsByFollowedUsers(user, pageable);
+    return postsPage.map(post -> buildPostResponse(post, username));
+    }
+
     public PostDTO getPostById(Long id, String username) {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));

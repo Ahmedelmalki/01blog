@@ -51,9 +51,26 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    // @GetMapping("/following{username}")
-    // public ResponseEntity<Map<String, Object>> getFolloingPosts(){}
- 
+    @GetMapping("/following")
+    public ResponseEntity<Map<String, Object>> getFollowingPosts(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
+
+        String token = authHeader.replace("Bearer ", "").trim();
+        String username = jwtUtil.extractUsername(token);
+        Page<PostDTO> postsPage = postService.getFollowingPosts(username, page, size);
+            
+        Map<String, Object> response = new HashMap<>();
+        response.put("posts", postsPage.getContent());
+        response.put("currentPage", postsPage.getNumber());
+        response.put("totalPages", postsPage.getTotalPages());
+        response.put("totalItems", postsPage.getTotalElements());
+        response.put("hasNext", postsPage.hasNext());
+            
+        return ResponseEntity.ok(response);
+    }
+     
     @GetMapping("/{id}")
     public ResponseEntity<PostDTO> getPostById(
             @PathVariable Long id,
