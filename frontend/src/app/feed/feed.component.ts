@@ -9,7 +9,7 @@ import { DarkModeService } from '../services/dark-mode.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'; // TODO: remove this shit from here
 
 interface PostsResponse {
-  posts: PostResponse[]; 
+  posts: PostResponse[];
   currentPage: number;
   totalPages: number;
   totalItems: number;
@@ -37,11 +37,13 @@ export class FeedComponent implements OnInit {
   faChartBar = faChartBar;
   isAdmin = false;
 
+  activeTab: 'all' | 'following' = 'all';
   currentPage = 0;
   pageSize = 10;
   hasMorePosts = true;
 
-  constructor(private http: HttpClient,
+  constructor(
+    private http: HttpClient,
     private router: Router,
     private darkModeService: DarkModeService
   ) { }
@@ -53,6 +55,13 @@ export class FeedComponent implements OnInit {
     })
     this.checkAdminStatus();
 
+  }
+
+  switchTab(tab: 'all' | 'following') {
+    if (this.activeTab === tab) return;
+
+    this.activeTab = tab;
+    this.loadPosts();
   }
 
   @HostListener('window:scroll')
@@ -85,27 +94,29 @@ export class FeedComponent implements OnInit {
   }
 
   loadMorePosts() {
-      if (this.isLoadingMore || !this.hasMorePosts){
-        return;
-      }
+    if (this.isLoadingMore || !this.hasMorePosts) {
+      return;
+    }
 
-      this.isLoadingMore = true;
-      this.currentPage++;
+    this.isLoadingMore = true;
+    this.currentPage++;
 
-      const token = localStorage.getItem('token');
-      if (!token){
-        this.router.navigate(['/login']);
-        return;
-      }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.router.navigate(['/login']);
+      return;
+    }
 
-      const headers = new HttpHeaders({
-        'Authorization': `Bearer ${token}`
-      });
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
 
-      this.http.get<PostsResponse>(
-      `http://localhost:8080/posts?page=${this.currentPage}&size=${this.pageSize}`, 
-      { headers }
-    ).subscribe({
+    const endpoint = this.activeTab === 'following'
+      ? `http://localhost:8080/posts/following?page=${this.currentPage}&size=${this.pageSize}`
+      : `http://localhost:8080/posts?page=${this.currentPage}&size=${this.pageSize}`;
+
+
+    this.http.get<PostsResponse>(endpoint, { headers }).subscribe({
       next: (response) => {
         this.posts = [...this.posts, ...response.posts];
         this.hasMorePosts = response.hasNext;
@@ -117,7 +128,7 @@ export class FeedComponent implements OnInit {
         this.currentPage--; // Revert page increment on error
       }
     });
-   }
+  }
 
   loadPosts() {
     this.isLoading = true;
@@ -136,10 +147,14 @@ export class FeedComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     });
 
-    this.http.get<PostsResponse>(`http://localhost:8080/posts?page=${this.currentPage}&size=${this.pageSize}`, { headers })
+        const endpoint = this.activeTab === 'following' 
+      ? `http://localhost:8080/posts/following?page=${this.currentPage}&size=${this.pageSize}`
+      : `http://localhost:8080/posts?page=${this.currentPage}&size=${this.pageSize}`;
+
+    this.http.get<PostsResponse>(endpoint, { headers })
       .subscribe({
         next: (response) => {
-          this.posts = response.posts; 
+          this.posts = response.posts;
           this.hasMorePosts = response.hasNext;
           this.isLoading = false;
         },

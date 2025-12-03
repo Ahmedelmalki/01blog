@@ -18,35 +18,54 @@
     </button>
   </div>
 
-  <!-- Loading spinner while fetching posts -->
-  <div *ngIf="isLoading" class="loading">
-    <p>Loading posts...</p>
+  <!-- Feed Navigation Tabs -->
+  <div class="feed-nav">
+    <button class="feed-nav-tab" [class.active]="activeTab === 'all'" (click)="switchTab('all')">
+      All Posts
+    </button>
+    <button class="feed-nav-tab" [class.active]="activeTab === 'following'" (click)="switchTab('following')">
+      Following
+    </button>
   </div>
 
-  <!-- Error message if API call fails -->
-  <div *ngIf="errorMessage" class="error">
-    <p>{{ errorMessage }}</p>
+  <!-- Scrollable Content Area -->
+  <div class="feed-content">
+    <div class="feed-content-inner">
+
+      <!-- Loading spinner while fetching posts -->
+      <div *ngIf="isLoading" class="loading">
+        <p>Loading posts...</p>
+      </div>
+
+      <!-- Error message if API call fails -->
+      <div *ngIf="errorMessage" class="error">
+        <p>{{ errorMessage }}</p>
+      </div>
+
+      <!-- Display posts if loaded successfully -->
+      <div *ngIf="!isLoading && !errorMessage" class="posts-list">
+
+        <!-- Message if no posts exist -->
+        <div *ngIf="posts.length === 0" class="no-posts">
+          <p>{{ activeTab === 'following' ? 'No posts from people you follow yet.' : 'No posts yet. Be the first to
+            post!' }}</p>
+        </div>
+
+        <!-- Loop through each post and render PostCardComponent -->
+        <app-post-card *ngFor="let post of posts" [postResponse]="post"></app-post-card>
+
+        <!-- Loading indicator when fetching more posts -->
+        <div *ngIf="isLoadingMore" class="loading-more">
+          <p>Loading more posts...</p>
+        </div>
+
+        <!-- End of posts message -->
+        <div *ngIf="!hasMorePosts && posts.length > 0" class="end-of-posts">
+          <p>You've reached the end!</p>
+        </div>
+      </div>
+
+    </div>
   </div>
 
-  <!-- Display posts if loaded successfully -->
-  <div *ngIf="!isLoading && !errorMessage" class="posts-list">
-
-    <!-- Message if no posts exist -->
-    <div *ngIf="posts.length === 0" class="no-posts">
-      <p>No posts yet. Be the first to post!</p>
-    </div>
-
-    <!-- Loop through each post and render PostCardComponent -->
-    <app-post-card *ngFor="let post of posts" [postResponse]="post"></app-post-card>
-    
-    <!-- Loading indicator when fetching more posts -->
-    <div *ngIf="isLoadingMore" class="loading-more">
-      <p>Loading more posts...</p>
-    </div>
-
-    <!-- End of posts message -->
-    <div *ngIf="!hasMorePosts && posts.length > 0" class="end-of-posts">
-      <p>You've reached the end!</p>
-    </div>
-  </div>
 </div>
