@@ -6,9 +6,8 @@ import com.example.demo.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
-import java.util.List;
 import org.springframework.data.domain.*;
-import java.util.Optional;
+import java.util.*;
 import lombok.*;
 
 @Service
@@ -19,17 +18,25 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostLikeRepository postLikeRepository;
     private final CommentRepository commentRepository;
+    private final FollowService followService;
+    private final NotificationService notificationService;
 
     public PostDTO createPost(String username, Post post) {
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-
+        User user = userRepository.findByUsername(username) 
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        
         if (user.getState() == -1) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are banned and cannot create posts");
         }
-
+        
         post.setAuthor(user);
         Post savedPost = postRepository.save(post);
+
+        List<User> followers = followService.getFollowers(username);
+        if (!followers.isEmpty()){
+            notificationService.notifyNewPost(user, savedPost.getId(), followers);
+        }
+
         return buildPostResponse(savedPost, username);    
     }
 

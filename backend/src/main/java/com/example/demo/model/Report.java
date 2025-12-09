@@ -3,11 +3,8 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-// Are reports on profiles/posts saved with reasons and timestamps?
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
@@ -43,6 +40,9 @@ public class Report {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    /* When you put it on a method inside an entity, that method is automatically executed
+     right before the entity is inserted into the database (i.e., before the SQL INSERT).
+    */ 
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

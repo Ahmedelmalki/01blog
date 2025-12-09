@@ -15,6 +15,7 @@ public class FollowService {
 
     private final UserRepository userRepo;
     private final FollowRepository followRepo;
+    private final NotificationService notificationService;
     
     // ========== GETING FOLLOWERS AND FOLLOWEES COUNT
     public int getFollowerCount(String username){
@@ -37,7 +38,7 @@ public class FollowService {
         }
         User follower = userRepo.findByUsername(followerUsername)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
-        User following = userRepo.findByUsername(followingUsername)
+        User following = userRepo.findByUsername(followingUsername)// todo: send notification to this mf
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
         
         return followRepo.findByFollowerAndFollowing(follower, following)
@@ -47,6 +48,7 @@ public class FollowService {
                 }).orElseGet(() -> {
                     Follow newFollow = new Follow(null, follower, following);
                     followRepo.save(newFollow); // provided by jpa
+                    notificationService.notifyFollow(follower, follower);
                     return true;
                 });
     }
