@@ -6,6 +6,7 @@
     <h1>01 BLOG</h1>
     <div class="header-actions">
       <button class="create-btn" routerLink="/post/create">+ Create Post</button>
+       <app-notification-bell></app-notification-bell>
       <button *ngIf="isAdmin" class="dashboard-btn" routerLink="/admin/dashboard">
         <fa-icon [icon]="faChartBar"></fa-icon>
         Dashboard

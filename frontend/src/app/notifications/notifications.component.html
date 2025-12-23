@@ -1,0 +1,107 @@
+<div class="notifications-container">
+  <!-- Header -->
+  <div class="notifications-header">
+    <div class="header-left">
+      <fa-icon [icon]="faBell" class="header-icon"></fa-icon>
+      <h1>Notifications</h1>
+      <span *ngIf="unreadCount > 0" class="unread-badge">{{ unreadCount }}</span>
+    </div>
+    <div class="header-actions">
+      <button 
+        *ngIf="hasUnreadNotifications()" 
+        class="mark-all-btn" 
+        (click)="markAllAsRead()"
+        title="Mark all as read">
+        <fa-icon [icon]="faCheck"></fa-icon>
+        Mark all read
+      </button>
+      <button 
+        class="permission-btn" 
+        (click)="requestNotificationPermission()"
+        title="Enable browser notifications">
+        <fa-icon [icon]="faBell"></fa-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="notifications-content" (scroll)="onScroll($event)">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading notifications...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error">
+      <fa-icon [icon]="faTimes"></fa-icon>
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <!-- Notifications List -->
+    <div *ngIf="!isLoading && !errorMessage" class="notifications-list">
+      <!-- Empty State -->
+      <div *ngIf="notifications.length === 0" class="empty-state">
+        <fa-icon [icon]="faBell" class="empty-icon"></fa-icon>
+        <h2>No notifications yet</h2>
+        <p>When someone follows you or interacts with your posts, you'll see it here.</p>
+      </div>
+
+      <!-- Notification Items -->
+      <div 
+        *ngFor="let notification of notifications" 
+        class="notification-item"
+        [class.unread]="!notification.isRead"
+        (click)="notification.postId ? navigateToPost(notification) : null">
+        
+        <!-- Avatar -->
+        <div class="notification-avatar" (click)="$event.stopPropagation(); navigateToProfile(notification.actorUsername)">
+          <img 
+            [src]="notification.actorProfileLink || 'assets/default-avatar.png'" 
+            [alt]="notification.actorUsername"
+            onerror="this.src='assets/default-avatar.png'">
+        </div>
+
+        <!-- Content -->
+        <div class="notification-content">
+          <div class="notification-icon">{{ getNotificationIcon(notification.type) }}</div>
+          <div class="notification-text">
+            <span class="actor-name" (click)="$event.stopPropagation(); navigateToProfile(notification.actorUsername)">
+              {{ notification.actorUsername }}
+            </span>
+            <span class="notification-message">{{ notification.message }}</span>
+          </div>
+          <div class="notification-time">{{ getTimeAgo(notification.createdAt) }}</div>
+        </div>
+
+        <!-- Actions -->
+        <div class="notification-actions" (click)="$event.stopPropagation()">
+          <button 
+            *ngIf="!notification.isRead"
+            class="action-btn mark-read-btn" 
+            (click)="markAsRead(notification.id)"
+            title="Mark as read">
+            <fa-icon [icon]="faCheck"></fa-icon>
+          </button>
+          <button 
+            class="action-btn delete-btn" 
+            (click)="deleteNotification(notification.id)"
+            title="Delete notification">
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading More -->
+      <div *ngIf="isLoadingMore" class="loading-more">
+        <div class="spinner"></div>
+        <p>Loading more...</p>
+      </div>
+
+      <!-- End of List -->
+      <div *ngIf="!hasMoreNotifications && notifications.length > 0" class="end-of-list">
+        <p>You're all caught up! 🎉</p>
+      </div>
+    </div>
+  </div>
+</div>  
