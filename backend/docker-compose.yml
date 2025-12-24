@@ -30,7 +30,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./uploads:/app/uploads  # ADD THIS LINE
+      - ./uploads:/app/uploads  
 
 volumes:
   db_data:
