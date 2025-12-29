@@ -12,15 +12,11 @@
     <!-- Profile Picture Section -->
     <div class="profile-pic-section">
       <div class="profile-preview">
-        <!-- Show uploaded image preview -->
-        <img *ngIf="previewUrl" [src]="previewUrl" alt="Profile preview" class="preview-image">
-
-        <!-- Show Gmail-style avatar if no image -->
-        <div *ngIf="!previewUrl" class="avatar-placeholder" [style.background-color]="getAvatarColor()">
-          {{ getInitial() }}
-        </div>
+        <!-- Show uploaded image preview OR default avatar -->
+        <img [src]="previewUrl || '/avatar/default-avatar.png'" 
+             alt="Profile preview" 
+             class="preview-image">
       </div>
-
       <div class="profile-actions">
         <label for="profilePic" class="upload-label">
           <fa-icon [icon]="faCamera"></fa-icon>

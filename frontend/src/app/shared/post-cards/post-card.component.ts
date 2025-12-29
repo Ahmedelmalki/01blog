@@ -2,7 +2,6 @@ import { Component, Input, Output, OnInit, EventEmitter, HostListener } from '@a
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PostResponse } from '../../models/post.models';
 import { faFlag, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { AvatarService } from '../../services/avatar.service';
 import { Router } from '@angular/router';
 import { POST_CARD_IMPORTS } from './post-card.imports';
 
@@ -27,8 +26,7 @@ export class PostCardComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private router: Router,
-    public avatarService: AvatarService
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -38,7 +36,7 @@ export class PostCardComponent implements OnInit {
         const payload = JSON.parse(atob(token.split('.')[1]));
         this.currentUsername = payload.sub || '';
       } catch (e) {
-        console.error('ffailed to decode token', e);
+        console.error('Failed to decode token', e);
       }
     }
   }
@@ -51,8 +49,7 @@ export class PostCardComponent implements OnInit {
   }
 
   canModifyPost(): boolean {
-    return this.currentUsername ===
-      this.postResponse.author;
+    return this.currentUsername === this.postResponse.author;
   }
 
   // Check if user can report (not their own post)
@@ -105,7 +102,7 @@ export class PostCardComponent implements OnInit {
 
     const reportRequest = {
       reason: reason,
-      reportedUserId: null,  // Not reporting a user, just a post
+      reportedUserId: null,
       reportedPostId: this.postResponse.id
     };
 
@@ -143,7 +140,6 @@ export class PostCardComponent implements OnInit {
       .subscribe({
         next: () => {
           console.log('✅ Post deleted successfully');
-          // Emit event to parent component to remove post from list
           this.postDeleted.emit(this.postResponse.id);
         },
         error: (err) => {
@@ -167,4 +163,8 @@ export class PostCardComponent implements OnInit {
   onFollowStatusChanged() {
     this.followRefreshKey++;
   }
+
+  // onImageError(event: any) {
+  //   event.target.src = '/avatar/default-avatar.png';
+  // }
 }

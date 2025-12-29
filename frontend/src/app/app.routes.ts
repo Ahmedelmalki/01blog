@@ -17,5 +17,5 @@ export const routes: Routes = [
   { path: 'post/edit/:id', component: CreateComponent },
   { path: 'notifications', component: NotificationsComponent },
   { path: 'admin/dashboard', component: DashboardComponent },
-  { path: '**', redirectTo: '/login' }
+  // { path: '**', redirectTo: '/login' }
 ];

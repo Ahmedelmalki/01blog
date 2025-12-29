@@ -94,27 +94,27 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  getInitial(): string {
-    return this.email ? this.email.charAt(0).toUpperCase() : '?';
-  }
+  // getInitial(): string {
+  //   return this.email ? this.email.charAt(0).toUpperCase() : '?';
+  // }
 
-  getAvatarColor(): string {
-    if (!this.email) return '#6c757d';
+  // getAvatarColor(): string {
+  //   if (!this.email) return '#6c757d';
 
-    // Generate consistent color based on email
-    let hash = 0;
-    for (let i = 0; i < this.email.length; i++) {
-      hash = this.email.charCodeAt(i) + ((hash << 5) - hash);
-    }
+  //   // Generate consistent color based on email
+  //   let hash = 0;
+  //   for (let i = 0; i < this.email.length; i++) {
+  //     hash = this.email.charCodeAt(i) + ((hash << 5) - hash);
+  //   }
 
-    const colors = [
-      '#e57373', '#f06292', '#ba68c8', '#9575cd',
-      '#7986cb', '#64b5f6', '#4fc3f7', '#4dd0e1',
-      '#4db6ac', '#81c784', '#aed581', '#ff8a65'
-    ];
+  //   const colors = [
+  //     '#e57373', '#f06292', '#ba68c8', '#9575cd',
+  //     '#7986cb', '#64b5f6', '#4fc3f7', '#4dd0e1',
+  //     '#4db6ac', '#81c784', '#aed581', '#ff8a65'
+  //   ];
 
-    return colors[Math.abs(hash) % colors.length];
-  }
+  //   return colors[Math.abs(hash) % colors.length];
+  // }
 
   async uploadProfilePicture(): Promise<string | null> {
     if (!this.selectedFile) return null;
@@ -124,17 +124,15 @@ export class RegisterComponent implements OnInit {
 
     const formData = new FormData();
     formData.append('file', this.selectedFile);
+    const url = 'http://localhost:8080/api/files/upload/public';
 
     try {
       const response = await firstValueFrom(
-        this.http.post<{ url: string }>(
-          'http://localhost:8080/api/files/upload/public',
-          formData,
-          {
-            headers: new HttpHeaders({
-              'Authorization': token ? `Bearer ${token}` : ''
-            })
-          }
+        this.http.post<{ url: string }>(url, formData, {
+          headers: new HttpHeaders({
+            'Authorization': token ? `Bearer ${token}` : ''
+          })
+        }
         )
       );
 

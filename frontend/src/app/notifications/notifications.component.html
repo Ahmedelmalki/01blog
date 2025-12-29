@@ -57,9 +57,9 @@
         <!-- Avatar -->
         <div class="notification-avatar" (click)="$event.stopPropagation(); navigateToProfile(notification.actorUsername)">
           <img 
-            [src]="notification.actorProfileLink || 'assets/default-avatar.png'" 
+            [src]="notification.actorProfileLink || '/avatar/default-avatar.png'" 
             [alt]="notification.actorUsername"
-            onerror="this.src='assets/default-avatar.png'">
+            onerror="this.src='/avatar/default-avatar.png'">
         </div>
 
         <!-- Content -->
