@@ -42,13 +42,12 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   isLoadingMore = false;
   unreadCount = 0;
 
-  // Icons
+  
   faBell = faBell;
   faCheck = faCheck;
   faTrash = faTrash;
   faTimes = faTimes;
 
-  // WebSocket
   private stompClient: CompatClient | null = null;
   private subscription: any = null;
 
@@ -230,15 +229,12 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     return `${months}mo ago`;
   }
 
-  // WebSocket Connection using native WebSocket (no SockJS)
   private connectWebSocket() {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    // Use native WebSocket endpoint
-    this.stompClient = Stomp.client('ws://localhost:8080/ws');
+    this.stompClient = Stomp.client('ws://localhost:8080/ws'); 
     
-    // Disable debug logging in production
     this.stompClient.debug = (str) => {
       console.log('STOMP: ' + str);
     };
@@ -276,7 +272,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.notifications.unshift(notification);
     this.unreadCount++;
     
-    // Show browser notification if permission granted
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('New Notification', {
         body: notification.message,

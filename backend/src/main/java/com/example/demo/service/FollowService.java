@@ -40,7 +40,8 @@ public class FollowService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
         User following = userRepo.findByUsername(followingUsername)// todo: send notification to this mf
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
-        
+                System.out.printf("%s   ||||||||| %s",follower.getUsername(), following.getUsername());
+
         return followRepo.findByFollowerAndFollowing(follower, following)
                 .map(exist -> {
                     followRepo.delete(exist);
@@ -48,7 +49,7 @@ public class FollowService {
                 }).orElseGet(() -> {
                     Follow newFollow = new Follow(null, follower, following);
                     followRepo.save(newFollow); // provided by jpa
-                    notificationService.notifyFollow(follower, follower);
+                    notificationService.notifyFollow(follower, following);
                     return true;
                 });
     }

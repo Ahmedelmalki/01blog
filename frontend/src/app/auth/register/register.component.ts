@@ -7,7 +7,7 @@ import { faMoon, faSun, faCamera, faTrash } from '@fortawesome/free-solid-svg-ic
 import { DarkModeService } from '../../services/dark-mode.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { firstValueFrom } from 'rxjs';
-import { RecaptchaModule } from 'ng-recaptcha';
+
 
 @Component({
   selector: 'app-register',
@@ -16,7 +16,6 @@ import { RecaptchaModule } from 'ng-recaptcha';
     FormsModule,
     FontAwesomeModule,
     RouterLink,
-    RecaptchaModule
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
@@ -42,18 +41,11 @@ export class RegisterComponent implements OnInit {
   isUploading = false;
   previewUrl: string | null = null;
 
-  captchaToken: string | null = null;
-  siteKey = '6Ld9ERIsAAAAANXlu6h1WgzSxz5Q9RfiQ7YPd2v2';
-
   constructor(
     private http: HttpClient,
     private router: Router,
     private darkModeService: DarkModeService
   ) { }
-
-  onCaptchaResolved(captchaResponse: string | null) {
-    this.captchaToken = captchaResponse;
-  }
 
   ngOnInit() {
     this.darkModeService.darkMode$.subscribe(isDark => {
@@ -158,11 +150,6 @@ export class RegisterComponent implements OnInit {
   }
 
   async register() {
-    if (!this.captchaToken){
-      this.errorMessage = 'please complete the CAPTCHA';
-      return;
-    }
-
     this.successMessage = null;
     this.errorMessage = null;
 
@@ -184,7 +171,6 @@ export class RegisterComponent implements OnInit {
       email: this.email,
       password: this.password,
       profileLink: this.profileLink || '', // Send empty string if no profile pic
-      captchaToken: this.captchaToken
     };
 
     this.http.post('http://localhost:8080/auth/register', payload)

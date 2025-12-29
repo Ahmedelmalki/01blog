@@ -15,7 +15,6 @@ import java.util.*;
 @AllArgsConstructor
 public class AdminController {
     private final AdminService adminService;
-    // private final JwtUtil jwtUtil;
 
     @GetMapping("/dashboard")
     public ResponseEntity<Map<String, Object>> getDashboard(){

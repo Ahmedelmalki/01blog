@@ -48,7 +48,7 @@ public class NotificationController {
         return ResponseEntity.ok(Map.of("unreadCount", count));
     }
 
-      @PutMapping("/{id}/read")
+    @PutMapping("/{id}/read")
     public ResponseEntity<Map<String, String>> markAsRead(
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Long id) {

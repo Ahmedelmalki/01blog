@@ -16,26 +16,15 @@ import com.example.demo.service.*;
 @AllArgsConstructor
 public class AuthController {
     private final AuthService authService;
-    private final RecaptchaService recaptchaService; // ADD THIS
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
-        // ADD THIS CHECK
-        if (!recaptchaService.verify(user.getCaptchaToken())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse("CAPTCHA verification failed"));
-        }
         User savedUser = authService.register(user);
         return ResponseEntity.ok(new UserResponse(savedUser));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        // ADD THIS CHECK
-        if (!recaptchaService.verify(request.getCaptchaToken())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse("CAPTCHA verification failed"));
-        }
         String token = authService.login(request.getUsername(), request.getPassword());
         User user = authService.getUserByUsername(request.getUsername());
         return ResponseEntity.ok(new AuthResponse(token, new UserResponse(user)));

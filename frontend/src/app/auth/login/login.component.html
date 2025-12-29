@@ -7,10 +7,6 @@
   <form (ngSubmit)="login()" #loginForm="ngForm">
     <input type="text" placeholder="Username" name="username" [(ngModel)]="username" required>
     <input type="password" placeholder="Password" name="password" [(ngModel)]="password" required>
-    <div class="captcha-container">
-      <re-captcha [siteKey]="siteKey" (resolved)="onCaptchaResolved($event)"
-        [theme]="isDarkMode ? 'dark' : 'light'"></re-captcha>
-    </div>
     <button type="submit" [disabled]="!loginForm.valid">Login</button>
   </form>
 
