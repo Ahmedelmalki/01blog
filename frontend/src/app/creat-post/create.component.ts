@@ -56,28 +56,29 @@ export class CreateComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
+    const url = `http://localhost:8080/posts/${this.postId}`;
 
-    this.http.get<any>(`http://localhost:8080/posts/${this.postId}`, { headers })
-      .subscribe({
-        next: (response) => {
-          this.post.title = response.post.title;
-          this.post.content = response.post.content;
-          this.post.mediaLink = response.post.mediaLink || '';
-          console.log('Post loaded for editing:', response);
-        },
-        error: (err) => {
-          console.error('Failed to load post:', err);
-          this.errorMessage = 'Failed to load post. Please try again.';
-          if (err.status === 401) {
-            localStorage.removeItem('token');
-            this.router.navigate(['/login']);
-          } else if (err.status === 403) {
-            this.errorMessage = 'You can only edit your own posts.';
-            setTimeout(() => this.router.navigate(['/feed']), 2000);
-          }
+    this.http.get<any>(url, { headers }).subscribe({
+      next: (response) => {
+        this.post.title = response.post.title;
+        this.post.content = response.post.content;
+        this.post.mediaLink = response.post.mediaLink || '';
+        console.log('Post loaded for editing:', response);
+      },
+      error: (err) => {
+        console.error('Failed to load post:', err);
+        this.errorMessage = 'Failed to load post. Please try again.';
+        if (err.status === 401) {
+          localStorage.removeItem('token');
+          this.router.navigate(['/login']);
+        } else if (err.status === 403) {
+          this.errorMessage = 'You can only edit your own posts.';
+          setTimeout(() => this.router.navigate(['/feed']), 2000);
         }
-      });
+      }
+    });
   }
+
   ifFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -117,7 +118,7 @@ export class CreateComponent implements OnInit {
       console.log(' File uploaded:', response.url);
       return response.url;
     } catch (error: any) {
-      this.ngZone.run(() => {  
+      this.ngZone.run(() => {
         this.isUploading = false;
 
         if (error.error && error.error.error) {
@@ -145,13 +146,11 @@ export class CreateComponent implements OnInit {
     this.errorMessage = null;
     this.successMessage = null;
 
-    // Upload file if selected
     if (this.selectedFile) {
       const uploadedUrl = await this.uploadFile();
       if (uploadedUrl) {
         this.post.mediaLink = uploadedUrl;
       } else {
-        // Upload failed, stop the submission
         this.isLoading = false;
         return;
       }
@@ -188,15 +187,17 @@ export class CreateComponent implements OnInit {
         }, 1500);
       },
       error: (err) => {
-        console.error(`❌ Failed to ${this.isEditMode ? 'update' : 'create'} post:`, err);
-        this.errorMessage = `Failed to ${this.isEditMode ? 'update' : 'create'} post. Please try again.`;
+        console.log(err);
         this.isLoading = false;
 
-        if (err.status === 401) {
+        if (err.error?.message) {
+          this.errorMessage = err.error.message;
+        } else if (err.status === 401) {
+          this.errorMessage = 'Unauthorized. Please log in again.';
           localStorage.removeItem('token');
           this.router.navigate(['/login']);
-        } else if (err.status === 403) {
-          this.errorMessage = 'You can only edit your own posts.';
+        } else {
+          this.errorMessage = 'Something went wrong. Please try again.';
         }
       }
     });
