@@ -28,7 +28,7 @@ public class NotificationService {
         String message = author.getUsername() + " created a new post";
         for (User follower: followers){
             System.out.println("follower: "+follower.getUsername()+" following: "+author.getUsername()+"44444444444444\n\n\n\n\n");
-            createAndSendNotification(follower, author, "NEW_POST", message, postId);
+            createAndSendNotification(author, follower, "NEW_POST", message, postId);
         } 
     }
 

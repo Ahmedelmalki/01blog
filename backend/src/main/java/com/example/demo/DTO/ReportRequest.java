@@ -6,6 +6,6 @@ import lombok.*;
 @AllArgsConstructor
 public class ReportRequest {
     private String reason;
-    private Long reportedUserId;  
+    private String reportedUsername;  
     private Long reportedPostId;  
 }

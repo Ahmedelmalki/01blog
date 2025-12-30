@@ -25,7 +25,7 @@ public class PostService {
         User user = userRepository.findByUsername(username) 
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         
-        if (user.getState() == -1) { 
+        if (user.getState() == -1) { // does not get this message
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are banned and cannot create posts");
         }
         

@@ -10,7 +10,8 @@
     <!-- User Info Card (Fixed) -->
     <div *ngIf="!isLoadingUser && userInfo" class="user-card">
       <div class="author-avatar">
-        <img *ngIf="userInfo.profileLink" [src]="userInfo.profileLink || '/avatar/default-avatar.png'" [alt]="userInfo.username" class="profile-image">
+        <img *ngIf="userInfo.profileLink" [src]="userInfo.profileLink || '/avatar/default-avatar.png'"
+          [alt]="userInfo.username" class="profile-image">
 
       </div>
       <div class="user-details">
@@ -18,9 +19,20 @@
         <p class="user-username">@{{ userInfo.username }}</p>
         <p class="post-count">{{ posts.length }} {{ posts.length === 1 ? 'post' : 'posts' }}</p>
       </div>
-      <!-- todo: add follow-button -->
-       <app-follow-button [username]="username" size="large"></app-follow-button>
-      <!-- and followres/following count -->
+
+
+      <div class="header-actions">
+        <app-follow-button [username]="username" size="large"></app-follow-button>
+
+        <div class="menu-container" *ngIf="!isCurrentUser()">
+          <button class="menu-btn" (click)="toggleMenu($event)">⋮</button>
+          <div class="menu-dropdown" [class.show]="showMenu">
+            <button class="menu-item report-btn" (click)="onReportUser()">
+            <fa-icon [icon]="faFlag" class="menu-icon"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Loading User Info -->

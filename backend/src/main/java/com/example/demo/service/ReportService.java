@@ -41,13 +41,23 @@ public class ReportService {
         return user.getRoles().contains("ADMIN");
     }
 
-    // create report
+
+    /*
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public class ReportRequest {
+            private String reason;
+            private String reportedUsername;  
+            private Long reportedPostId;  
+        }
+    */
     public Report createReport(String reporterUsername, ReportRequest request){
-        if (request.getReportedUserId() == null && request.getReportedPostId() == null) {
+        if (request.getReportedUsername() == null && request.getReportedPostId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
                 "Must specify either reportedUserId or reportedPostId");
         }
-        if (request.getReportedUserId() != null && request.getReportedPostId() != null) {
+        if (request.getReportedUsername() != null && request.getReportedPostId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
                 "Cannot report both a user and a post in the same report");
         }
@@ -59,8 +69,8 @@ public class ReportService {
         report.setReporter(reporter);
 
         // reporting a user
-        if (request.getReportedUserId() != null){
-            User reportedUser = userRepository.findById(request.getReportedUserId())
+        if (request.getReportedUsername() != null){
+            User reportedUser = userRepository.findByUsername(request.getReportedUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reported user not found"));
             
             // Prevent self-reporting

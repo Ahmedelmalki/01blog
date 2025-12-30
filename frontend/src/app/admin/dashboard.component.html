@@ -36,7 +36,7 @@
         <div *ngFor="let report of userReports" class="report-card">
           <div class="report-summary" (click)="toggleUserReport(report.id)">
             <div class="report-info">
-              <img class="user-avatar" src="report.reportedUser.profileLink || '/avatar/default-avatar.png'" alt=""> <!--check later-->
+              <img class="user-avatar" [src]="report.reportedUser.profileLink || '/avatar/default-avatar.png'" alt=""> <!--check later-->
               <div class="report-details">
                 <h3 class="reported-name">
                   {{ report.reportedUser.firstname }} {{ report.reportedUser.lastname }}
@@ -101,7 +101,9 @@
         <div *ngFor="let report of postReports" class="report-card">
           <div class="report-summary" (click)="togglePostReport(report.id)">
             <div class="report-info">
-              <div class="post-icon">📄</div>
+              <div class="post-icon">
+                <fa-icon [icon]="faSheet"></fa-icon>
+              </div>
               <div class="report-details">
                 <h3 class="reported-name">{{ report.reportedPost.title }}</h3>
                 <p class="post-author">By @{{ report.reportedPost.author.username }}</p> <!--here-->

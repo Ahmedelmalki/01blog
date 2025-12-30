@@ -109,13 +109,11 @@ export class PostCardComponent implements OnInit {
     this.http.post('http://localhost:8080/reports', reportRequest, { headers })
       .subscribe({
         next: (response: any) => {
-          console.log('✅ Post reported successfully:', response);
+          console.log('Post reported successfully:', response);
           alert('Thank you for your report. Our team will review it shortly.');
         },
         error: (err) => {
-          console.error('❌ Failed to report post:', err);
           alert('Failed to submit report. Please try again.');
-
           if (err.status === 401) {
             localStorage.removeItem('token');
             this.router.navigate(['/login']);
@@ -135,17 +133,13 @@ export class PostCardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
-    this.http.delete(`http://localhost:8080/posts/${this.postResponse.id}`, { headers })
-      .subscribe({
+    const url = `http://localhost:8080/posts/${this.postResponse.id}`;
+    this.http.delete(url, { headers }).subscribe({
         next: () => {
-          console.log('✅ Post deleted successfully');
           this.postDeleted.emit(this.postResponse.id);
         },
         error: (err) => {
-          console.error('❌ Failed to delete post:', err);
           alert('Failed to delete post. Please try again.');
-
           if (err.status === 401) {
             localStorage.removeItem('token');
             this.router.navigate(['/login']);
@@ -154,7 +148,6 @@ export class PostCardComponent implements OnInit {
       });
   }
 
-  // Close menu when clicking outside
   @HostListener('document:click')
   closeMenu() {
     this.showMenu = false;

@@ -58,7 +58,7 @@ export class FollowButtonComponent implements OnInit, OnDestroy {
     private checkFollowStatus() {
         const token = localStorage.getItem('token');
         if (!token) return;
-        console.log('============> checkFollowStatus()');
+        // console.log('============> checkFollowStatus()');
         this.followService.checkFollowStatus(this.username).subscribe({
             next: (res) => {
                 this.followService.updateFollowStatus(this.username, res.following);

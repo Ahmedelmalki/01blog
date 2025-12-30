@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PostResponse, PostsResponse, UserInfo } from '../models/post.models';
+import { faFlag } from '@fortawesome/free-solid-svg-icons';
 import { PROFILE_IMPORTS } from './profile.imports';
 
 @Component({
@@ -18,6 +19,9 @@ export class ProfileComponent implements OnInit {
   isLoadingPosts = true;
   errorMessage: string | null = null;
   username: string = '';
+  faFlag = faFlag;
+  showMenu = false;
+  currentUsername: string = '';
 
   constructor(
     private http: HttpClient,
@@ -47,7 +51,7 @@ export class ProfileComponent implements OnInit {
   }
 
   loadUserPosts() {
-    console.log("=======> loadUserPosts()");
+    // console.log("=======> loadUserPosts()");
     this.isLoadingPosts = true;
     this.errorMessage = null;
     const token = localStorage.getItem('token');
@@ -61,10 +65,9 @@ export class ProfileComponent implements OnInit {
     });
     const url = `http://localhost:8080/posts/user/${this.username}`;
 
-    this.http.get<PostsResponse>(url, { headers }
-    ).subscribe({
+    this.http.get<PostsResponse>(url, { headers }).subscribe({
       next: (data) => {
-        console.log('User posts loaded:', data);
+        // console.log('User posts loaded:', data);
         this.posts = data.posts;
         this.isLoadingPosts = false;
 
@@ -99,5 +102,62 @@ export class ProfileComponent implements OnInit {
 
   goToFeed() {
     this.router.navigate(['/feed']);
+  }
+
+  isCurrentUser(): boolean {
+    return this.currentUsername === this.username;
+  }
+
+  toggleMenu(event: Event) {
+    event.stopPropagation();
+    this.showMenu = !this.showMenu;
+  }
+
+  onReportUser() {
+    this.showMenu = false;
+    const reason = prompt('Please provide a reason for reporting this user:');
+    if (reason && reason.trim()) {
+      this.reportUser(reason.trim());
+    }
+  }
+
+  private reportUser(reason: string) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const reportRequest = {
+      reason: reason,
+      reportedUsername: this.username,
+      reportedPostId: null
+    };
+
+    this.http.post('http://localhost:8080/reports', reportRequest, { headers })
+      .subscribe({
+        next: () => {
+          console.log("00000000000000000000 next");
+
+          alert('Thank you for your report.')
+        },
+        error: (err) => {
+          alert('Failed to submit report.');
+          if (err.status === 401) {
+            localStorage.removeItem('token');
+            this.router.navigate(['/login']);
+          }
+        }
+      });
+  }
+
+  @HostListener('document:click')
+  closeMenu() {
+    this.showMenu = false;
   }
 }
