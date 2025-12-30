@@ -1,18 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PostCardComponent } from '../shared/post-cards/post-card.component';
 import { PostResponse, UserInfo } from '../models/post.models';
-import { AvatarService } from '../services/avatar.service';
-import { FollowButtonComponent } from '../shared/follow/follow-button.component';
+import { PROFILE_IMPORTS } from './profile.imports';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule,
-    PostCardComponent,
-    FollowButtonComponent],
+  imports: [PROFILE_IMPORTS],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
@@ -28,12 +23,11 @@ export class ProfileComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute,
-    public avatarService: AvatarService
   ) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.username = params['username'];
+      this.username = params['username']; // what is this
       if (this.username) {
         this.loadUserPosts();
       } else {
@@ -53,6 +47,7 @@ export class ProfileComponent implements OnInit {
   }
 
   loadUserPosts() {
+    console.log("=======> loadUserPosts()");
     this.isLoadingPosts = true;
     this.errorMessage = null;
     const token = localStorage.getItem('token');
@@ -64,11 +59,9 @@ export class ProfileComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
+    const url = `http://localhost:8080/posts/user/${this.username}`;
 
-
-    this.http.get<PostResponse[]>(
-      `http://localhost:8080/posts/user/${this.username}`,
-      { headers }
+    this.http.get<PostResponse[]>(url, { headers }
     ).subscribe({
       next: (data) => {
         console.log('User posts loaded:', data);

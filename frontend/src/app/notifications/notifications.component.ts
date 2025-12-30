@@ -5,25 +5,8 @@ import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBell, faCheck, faTrash, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { CompatClient, Stomp } from '@stomp/stompjs';
-
-interface Notification {
-  id: number;
-  type: string;
-  message: string;
-  actorUsername: string;
-  actorProfileLink?: string;
-  postId?: number;
-  isRead: boolean;
-  createdAt: string;
-}
-
-interface NotificationsResponse {
-  notifications: Notification[];
-  currentPage: number;
-  totalPages: number;
-  totalItems: number;
-  hasNext: boolean;
-}
+import {  NotificationsResponse } from '../models/notification.models';
+import type { Notification } from '../models/notification.models';
 
 @Component({
   selector: 'app-notifications',
@@ -234,6 +217,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     if (!token) return;
 
     this.stompClient = Stomp.client('ws://localhost:8080/ws'); 
+    console.log("000000000000000000000000000000000");
     
     this.stompClient.debug = (str) => {
       console.log('STOMP: ' + str);
@@ -257,6 +241,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         console.error('WebSocket connection error:', error);
       }
     );
+    console.log("1111111111111111111111");
+    
   }
 
   private disconnectWebSocket() {

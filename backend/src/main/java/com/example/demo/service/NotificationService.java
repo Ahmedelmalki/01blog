@@ -18,17 +18,17 @@ public class NotificationService {
     private final SimpMessagingTemplate messagingTemplate;
     private final UserRepository userRepository;
     
-    public void notifyFollow(User follower, User followed){
+    public void notifyFollow(User follower, User following){
         String message = follower.getUsername() + " stated following you";
-                System.out.printf("%s   ||||||||| %s",follower.getUsername(), followed.getUsername());
-
-        createAndSendNotification(follower, followed, "FOLLOW", message, null);
+        System.out.println("follower: "+follower.getUsername()+" following: "+following.getUsername()+"222222222222\n\n\n\n\n");
+        createAndSendNotification(follower, following, "FOLLOW", message, null);
     }
 
     public void notifyNewPost(User author, Long postId, List<User> followers){
         String message = author.getUsername() + " created a new post";
-        for (User f: followers){
-            createAndSendNotification(f, author, "NEW_POST", message, postId);
+        for (User follower: followers){
+            System.out.println("follower: "+follower.getUsername()+" following: "+author.getUsername()+"44444444444444\n\n\n\n\n");
+            createAndSendNotification(follower, author, "NEW_POST", message, postId);
         } 
     }
 
@@ -85,17 +85,18 @@ public class NotificationService {
     }
 
     // =========== HELPER ===========
-    private void createAndSendNotification(User recipient, User actor, String type, String message, Long postId){
+    private void createAndSendNotification(User follower, User following, String type, String message, Long postId){
+        System.out.println("follower: "+follower.getUsername()+" following: "+following.getUsername()+"333333333333\n\n\n\n\n");
+
         Notification notification = new Notification();
-        notification.setNotifiedUser(actor);
-        notification.setActor(recipient);
+        notification.setNotifiedUser(following);
+        notification.setActor(follower);
         notification.setType(type);
         notification.setMessage(message);
         notification.setPostId(postId);
         notification.setRead(false);
         Notification saved = notificationsRepo.save(notification);
-        System.out.printf("%s   ||||||||| %s",actor.getUsername(), recipient.getUsername());
-        sendNotificationToUser(actor.getUsername(), saved);
+        sendNotificationToUser(following.getUsername(), saved);
     }
 
     private void sendNotificationToUser(String username, Notification notification){

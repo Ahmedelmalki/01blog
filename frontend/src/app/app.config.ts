@@ -2,12 +2,12 @@ import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
-import { RecaptchaModule } from 'ng-recaptcha';
+// import { RecaptchaModule } from 'ng-recaptcha'; // later
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(),
-    importProvidersFrom(RecaptchaModule)
+    // importProvidersFrom(RecaptchaModule)
   ]
 };

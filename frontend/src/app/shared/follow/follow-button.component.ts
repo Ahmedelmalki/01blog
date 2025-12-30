@@ -1,7 +1,8 @@
-import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { CommonModule } from "@angular/common";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { FollowService } from "../../services/follow.service";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: 'app-follow-button',
@@ -10,7 +11,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
     styleUrl: './follow-button.component.css',
     imports: [CommonModule]
 })
-export class FollowButtonComponent implements OnInit {
+export class FollowButtonComponent implements OnInit, OnDestroy {
     @Input() username!: string;
     @Input() size: 'small' | 'medium' | 'large' = 'medium';
     @Output() followStatusChanged = new EventEmitter<boolean>();
@@ -18,16 +19,27 @@ export class FollowButtonComponent implements OnInit {
     isFollowing: boolean = false;
     isLoading: boolean = false;
     currentUsername: string = '';
+    private followSubscription?: Subscription;
 
     constructor(
-        private http: HttpClient,
+        private followService: FollowService,
         private router: Router
     ) { }
 
     ngOnInit() {
         this.getCurrentUsername();
         if (this.username && this.username !== this.currentUsername) {
-            this.checkFollowStatus()
+            this.followSubscription = this.followService.getFollowStatus$(this.username)
+                .subscribe(isFollowing => {
+                    this.isFollowing = isFollowing;
+                });
+            this.checkFollowStatus();
+        }
+    }
+
+    ngOnDestroy() {
+        if (this.followSubscription) {
+            this.followSubscription.unsubscribe();
         }
     }
 
@@ -37,7 +49,6 @@ export class FollowButtonComponent implements OnInit {
             try {
                 const payload = JSON.parse(atob(token.split('.')[1]));
                 this.currentUsername = payload.sub || '';
-                // console.log("payload :", payload);
             } catch (e) {
                 console.error('failed to decode token', e);
             }
@@ -47,15 +58,10 @@ export class FollowButtonComponent implements OnInit {
     private checkFollowStatus() {
         const token = localStorage.getItem('token');
         if (!token) return;
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${token}`
-        });
-        this.http.get<{ following: boolean }>(
-            `http://localhost:8080/follow/status/${this.username}`,
-            { headers }
-        ).subscribe({
+        console.log('============> checkFollowStatus()');
+        this.followService.checkFollowStatus(this.username).subscribe({
             next: (res) => {
-                this.isFollowing = res.following;
+                this.followService.updateFollowStatus(this.username, res.following);
             },
             error: (err) => {
                 console.error('failed to check follow status:', err);
@@ -69,25 +75,21 @@ export class FollowButtonComponent implements OnInit {
             this.router.navigate(['/login']);
             return;
         }
+
         this.isLoading = true;
 
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${token}`
-        });
-        this.http.post<{ following: boolean, message: string }>(
-            `http://localhost:8080/follow/${this.username}`,
-            {},
-            { headers }
-        ).subscribe({
+        this.followService.toggleFollow(this.username).subscribe({
             next: (res) => {
-                this.isFollowing = res.following;
+                // Update the shared service, which will notify ALL components watching this username
+                this.followService.updateFollowStatus(this.username, res.following);
                 this.isLoading = false;
-                console.log("toggle follow working i guess", res.message);
+                this.followStatusChanged.emit(res.following);
+                console.log("toggle follow working", res.message);
             },
-            error: (err) =>{
+            error: (err) => {
                 console.error('failed to toggle follow', err);
                 this.isLoading = false;
-                if(err.status === 401){
+                if (err.status === 401) {
                     localStorage.removeItem('token');
                     this.router.navigate(['/login']);
                 }
@@ -95,7 +97,7 @@ export class FollowButtonComponent implements OnInit {
         });
     }
 
-    shouldShowButton(): boolean{
-        return  this.username !== this.currentUsername && this.currentUsername !== '';
+    shouldShowButton(): boolean {
+        return this.username !== this.currentUsername && this.currentUsername !== '';
     }
 }

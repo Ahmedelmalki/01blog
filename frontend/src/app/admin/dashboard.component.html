@@ -1,4 +1,3 @@
-<!-- src/app/admin/dashboard.component.html -->
 <div class="dashboard-container">
   
   <!-- Header -->
@@ -37,9 +36,7 @@
         <div *ngFor="let report of userReports" class="report-card">
           <div class="report-summary" (click)="toggleUserReport(report.id)">
             <div class="report-info">
-              <div class="user-avatar">
-                {{ getUserInitials(report.reportedUser) }}
-              </div>
+              <img class="user-avatar" src="report.reportedUser.profileLink || '/avatar/default-avatar.png'" alt=""> <!--check later-->
               <div class="report-details">
                 <h3 class="reported-name">
                   {{ report.reportedUser.firstname }} {{ report.reportedUser.lastname }}

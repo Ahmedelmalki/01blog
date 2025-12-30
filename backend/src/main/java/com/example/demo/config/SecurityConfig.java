@@ -58,6 +58,8 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/ws/**").permitAll()          
+                .requestMatchers("/ws").permitAll() 
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // just for debugging
                 .requestMatchers(HttpMethod.POST, "/api/files/upload/public").permitAll() // For registration
                 .requestMatchers(HttpMethod.POST, "/api/files/upload").authenticated()

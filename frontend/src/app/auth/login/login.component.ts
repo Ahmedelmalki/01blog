@@ -27,7 +27,10 @@ export class LoginComponent implements OnInit {
   faSun = faSun;
 
 
-  constructor(private http: HttpClient, private router: Router, private darkModeService: DarkModeService) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private darkModeService: DarkModeService) { }
 
   ngOnInit() {
     this.darkModeService.darkMode$.subscribe(isDark => {
@@ -47,8 +50,9 @@ export class LoginComponent implements OnInit {
       username: this.username,
       password: this.password,
     };
+    const url = 'http://localhost:8080/auth/login';
 
-    this.http.post('http://localhost:8080/auth/login', payload)
+    this.http.post(url, payload)
       .subscribe({
         next: (res: any) => {
           console.log('Login successful:', res);

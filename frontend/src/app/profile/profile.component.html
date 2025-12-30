@@ -1,20 +1,17 @@
-<!-- profile/profile.component.html -->
 <div class="profile-container">
 
   <!-- Fixed Header Section -->
   <div class="fixed-header">
     <!-- Back Button -->
     <div class="profile-header">
-      <button class="back-btn" (click)="goToFeed()">← Back to Feed</button>
+      <button class="back-btn" (click)="goToFeed()">Back to Feed</button>
     </div>
 
     <!-- User Info Card (Fixed) -->
     <div *ngIf="!isLoadingUser && userInfo" class="user-card">
       <div class="author-avatar">
-        <img *ngIf="userInfo.profileLink" [src]="userInfo.profileLink" [alt]="userInfo.username" class="profile-image">
-        <div *ngIf="!userInfo.profileLink" [style.background-color]="avatarService.getAvatarColor(username)">
-          {{avatarService.getInitial(username) }}
-        </div>
+        <img *ngIf="userInfo.profileLink" [src]="userInfo.profileLink || '/avatar/default-avatar.png'" [alt]="userInfo.username" class="profile-image">
+
       </div>
       <div class="user-details">
         <h1 class="user-name">{{ userInfo.firstname }} {{ userInfo.lastname }}</h1>

@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { UserReport, PostReport } from '../models/post.models';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { AvatarService } from '../services/avatar.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,6 +13,25 @@ import { AvatarService } from '../services/avatar.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
+/*
+export interface UserReport {
+  id: number;
+  reportedUser: {
+    id: number;
+    username: string;
+    firstname: string;
+    lastname: string;
+    profileLink: string,
+    state: number;
+  };
+  reporter: {
+    username: string;
+  };
+  reason: string;
+  createdAt: string;
+}
+*/
+
 export class DashboardComponent implements OnInit {
   userReports: UserReport[] = [];
   postReports: PostReport[] = [];
@@ -22,13 +40,12 @@ export class DashboardComponent implements OnInit {
   loading = true;
   errorMessage: string | null = null;
   faTrash = faTrash;
-  
+
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    public avatarService: AvatarService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchReports();
@@ -47,8 +64,9 @@ export class DashboardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
+    const url = 'http://localhost:8080/reports';
 
-    this.http.get<any[]>('http://localhost:8080/reports', { headers })
+    this.http.get<any[]>(url, { headers })
       .subscribe({
         next: (data) => {
           this.userReports = data.filter(r => r.reportedUser !== null);
@@ -82,8 +100,9 @@ export class DashboardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
+    const url = `http://localhost:8080/admin/users/${userId}/ban`;
 
-    this.http.put(`http://localhost:8080/admin/users/${userId}/ban`, {}, { headers })
+    this.http.put(url, {}, { headers })
       .subscribe({
         next: () => {
           alert('User banned successfully');
@@ -103,8 +122,8 @@ export class DashboardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
-    this.http.put(`http://localhost:8080/admin/users/${userId}/unban`, {}, { headers })
+    const url = `http://localhost:8080/admin/users/${userId}/unban`;
+    this.http.put(url, {}, { headers })
       .subscribe({
         next: () => {
           alert('User unbanned successfully');
@@ -124,8 +143,9 @@ export class DashboardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
+    const url = `http://localhost:8080/admin/users/${userId}`;
 
-    this.http.delete(`http://localhost:8080/admin/users/${userId}`, { headers })
+    this.http.delete(url, { headers })
       .subscribe({
         next: () => {
           alert('User deleted successfully');
@@ -145,8 +165,8 @@ export class DashboardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
-    this.http.delete(`http://localhost:8080/admin/posts/${postId}`, { headers })
+    const url = `http://localhost:8080/admin/posts/${postId}`;
+    this.http.delete(url, { headers })
       .subscribe({
         next: () => {
           alert('Post deleted successfully');
@@ -157,10 +177,6 @@ export class DashboardComponent implements OnInit {
           alert('Failed to delete post. Please try again.');
         }
       });
-  }
-
-  getUserInitials(user: any): string {
-    return `${user.firstname.charAt(0)}${user.lastname.charAt(0)}`.toUpperCase();
   }
 
   isUserBanned(state: number): boolean {

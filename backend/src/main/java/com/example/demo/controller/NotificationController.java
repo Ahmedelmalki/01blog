@@ -22,8 +22,9 @@ public class NotificationController {
         @RequestHeader("Authorization") String authHeader,
         @RequestParam(defaultValue = "0")int page,
         @RequestParam(defaultValue = "20") int size) {
-        String token = authHeader.replace("Bearer ", "").trim();
-        String username = jwtUtil.extractUsername(token);
+            String token = authHeader.replace("Bearer ", "").trim();
+            String username = jwtUtil.extractUsername(token);
+            
 
         Page<Map<String, Object>> notificationsPage = ns.getUserNotifications(username, page, size);
 
@@ -60,7 +61,6 @@ public class NotificationController {
         return ResponseEntity.ok(Map.of("message", "Notification marked as read"));
     }
 
-    // Mark all as read
     @PutMapping("/read-all")
     public ResponseEntity<Map<String, String>> markAllAsRead(
             @RequestHeader("Authorization") String authHeader) {
@@ -72,7 +72,6 @@ public class NotificationController {
         return ResponseEntity.ok(Map.of("message", "All notifications marked as read"));
     }
 
-    // Delete notification
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> deleteNotification(
             @RequestHeader("Authorization") String authHeader,
