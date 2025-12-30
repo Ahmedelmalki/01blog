@@ -1,5 +1,5 @@
 <div class="dashboard-container">
-  
+
   <!-- Header -->
   <div class="dashboard-header">
     <h1>Admin Dashboard</h1>
@@ -18,7 +18,7 @@
 
   <!-- Dashboard Grid -->
   <div *ngIf="!loading && !errorMessage" class="dashboard-grid">
-    
+
     <!-- User Reports Section -->
     <div class="reports-section">
       <div class="section-header">
@@ -36,7 +36,8 @@
         <div *ngFor="let report of userReports" class="report-card">
           <div class="report-summary" (click)="toggleUserReport(report.id)">
             <div class="report-info">
-              <img class="user-avatar" [src]="report.reportedUser.profileLink || '/avatar/default-avatar.png'" alt=""> <!--check later-->
+              <img class="user-avatar" [src]="report.reportedUser.profileLink || '/avatar/default-avatar.png'" alt="">
+              <!--check later-->
               <div class="report-details">
                 <h3 class="reported-name">
                   {{ report.reportedUser.firstname }} {{ report.reportedUser.lastname }}
@@ -58,25 +59,19 @@
               <p class="reason-text">{{ report.reason }}</p>
               <p class="report-date">Reported on: {{ report.createdAt | date:'medium' }}</p>
             </div>
-            
+
             <div class="action-buttons">
-              <button 
-                *ngIf="!isUserBanned(report.reportedUser.state)"
-                class="btn ban-btn" 
+              <button *ngIf="!isUserBanned(report.reportedUser.state)" class="btn ban-btn"
                 (click)="banUser(report.reportedUser.id)">
                 Ban User
               </button> <!--add icon later-->
-              <button 
-                *ngIf="isUserBanned(report.reportedUser.state)"
-                class="btn unban-btn" 
+              <button *ngIf="isUserBanned(report.reportedUser.state)" class="btn unban-btn"
                 (click)="unbanUser(report.reportedUser.id)">
                 Unban User
               </button> <!--add icon later-->
-              <button  
-                class="btn delete-btn" 
-                (click)="deleteUser(report.reportedUser.id)">
+              <button class="btn delete-btn" (click)="deleteUser(report.reportedUser.id)">
                 <fa-icon [icon]="faTrash"></fa-icon>
-                 Delete User
+                Delete User
               </button> <!--add icon later-->
             </div>
           </div>
@@ -120,18 +115,20 @@
             <div class="reason-section">
               <h4>Post Content:</h4>
               <p class="post-content">{{ report.reportedPost.content }}</p>
-              
+
               <h4>Reason for Report:</h4>
               <p class="reason-text">{{ report.reason }}</p>
               <p class="report-date">Reported on: {{ report.createdAt | date:'medium' }}</p>
             </div>
-            
-            <div class="action-buttons"> 
-              <button 
-                class="btn delete-btn" 
-                (click)="deletePost(report.reportedPost.id)">
+
+            <div class="action-buttons">
+              <button class="btn hide-btn" (click)="togglePostVisibility(report.reportedPost)">
+                <fa-icon [icon]="getEyeIcon(report.reportedPost)"></fa-icon>
+                {{ getHideButtonText(report.reportedPost) }}
+              </button>
+              <button class="btn delete-btn" (click)="deletePost(report.reportedPost.id)">
                 <fa-icon [icon]="faTrash"></fa-icon>
-                 Delete Post
+                Delete Post
               </button>
             </div>
           </div>

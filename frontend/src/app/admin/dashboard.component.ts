@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { PostReport, UserReport } from '../models/report.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faTrash, faSheetPlastic } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faSheetPlastic, faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +22,8 @@ export class DashboardComponent implements OnInit {
   errorMessage: string | null = null;
   faTrash = faTrash;
   faSheet = faSheetPlastic;
+  faEyeSlash = faEyeSlash;
+  faEye = faEye;
 
 
   constructor(
@@ -65,6 +67,26 @@ export class DashboardComponent implements OnInit {
           }
         }
       });
+  }
+
+  isPostHidden(post: any): boolean {
+    return post.hidden === true;
+  }
+
+  getEyeIcon(post: any) {
+    return this.isPostHidden(post) ? this.faEye : this.faEyeSlash;
+  }
+
+  getHideButtonText(post: any): string {
+    return this.isPostHidden(post) ? 'Unhide Post' : 'Hide Post';
+  }
+
+  togglePostVisibility(post: any) {
+    if (this.isPostHidden(post)) {
+      this.unhidePost(post.id);
+    } else {
+      this.hidePost(post.id);
+    }
   }
 
   toggleUserReport(reportId: number) {
@@ -160,6 +182,52 @@ export class DashboardComponent implements OnInit {
         }
       });
   }
+
+  hidePost(postId: number) {
+    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) return;
+
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    const url = `http://localhost:8080/admin/posts/${postId}`;
+    this.http.put(url, {}, { headers })
+      .subscribe({
+        next: () => {
+          console.log("shit has been sent 00000000000000000");
+
+          alert('Post hidden successfully');
+          this.fetchReports();
+        },
+        error: (err) => {
+          console.error('Failed to hide post:', err);
+          alert('Failed to hide post. Please try again.');
+        }
+      });
+  }
+
+  unhidePost(postId: number) {
+    if (!confirm('Are you sure you want to unhide this post?')) return;
+
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    const url = `http://localhost:8080/admin/posts/${postId}/unhide`;
+
+    this.http.put(url, {}, { headers })
+      .subscribe({
+        next: () => {
+          alert('Post unhidden successfully');
+          this.fetchReports();
+        },
+        error: (err) => {
+          console.error('Failed to unhide post:', err);
+          alert('Failed to unhide post. Please try again.');
+        }
+      });
+  }
+
 
   isUserBanned(state: number): boolean {
     return state === -1;

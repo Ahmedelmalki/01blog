@@ -3,7 +3,6 @@ package com.example.demo.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -18,6 +17,9 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private boolean hidden = false;
 
     @Column(nullable = false)
     private String title;
@@ -35,12 +37,10 @@ public class Post {
     @JsonIgnoreProperties({"reportedPost"})
     private List<Report> reports = new ArrayList<>();
 
-    // ✅ CASCADE DELETE for comments
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"post"})
     private List<Comment> comments = new ArrayList<>();
 
-    // ✅ CASCADE DELETE for post likes
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"post", "user"})
     private List<PostLike> likes = new ArrayList<>();

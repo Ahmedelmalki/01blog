@@ -60,12 +60,12 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/ws/**").permitAll()          
                 .requestMatchers("/ws").permitAll() 
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // just for debugging
-                .requestMatchers(HttpMethod.POST, "/api/files/upload/public").permitAll() // For registration
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
+                .requestMatchers(HttpMethod.POST, "/api/files/upload/public").permitAll() 
                 .requestMatchers(HttpMethod.POST, "/api/files/upload").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/reports").authenticated()  // Anyone can report
-                .requestMatchers(HttpMethod.GET, "/reports/**").hasRole("ADMIN")  // Only admins can view
+                .requestMatchers(HttpMethod.POST, "/reports").authenticated()  
+                .requestMatchers(HttpMethod.GET, "/reports/**").hasRole("ADMIN") 
                 .requestMatchers("/admin/**").hasRole("ADMIN")   
                 .requestMatchers("/posts/**").authenticated()
                 .requestMatchers("/comments/**").authenticated()

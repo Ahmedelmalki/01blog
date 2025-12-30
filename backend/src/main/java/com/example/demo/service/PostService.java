@@ -25,7 +25,7 @@ public class PostService {
         User user = userRepository.findByUsername(username) 
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         
-        if (user.getState() == -1) { // does not get this message
+        if (user.getState() == -1) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are banned and cannot create posts");
         }
         
@@ -42,7 +42,7 @@ public class PostService {
 
     public Page<PostDTO> getAllPosts(String username, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Post> postPage = postRepository.findAll(pageable);
+        Page<Post> postPage = postRepository.findByHiddenFalse(pageable);
         return postPage.map(post -> buildPostResponse(post, username));
     }
 

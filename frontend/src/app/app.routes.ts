@@ -6,6 +6,7 @@ import { CreateComponent } from './creat-post/create.component';
 import { ProfileComponent } from './profile/profile.component';
 import { DashboardComponent } from './admin/dashboard.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { NotFoundComponent } from './404page/404page.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -17,5 +18,5 @@ export const routes: Routes = [
   { path: 'post/edit/:id', component: CreateComponent },
   { path: 'notifications', component: NotificationsComponent },
   { path: 'admin/dashboard', component: DashboardComponent },
-  // { path: '**', redirectTo: '/login' }
+  { path: '**', component: NotFoundComponent }
 ];

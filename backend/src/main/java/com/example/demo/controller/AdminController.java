@@ -27,6 +27,16 @@ public class AdminController {
         return adminService.deletePost(postId);
     }
 
+    @PutMapping("/posts/{postId}")
+    public ResponseEntity<?> hidePost(@RequestHeader("Authorization") String authHeader, @PathVariable Long postId){
+        return adminService.hidePost(postId);
+    }
+
+    @PutMapping("/posts/{postId}/unhide")
+    public ResponseEntity<?> unHidePost(@RequestHeader("Authorization") String authHeader, @PathVariable Long postId){
+        return adminService.unHidePost(postId);
+    }
+
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<?> deleteUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long userId){
         return adminService.deleteUser(userId);

@@ -405,3 +405,34 @@
     width: 100%;
   }
 }
+
+.hide-btn {
+  background-color: #ff9800;
+  color: #fff;
+}
+
+.hide-btn:hover {
+  background-color: #f57c00;
+}
+
+.unhide-btn {
+  background-color: #17a2b8;
+  color: #fff;
+}
+
+.unhide-btn:hover {
+  background-color: #138496;
+}
+
+/* Optional: Add a visual indicator for hidden posts */
+.report-card.hidden-post {
+  opacity: 0.7;
+  border-left: 4px solid #ff9800;
+}
+
+.report-card.hidden-post .reported-name::after {
+  content: " (Hidden)";
+  font-size: 0.8rem;
+  color: #ff9800;
+  font-weight: normal;
+}

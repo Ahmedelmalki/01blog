@@ -39,7 +39,7 @@ public class FollowService {
 
         User follower = userRepo.findByUsername(followerUsername)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
-        User following = userRepo.findByUsername(followingUsername)// todo: send notification to this mf
+        User following = userRepo.findByUsername(followingUsername)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
     
 
@@ -49,7 +49,6 @@ public class FollowService {
                     return false;
                 }).orElseGet(() -> {
                     Follow newFollow = new Follow(null, follower, following);
-                    System.out.println("follower: "+follower.getUsername()+" following: "+following.getUsername()+"11111111111111\n\n\n\n\n");
                     followRepo.save(newFollow); // provided by jpa
                     notificationService.notifyFollow(follower, following);
                     return true;

@@ -16,7 +16,6 @@ public class AdminService {
     private final UserRepository userRepo;
     private final ReportRepository reportRepo;
     
-    // delete post
     public ResponseEntity<?> deletePost(Long postId){
         Post post = postRepo.findById(postId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
@@ -31,6 +30,39 @@ public class AdminService {
         ));
     }    
     
+    public ResponseEntity<?> hidePost(Long postId){
+        Post post = postRepo.findById(postId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
+        if(post.isHidden()){
+            return ResponseEntity.ok(Map.of(
+                "message", "Post is already hidden"
+            ));
+        }
+        post.setHidden(true);
+        postRepo.save(post);
+
+        return ResponseEntity.ok(Map.of(
+            "message", "Post has been hidden successfully"
+        ));
+    }
+
+    public ResponseEntity<?> unHidePost(Long postId){
+        Post post = postRepo.findById(postId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
+        if(!post.isHidden()){
+            return ResponseEntity.ok(Map.of(
+                "message", "Post is already visible"
+            ));    
+        }
+        post.setHidden(false);
+        postRepo.save(post);
+        List<Report> relatedReports = reportRepo.findByReportedPost(post);
+        reportRepo.deleteAll(relatedReports);
+        return ResponseEntity.ok(Map.of(
+            "message", "Post has been hidden successfully"
+        ));
+    }
+
     // delete user 
     public ResponseEntity<?> deleteUser(Long userId){
         User user = userRepo.findById(userId)

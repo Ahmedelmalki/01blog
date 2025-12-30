@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 public interface PostRepository extends JpaRepository<Post, Long> {
   Page<Post> findByAuthor(User author, Pageable pageable);
 
+  Page<Post> findByHiddenFalse(Pageable pageable);
+
   @Query("SELECT p FROM Post p WHERE p.author IN " +
        "(SELECT f.following FROM Follow f WHERE f.follower = :user) " +
        "ORDER BY p.createdAt DESC")
