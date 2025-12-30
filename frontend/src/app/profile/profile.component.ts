@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PostResponse, UserInfo } from '../models/post.models';
+import { PostResponse, PostsResponse, UserInfo } from '../models/post.models';
 import { PROFILE_IMPORTS } from './profile.imports';
 
 @Component({
@@ -61,20 +61,20 @@ export class ProfileComponent implements OnInit {
     });
     const url = `http://localhost:8080/posts/user/${this.username}`;
 
-    this.http.get<PostResponse[]>(url, { headers }
+    this.http.get<PostsResponse>(url, { headers }
     ).subscribe({
       next: (data) => {
         console.log('User posts loaded:', data);
-        this.posts = data;
+        this.posts = data.posts;
         this.isLoadingPosts = false;
 
-        if (data.length > 0) {
+        if (this.posts.length > 0) {
           this.userInfo = {
-            username: data[0].author,  // Changed from data[0].post.author
+            username: this.posts[0].author,  // Changed from data[0].post.author
             firstname: '',
             lastname: '',
             email: '',
-            profileLink: data[0].authorProfileLink,
+            profileLink: this.posts[0].authorProfileLink,
           };
           this.isLoadingUser = false;
         }

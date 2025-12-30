@@ -45,6 +45,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.connectWebSocket();
   }
 
+  goBack() {
+    this.router.navigate(['/feed']);
+  }
+
   ngOnDestroy() {
     this.disconnectWebSocket();
   }
@@ -217,7 +221,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     if (!token) return;
 
     this.stompClient = Stomp.client('ws://localhost:8080/ws'); 
-    console.log("000000000000000000000000000000000");
+    // console.log("000000000000000000000000000000000");
     
     this.stompClient.debug = (str) => {
       console.log('STOMP: ' + str);
@@ -241,7 +245,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         console.error('WebSocket connection error:', error);
       }
     );
-    console.log("1111111111111111111111");
+    // console.log("1111111111111111111111");
     
   }
 

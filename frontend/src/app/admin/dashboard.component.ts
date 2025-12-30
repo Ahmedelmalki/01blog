@@ -13,25 +13,6 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-/*
-export interface UserReport {
-  id: number;
-  reportedUser: {
-    id: number;
-    username: string;
-    firstname: string;
-    lastname: string;
-    profileLink: string,
-    state: number;
-  };
-  reporter: {
-    username: string;
-  };
-  reason: string;
-  createdAt: string;
-}
-*/
-
 export class DashboardComponent implements OnInit {
   userReports: UserReport[] = [];
   postReports: PostReport[] = [];

@@ -7,6 +7,9 @@
       <span *ngIf="unreadCount > 0" class="unread-badge">{{ unreadCount }}</span>
     </div>
     <div class="header-actions">
+      <button (click)="goBack()">
+        back
+      </button>
       <button 
         *ngIf="hasUnreadNotifications()" 
         class="mark-all-btn" 
