@@ -60,13 +60,11 @@ export class RegisterComponent implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         this.errorMessage = 'Please select an image file';
         return;
       }
 
-      // Validate file size (e.g., max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         this.errorMessage = 'Image size must be less than 5MB';
         return;
@@ -75,7 +73,6 @@ export class RegisterComponent implements OnInit {
       this.selectedFile = file;
       this.errorMessage = null;
 
-      // Create preview
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.previewUrl = e.target.result;
@@ -87,34 +84,11 @@ export class RegisterComponent implements OnInit {
   removeProfilePic() {
     this.selectedFile = null;
     this.previewUrl = null;
-    // Reset file input
     const fileInput = document.getElementById('profilePic') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = '';
     }
   }
-
-  // getInitial(): string {
-  //   return this.email ? this.email.charAt(0).toUpperCase() : '?';
-  // }
-
-  // getAvatarColor(): string {
-  //   if (!this.email) return '#6c757d';
-
-  //   // Generate consistent color based on email
-  //   let hash = 0;
-  //   for (let i = 0; i < this.email.length; i++) {
-  //     hash = this.email.charCodeAt(i) + ((hash << 5) - hash);
-  //   }
-
-  //   const colors = [
-  //     '#e57373', '#f06292', '#ba68c8', '#9575cd',
-  //     '#7986cb', '#64b5f6', '#4fc3f7', '#4dd0e1',
-  //     '#4db6ac', '#81c784', '#aed581', '#ff8a65'
-  //   ];
-
-  //   return colors[Math.abs(hash) % colors.length];
-  // }
 
   async uploadProfilePicture(): Promise<string | null> {
     if (!this.selectedFile) return null;
@@ -151,13 +125,22 @@ export class RegisterComponent implements OnInit {
     this.successMessage = null;
     this.errorMessage = null;
 
-    // Upload profile picture if selected
+    if (!this.validateEmail(this.email)) {
+      this.errorMessage = 'Please enter a valid email address';
+      return;
+    }
+
+    const passwordCheck = this.validatePassword(this.password);
+    if (!passwordCheck.valid) {
+      this.errorMessage = passwordCheck.message;
+      return;
+    }
+
     if (this.selectedFile) {
       const uploadedUrl = await this.uploadProfilePicture();
       if (uploadedUrl) {
         this.profileLink = uploadedUrl;
       } else {
-        // Upload failed, stop registration
         return;
       }
     }
@@ -185,7 +168,7 @@ export class RegisterComponent implements OnInit {
         }
       });
   }
-
+  // =========== HELPERS ===========
   clearForm() {
     this.firstname = '';
     this.lastname = '';
@@ -195,5 +178,29 @@ export class RegisterComponent implements OnInit {
     this.profileLink = '';
     this.selectedFile = null;
     this.previewUrl = null;
+  }
+
+  validateEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  validatePassword(password: string): { valid: boolean; message: string } {
+    if (password.length < 8) {
+      return { valid: false, message: 'Password must be at least 8 characters' };
+    }
+    if (!/[A-Z]/.test(password)) {
+      return { valid: false, message: 'Password must contain an uppercase letter' };
+    }
+    if (!/[a-z]/.test(password)) {
+      return { valid: false, message: 'Password must contain a lowercase letter' };
+    }
+    if (!/[0-9]/.test(password)) {
+      return { valid: false, message: 'Password must contain a number' };
+    }
+    if (!/[!@#$%^&*]/.test(password)) {
+      return { valid: false, message: 'Password must contain a special character (!@#$%^&*)' };
+    }
+    return { valid: true, message: '' };
   }
 }

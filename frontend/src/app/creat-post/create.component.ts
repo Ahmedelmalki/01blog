@@ -178,7 +178,7 @@ export class CreateComponent implements OnInit {
       headers
     }).subscribe({
       next: (response) => {
-        console.log(`✅ Post ${this.isEditMode ? 'updated' : 'created'}:`, response);
+        console.log(`Post ${this.isEditMode ? 'updated' : 'created'}:`, response);
         this.successMessage = `Post ${this.isEditMode ? 'updated' : 'created'} successfully!`;
         this.isLoading = false;
 

@@ -13,9 +13,7 @@
     <div class="profile-pic-section">
       <div class="profile-preview">
         <!-- Show uploaded image preview OR default avatar -->
-        <img [src]="previewUrl || '/avatar/default-avatar.png'" 
-             alt="Profile preview" 
-             class="preview-image">
+        <img [src]="previewUrl || '/avatar/default-avatar.png'" alt="Profile preview" class="preview-image">
       </div>
       <div class="profile-actions">
         <label for="profilePic" class="upload-label">
@@ -36,8 +34,14 @@
     <input type="text" placeholder="First Name" name="firstname" [(ngModel)]="firstname" required>
     <input type="text" placeholder="Last Name" name="lastname" [(ngModel)]="lastname" required>
     <input type="text" placeholder="Username" name="username" [(ngModel)]="username" required>
-    <input type="email" placeholder="Email" name="email" [(ngModel)]="email" required>
-    <input type="password" placeholder="Password" name="password" [(ngModel)]="password" required>
+    <input type="email" placeholder="Email" name="email" [(ngModel)]="email"
+      (blur)="email && !validateEmail(email) && (errorMessage = 'Invalid email format')" required>
+
+    <input type="password" placeholder="Password" name="password" [(ngModel)]="password" (input)="errorMessage = null"
+      required>
+    <small class="helper-text" *ngIf="password">
+      {{ validatePassword(password).message || '✓ Strong password' }}
+    </small>
 
     <button type="submit" [disabled]="!registerForm.valid || isUploading">
       <span *ngIf="!isUploading">Register</span>
