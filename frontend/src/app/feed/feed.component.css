@@ -280,15 +280,22 @@
 }
 
 :host-context(.dark-mode) .dark-mode-btn {
-  background-color: #2c2c2c;
+  background-color:white;
   color: #ffd700;
   border-color: #444;
 }
 
-:host-context(.dark-mode) .dark-mode-btn:hover {
+:host-context(.dark-mode) .create-btn,
+:host-context(.dark-mode) .dashboard-btn,
+:host-context(.dark-mode) .logout-btn {
+  background-color: white;
+  color: black;
+}
+
+/* :host-context(.dark-mode) .dark-mode-btn:hover {
   background-color: #3c3c3c;
   border-color: #555;
-}
+} */
 
 :host-context(.dark-mode) .loading,
 :host-context(.dark-mode) .loading-more {

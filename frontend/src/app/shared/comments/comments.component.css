@@ -50,7 +50,7 @@
   border-radius: 8px;
   font-size: 0.95rem;
   font-family: inherit;
-  resize: vertical;
+  resize: none;
   transition: border-color 0.2s;
 }
 

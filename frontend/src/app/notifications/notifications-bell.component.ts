@@ -78,14 +78,14 @@ import { CompatClient, Stomp } from '@stomp/stompjs';
 
     /* Dark Mode */
     :host-context(.dark-mode) .notification-bell {
-      background-color: #2c2c2c;
-      border-color: #444;
+      background-color: white;
+      border-color: black;
     }
 
-    :host-context(.dark-mode) .notification-bell:hover {
+    /* :host-context(.dark-mode) .notification-bell:hover {
       background-color: #3c3c3c;
       border-color: #555;
-    }
+    } */
 
     :host-context(.dark-mode) .notification-bell fa-icon {
       color: #aaa;

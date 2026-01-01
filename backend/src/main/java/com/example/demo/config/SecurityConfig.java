@@ -16,20 +16,19 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity  // to enable @PreAuthorize
+@EnableMethodSecurity  
+@AllArgsConstructor
 public class SecurityConfig {
 
     private final MyJWT jwtAuthenticationFilter;
-
-    public SecurityConfig(MyJWT jwtAuthenticationFilter) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-    }
+    private final RateLimitFilter rateLimitFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -90,7 +89,8 @@ public class SecurityConfig {
 
                 );
             }))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); 
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
