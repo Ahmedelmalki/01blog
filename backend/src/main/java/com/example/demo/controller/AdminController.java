@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.service.AdminService;
-import com.example.demo.util.JwtUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

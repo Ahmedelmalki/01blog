@@ -76,7 +76,7 @@ export class LikesComponent implements OnInit {
                 }
             },
             error: (err) => {
-                console.error('❌ Failed to toggle reaction:', err);
+                console.error('Failed to toggle reaction:', err);
             }
         });
     }
@@ -84,9 +84,9 @@ export class LikesComponent implements OnInit {
     // ========= HELPERS ==========
     private getEndpoint(): string {
         if (this.entityType === 'post') {
-            return `http://localhost:8080/posts/${this.entityId}/like?value=${this.localUserReaction === 1 ? -1 : 1}`;
+            return `/api/posts/${this.entityId}/like?value=${this.localUserReaction === 1 ? -1 : 1}`;
         } else if (this.entityType === 'comment') {
-            return `http://localhost:8080/comments/${this.entityId}/like?value=${this.localUserReaction === 1 ? -1 : 1}`;
+            return `/api/comments/${this.entityId}/like?value=${this.localUserReaction === 1 ? -1 : 1}`;
         }
         throw new Error('Invalid entity type');
     }

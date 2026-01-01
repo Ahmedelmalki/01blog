@@ -106,7 +106,7 @@ export class PostCardComponent implements OnInit {
       reportedPostId: this.postResponse.id
     };
 
-    this.http.post('http://localhost:8080/reports', reportRequest, { headers })
+    this.http.post('/api/reports', reportRequest, { headers })
       .subscribe({
         next: (response: any) => {
           console.log('Post reported successfully:', response);
@@ -133,7 +133,7 @@ export class PostCardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = `http://localhost:8080/posts/${this.postResponse.id}`;
+    const url = `/api/posts/${this.postResponse.id}`;
     this.http.delete(url, { headers }).subscribe({
         next: () => {
           this.postDeleted.emit(this.postResponse.id);

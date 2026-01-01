@@ -5,7 +5,6 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.util.JwtUtil;
 import java.util.HashSet;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

@@ -31,6 +31,8 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
+      console.log('==>',params);
+      
       this.username = params['username']; // what is this
       if (this.username) {
         this.loadUserPosts();
@@ -51,7 +53,6 @@ export class ProfileComponent implements OnInit {
   }
 
   loadUserPosts() {
-    // console.log("=======> loadUserPosts()");
     this.isLoadingPosts = true;
     this.errorMessage = null;
     const token = localStorage.getItem('token');
@@ -63,17 +64,16 @@ export class ProfileComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = `http://localhost:8080/posts/user/${this.username}`;
+    const url = `api/posts/user/${this.username}`;
 
     this.http.get<PostsResponse>(url, { headers }).subscribe({
       next: (data) => {
-        // console.log('User posts loaded:', data);
         this.posts = data.posts;
         this.isLoadingPosts = false;
 
         if (this.posts.length > 0) {
           this.userInfo = {
-            username: this.posts[0].author,  // Changed from data[0].post.author
+            username: this.posts[0].author, 
             firstname: '',
             lastname: '',
             email: '',
@@ -139,11 +139,9 @@ export class ProfileComponent implements OnInit {
       reportedPostId: null
     };
 
-    this.http.post('http://localhost:8080/reports', reportRequest, { headers })
+    this.http.post('/api/reports', reportRequest, { headers })
       .subscribe({
         next: () => {
-          console.log("00000000000000000000 next");
-
           alert('Thank you for your report.')
         },
         error: (err) => {

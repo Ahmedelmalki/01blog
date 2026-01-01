@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = 'http://localhost:8080/reports';
+    const url = '/api/reports';
 
     this.http.get<any[]>(url, { headers })
       .subscribe({
@@ -58,7 +58,7 @@ export class DashboardComponent implements OnInit {
           this.loading = false;
         },
         error: (err) => {
-          console.error('Failed to load reports:', err);
+          console.log('Failed to load reports:', err);
           this.errorMessage = 'Failed to load reports. Please try again.';
           this.loading = false;
 
@@ -104,7 +104,7 @@ export class DashboardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = `http://localhost:8080/admin/users/${userId}/ban`;
+    const url = `/api/admin/users/${userId}/ban`;
 
     this.http.put(url, {}, { headers })
       .subscribe({
@@ -126,7 +126,7 @@ export class DashboardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = `http://localhost:8080/admin/users/${userId}/unban`;
+    const url = `/api/admin/users/${userId}/unban`;
     this.http.put(url, {}, { headers })
       .subscribe({
         next: () => {
@@ -147,7 +147,7 @@ export class DashboardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = `http://localhost:8080/admin/users/${userId}`;
+    const url = `/api/admin/users/${userId}`;
 
     this.http.delete(url, { headers })
       .subscribe({
@@ -169,7 +169,7 @@ export class DashboardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = `http://localhost:8080/admin/posts/${postId}`;
+    const url = `/api/admin/posts/${postId}`;
     this.http.delete(url, { headers })
       .subscribe({
         next: () => {
@@ -190,12 +190,10 @@ export class DashboardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = `http://localhost:8080/admin/posts/${postId}`;
+    const url = `/api/admin/posts/${postId}`;
     this.http.put(url, {}, { headers })
       .subscribe({
         next: () => {
-          console.log("shit has been sent 00000000000000000");
-
           alert('Post hidden successfully');
           this.fetchReports();
         },
@@ -213,7 +211,7 @@ export class DashboardComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = `http://localhost:8080/admin/posts/${postId}/unhide`;
+    const url = `/api/admin/posts/${postId}/unhide`;
 
     this.http.put(url, {}, { headers })
       .subscribe({

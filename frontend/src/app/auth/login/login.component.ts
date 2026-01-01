@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
       username: this.username,
       password: this.password,
     };
-    const url = 'http://localhost:8080/auth/login';
+    const url = '/api/auth/login';
 
     this.http.post(url, payload)
       .subscribe({

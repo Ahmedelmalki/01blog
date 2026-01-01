@@ -51,10 +51,9 @@ public class MyJWT extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             } else{
-                System.out.println("❌ Token is INVALID or EXPIRED"); 
+                System.out.println("Token is INVALID or EXPIRED"); 
             }
         }
-        
             filterChain.doFilter(request, response);
     }
 }

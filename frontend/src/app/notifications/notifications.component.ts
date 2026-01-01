@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBell, faCheck, faTrash, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { CompatClient, Stomp } from '@stomp/stompjs';
-import {  NotificationsResponse } from '../models/notification.models';
+import { NotificationsResponse } from '../models/notification.models';
 import type { Notification } from '../models/notification.models';
 
 @Component({
@@ -25,7 +25,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   isLoadingMore = false;
   unreadCount = 0;
 
-  
+
   faBell = faBell;
   faCheck = faCheck;
   faTrash = faTrash;
@@ -37,7 +37,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadNotifications();
@@ -69,7 +69,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.errorMessage = null;
 
     const headers = this.getHeaders();
-    const url = `http://localhost:8080/notifications?page=${this.currentPage}&size=${this.pageSize}`;
+    const url = `/api/notifications?page=${this.currentPage}&size=${this.pageSize}`;
 
     this.http.get<NotificationsResponse>(url, { headers }).subscribe({
       next: (response) => {
@@ -96,7 +96,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.currentPage++;
 
     const headers = this.getHeaders();
-    const url = `http://localhost:8080/notifications?page=${this.currentPage}&size=${this.pageSize}`;
+    const url = `/api/notifications?page=${this.currentPage}&size=${this.pageSize}`;
 
     this.http.get<NotificationsResponse>(url, { headers }).subscribe({
       next: (response) => {
@@ -114,7 +114,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   loadUnreadCount() {
     const headers = this.getHeaders();
-    this.http.get<{ unreadCount: number }>('http://localhost:8080/notifications/unread-count', { headers })
+    const url = '/api/notifications/unread-count';
+    this.http.get<{ unreadCount: number }>(url, { headers })
       .subscribe({
         next: (response) => {
           this.unreadCount = response.unreadCount;
@@ -127,7 +128,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   markAsRead(notificationId: number) {
     const headers = this.getHeaders();
-    this.http.put(`http://localhost:8080/notifications/${notificationId}/read`, {}, { headers })
+    const url = `/api/notifications/${notificationId}/read`;
+    this.http.put(url, {}, { headers })
       .subscribe({
         next: () => {
           const notification = this.notifications.find(n => n.id === notificationId);
@@ -144,7 +146,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   markAllAsRead() {
     const headers = this.getHeaders();
-    this.http.put('http://localhost:8080/notifications/read-all', {}, { headers })
+    const url = '/api/notifications/read-all';
+    this.http.put(url, {}, { headers })
       .subscribe({
         next: () => {
           this.notifications.forEach(n => n.isRead = true);
@@ -159,7 +162,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   deleteNotification(notificationId: number) {
     const headers = this.getHeaders();
-    this.http.delete(`http://localhost:8080/notifications/${notificationId}`, { headers })
+    const url = `/api/notifications/${notificationId}`;
+    this.http.delete(url, { headers })
       .subscribe({
         next: () => {
           const notification = this.notifications.find(n => n.id === notificationId);
@@ -220,33 +224,27 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    this.stompClient = Stomp.client('ws://localhost:8080/ws'); 
-    // console.log("000000000000000000000000000000000");
-    
+    this.stompClient = Stomp.client('ws://localhost:8080/ws');
     this.stompClient.debug = (str) => {
       console.log('STOMP: ' + str);
     };
 
-    this.stompClient.connect(
-      {},
-      () => {
-        console.log('WebSocket connected');
-        if (this.stompClient) {
-          this.subscription = this.stompClient.subscribe(
-            '/user/queue/notifications',
-            (message: any) => {
-              const notification = JSON.parse(message.body);
-              this.handleNewNotification(notification);
-            }
-          );
-        }
-      },
+    this.stompClient.connect({}, () => {
+      console.log('WebSocket connected');
+      if (this.stompClient) {
+        this.subscription = this.stompClient.subscribe(
+          '/user/queue/notifications',
+          (message: any) => {
+            const notification = JSON.parse(message.body);
+            this.handleNewNotification(notification);
+          }
+        );
+      }
+    },
       (error: any) => {
         console.error('WebSocket connection error:', error);
       }
     );
-    // console.log("1111111111111111111111");
-    
   }
 
   private disconnectWebSocket() {
@@ -261,7 +259,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   private handleNewNotification(notification: Notification) {
     this.notifications.unshift(notification);
     this.unreadCount++;
-    
+
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('New Notification', {
         body: notification.message,

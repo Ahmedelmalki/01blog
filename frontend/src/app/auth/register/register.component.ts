@@ -98,7 +98,7 @@ export class RegisterComponent implements OnInit {
 
     const formData = new FormData();
     formData.append('file', this.selectedFile);
-    const url = 'http://localhost:8080/api/files/upload/public';
+    const url = '/api/files/upload/public';
 
     try {
       const response = await firstValueFrom(
@@ -111,10 +111,10 @@ export class RegisterComponent implements OnInit {
       );
 
       this.isUploading = false;
-      console.log('✅ Profile picture uploaded:', response.url);
+      console.log('Profile picture uploaded:', response.url);
       return response.url;
     } catch (error: any) {
-      console.error('❌ Profile picture upload failed:', error);
+      console.error('Profile picture upload failed:', error);
       this.isUploading = false;
       this.errorMessage = 'Failed to upload profile picture. Please try again.';
       return null;
@@ -154,7 +154,7 @@ export class RegisterComponent implements OnInit {
       profileLink: this.profileLink || '', // Send empty string if no profile pic
     };
 
-    this.http.post('http://localhost:8080/auth/register', payload)
+    this.http.post('/api/auth/register', payload)
       .subscribe({
         next: (res) => {
           console.log('✅ Registration successful:', res);
@@ -163,7 +163,7 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/feed']);
         },
         error: (err) => {
-          console.error('❌ Registration failed:', err);
+          console.error('Registration failed:', err);
           this.errorMessage = err.error?.message || 'Registration failed. Please try again.';
         }
       });

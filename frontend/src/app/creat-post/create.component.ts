@@ -35,7 +35,6 @@ export class CreateComponent implements OnInit {
     private ngZone: NgZone
   ) { }
 
-  // lifecycle hook
   ngOnInit() {
     this.route.params.subscribe(params => {
       if (params['id']) {
@@ -56,7 +55,7 @@ export class CreateComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = `http://localhost:8080/posts/${this.postId}`;
+    const url = `/api/posts/${this.postId}`;
 
     this.http.get<any>(url, { headers }).subscribe({
       next: (response) => {
@@ -103,9 +102,7 @@ export class CreateComponent implements OnInit {
 
     try {
       const response = await firstValueFrom(
-        this.http.post<{ url: string }>(
-          'http://localhost:8080/api/files/upload',
-          formData,
+        this.http.post<{ url: string }>('/api/files/upload', formData,
           {
             headers: new HttpHeaders({
               'Authorization': `Bearer ${token}`
@@ -131,7 +128,6 @@ export class CreateComponent implements OnInit {
           this.errorMessage = 'Failed to upload file. Please try again.';
         }
       });
-
       return null;
     }
   }
@@ -167,10 +163,7 @@ export class CreateComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    const url = this.isEditMode
-      ? `http://localhost:8080/posts/${this.postId}`
-      : 'http://localhost:8080/posts';
-
+    const url = this.isEditMode ? `/api/posts/${this.postId}` : '/api/posts';
     const method = this.isEditMode ? 'put' : 'post';
 
     this.http.request(method, url, {

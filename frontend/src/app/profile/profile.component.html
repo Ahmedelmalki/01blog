@@ -10,8 +10,8 @@
     <!-- User Info Card (Fixed) -->
     <div *ngIf="!isLoadingUser && userInfo" class="user-card">
       <div class="author-avatar">
-        <img *ngIf="userInfo.profileLink" [src]="userInfo.profileLink || '/avatar/default-avatar.png'"
-          [alt]="userInfo.username" class="profile-image">
+        <img [src]="userInfo.profileLink || '/avatar/default-avatar.png'" [alt]="userInfo.username"
+          class="profile-image">
 
       </div>
       <div class="user-details">
@@ -28,7 +28,7 @@
           <button class="menu-btn" (click)="toggleMenu($event)">⋮</button>
           <div class="menu-dropdown" [class.show]="showMenu">
             <button class="menu-item report-btn" (click)="onReportUser()">
-            <fa-icon [icon]="faFlag" class="menu-icon"></fa-icon>
+              <fa-icon [icon]="faFlag" class="menu-icon"></fa-icon>
             </button>
           </div>
         </div>

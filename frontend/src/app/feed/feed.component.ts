@@ -101,8 +101,8 @@ export class FeedComponent implements OnInit {
     });
 
     const endpoint = this.activeTab === 'following'
-      ? `http://localhost:8080/posts/following?page=${this.currentPage}&size=${this.pageSize}`
-      : `http://localhost:8080/posts?page=${this.currentPage}&size=${this.pageSize}`;
+      ? `/api/posts/following?page=${this.currentPage}&size=${this.pageSize}`
+      : `/api/posts?page=${this.currentPage}&size=${this.pageSize}`;
 
 
     this.http.get<PostsResponse>(endpoint, { headers }).subscribe({
@@ -137,8 +137,8 @@ export class FeedComponent implements OnInit {
     });
 
     const endpoint = this.activeTab === 'following'
-      ? `http://localhost:8080/posts/following?page=${this.currentPage}&size=${this.pageSize}`
-      : `http://localhost:8080/posts?page=${this.currentPage}&size=${this.pageSize}`;
+      ? `/api/posts/following?page=${this.currentPage}&size=${this.pageSize}`
+      : `/api/posts?page=${this.currentPage}&size=${this.pageSize}`;
 
     this.http.get<PostsResponse>(endpoint, { headers })
       .subscribe({
@@ -148,7 +148,6 @@ export class FeedComponent implements OnInit {
           this.isLoading = false;
         },
         error: (err) => {
-          console.error('Failed to load posts:', err);
           this.errorMessage = 'Failed to load posts. Please try again.';
           this.isLoading = false;
 

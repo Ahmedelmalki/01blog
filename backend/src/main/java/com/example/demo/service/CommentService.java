@@ -4,7 +4,7 @@ package com.example.demo.service;
 import com.example.demo.DTO.CommentRequest;
 import com.example.demo.model.*;
 import com.example.demo.repository.CommentRepository;
-import com.example.demo.repository.PostRepository; // responsible for saving shit
+import com.example.demo.repository.PostRepository; 
 import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,6 +27,10 @@ public class CommentService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are banned and cannot create comments");
         }
 
+        if (request.getContent().length() > 500){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment is too long");
+        }
+
         Post post = postRepository.findById(request.getPostId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
 
@@ -37,7 +41,7 @@ public class CommentService {
 
     public List<Comment> getCommentsByPostId(Long postId){
         Post post = postRepository.findById(postId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
         return commentRepository.findByPostOrderByIdDesc(post);
     }
 }

@@ -129,7 +129,7 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = 'http://localhost:8080/notifications/unread-count';
+    const url = '/api/notifications/unread-count';
     
     this.http.get<{ unreadCount: number }>(url, { headers })
       .subscribe({

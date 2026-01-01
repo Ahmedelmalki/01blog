@@ -29,7 +29,7 @@ export class FollowService {
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`
         });
-        const url = `http://localhost:8080/follow/status/${username}`;
+        const url = `/api/follow/status/${username}`;
         return this.http.get<{ following: boolean }>(url, { headers });
     }
 
@@ -38,7 +38,7 @@ export class FollowService {
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`
         });
-        const url = `http://localhost:8080/follow/${username}`;
+        const url = `/api/follow/${username}`;
         return this.http.post<{ following: boolean, message: string }>(url, {}, { headers });
     }
 }

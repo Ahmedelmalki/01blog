@@ -12,7 +12,8 @@ import { COMMENTS_IMPORTS } from "./comments.imports";
     templateUrl: './comments.component.html',
     styleUrl: './comments.component.css',
 })
-export class CommentsComponent implements OnInit {
+export class CommentsComponent {
+    // definite assignment assertion.
     @Input() postId!: number;
     @Input() commentsCount: number = 0;
     faComment = faComment;
@@ -21,11 +22,11 @@ export class CommentsComponent implements OnInit {
     isExpanded = false;
     isLoading = false;
     isSubmitting = false;
-    errorMessage: String | null = null; // why null = null;
+    errorMessage: String | null = null;
 
-    constructor(private http: HttpClient, private router: Router) { }
-
-    ngOnInit() { }
+    constructor(
+        private http: HttpClient,
+        private router: Router) { }
 
     toggleComments() {
         this.isExpanded = !this.isExpanded;
@@ -47,19 +48,16 @@ export class CommentsComponent implements OnInit {
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`
         });
+        const url = `/api/posts/${this.postId}/comments`;
 
-        // GET /posts/{postId}/comments
-        this.http.get<Comment[]>(
-            `http://localhost:8080/posts/${this.postId}/comments`,
-            { headers }
-        ).subscribe({ 
+        this.http.get<Comment[]>(url, { headers }).subscribe({
             next: (data) => {
-                console.log('✅ Comments loaded:', data);
+                console.log('Comments loaded:', data);
                 this.comments = data;
                 this.isLoading = false;
             },
             error: (err) => {
-                console.error('❌ Failed to load comments:', err);
+                console.log(err);
                 this.errorMessage = 'Failed to load comments.';
                 this.isLoading = false;
             }
@@ -88,11 +86,7 @@ export class CommentsComponent implements OnInit {
             postId: this.postId,
             content: this.newCommentContent.trim(),
         };
-        this.http.post<Comment>(
-            'http://localhost:8080/comments',
-            commentRequest,
-            { headers }
-        ).subscribe({
+        this.http.post<Comment>('/api/comments', commentRequest, { headers }).subscribe({
             next: (newComment) => {
                 console.log('comment created: ', newComment);
                 this.comments.unshift(newComment);
@@ -100,8 +94,11 @@ export class CommentsComponent implements OnInit {
                 this.isSubmitting = false;
             },
             error: (err) => {
-                console.log("big fat error", err);
-                this.errorMessage = "failed to post comment";
+                if (err.status === 400) {
+                    this.errorMessage = err.error.message;
+                } else {
+                    this.errorMessage = "failed to post comment";
+                }
                 this.isSubmitting = false;
             }
         });

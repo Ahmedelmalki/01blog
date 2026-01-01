@@ -17,20 +17,27 @@ services:
       - "3306:3306"
 
   backend:
-    build: .
+    build: 
+      context: .
+      target: dev  # Use dev stage for development
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/01blogdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: 01blog
       SPRING_DATASOURCE_PASSWORD: 01blogpass
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      FILE_UPLOAD_DIR: /app/uploads 
+      FILE_UPLOAD_DIR: /app/uploads
+      SPRING_DEVTOOLS_RESTART_ENABLED: "true"
     depends_on:
       db:
         condition: service_healthy
     ports:
       - "8080:8080"
     volumes:
-      - ./uploads:/app/uploads  
+      - ./uploads:/app/uploads
+      - ./src:/app/src          # Mount source code
+      - ./target:/app/target    # Mount compiled classes
+      - maven-cache:/root/.m2   # Cache Maven dependencies
 
 volumes:
   db_data:
+  maven-cache:

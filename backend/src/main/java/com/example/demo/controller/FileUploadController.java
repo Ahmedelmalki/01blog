@@ -12,7 +12,7 @@ import java.util.*;
 
 
 @RestController
-@RequestMapping("/api/files")
+@RequestMapping("/files")
 @CrossOrigin(origins = "http://localhost:4200")
 public class FileUploadController {
 
@@ -68,7 +68,7 @@ public class FileUploadController {
             Path filePath = uploadPath.resolve(uniqueFilename);
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            String fileUrl = "http://localhost:" + serverPort + "/api/files/" + uniqueFilename;
+            String fileUrl = "http://localhost:" + serverPort + "/files/" + uniqueFilename;
 
             Map<String, Object> response = new HashMap<>();
             response.put("url", fileUrl);
