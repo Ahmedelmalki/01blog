@@ -7,7 +7,7 @@ import { faMoon, faSun, faCamera, faTrash } from '@fortawesome/free-solid-svg-ic
 import { DarkModeService } from '../../services/dark-mode.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { firstValueFrom } from 'rxjs';
-
+import { RecaptchaModule } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-register',
@@ -16,6 +16,7 @@ import { firstValueFrom } from 'rxjs';
     FormsModule,
     FontAwesomeModule,
     RouterLink,
+    RecaptchaModule,
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
@@ -40,6 +41,9 @@ export class RegisterComponent implements OnInit {
   selectedFile: File | null = null;
   isUploading = false;
   previewUrl: string | null = null;
+
+  captchaToken: string | null = null;
+  siteKey = '6Ld9ERIsAAAAANXlu6h1WgzSxz5Q9RfiQ7YPd2v2';
 
   constructor(
     private http: HttpClient,
@@ -124,6 +128,10 @@ export class RegisterComponent implements OnInit {
   async register() {
     this.successMessage = null;
     this.errorMessage = null;
+    if (!this.captchaToken) {
+      this.errorMessage = 'Please complete the CAPTCHA verification';
+      return;
+    }
 
     if (!this.validateEmail(this.email)) {
       this.errorMessage = 'Please enter a valid email address';
@@ -152,12 +160,13 @@ export class RegisterComponent implements OnInit {
       email: this.email,
       password: this.password,
       profileLink: this.profileLink || '', // Send empty string if no profile pic
+      captchaToken: this.captchaToken
     };
 
     this.http.post('/api/auth/register', payload)
       .subscribe({
         next: (res) => {
-          console.log('✅ Registration successful:', res);
+          console.log('Registration successful:', res);
           this.successMessage = 'Registration successful!';
           this.clearForm();
           this.router.navigate(['/feed']);
@@ -169,6 +178,10 @@ export class RegisterComponent implements OnInit {
       });
   }
   // =========== HELPERS ===========
+  onCaptchaResolved(captchaResponse: string | null) {
+    this.captchaToken = captchaResponse;
+  }
+
   clearForm() {
     this.firstname = '';
     this.lastname = '';
@@ -178,6 +191,7 @@ export class RegisterComponent implements OnInit {
     this.profileLink = '';
     this.selectedFile = null;
     this.previewUrl = null;
+    this.captchaToken = null;
   }
 
   validateEmail(email: string): boolean {

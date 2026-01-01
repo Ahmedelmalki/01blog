@@ -43,6 +43,11 @@
       {{ validatePassword(password).message || '✓ Strong password' }}
     </small>
 
+    <div class="captcha-container">
+      <re-captcha [siteKey]="siteKey" (resolved)="onCaptchaResolved($event)"
+        [theme]="isDarkMode ? 'dark' : 'light'"></re-captcha>
+    </div>
+
     <button type="submit" [disabled]="!registerForm.valid || isUploading">
       <span *ngIf="!isUploading">Register</span>
       <span *ngIf="isUploading">Uploading...</span>

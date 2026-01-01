@@ -3,8 +3,11 @@ package com.example.demo.controller;
 import com.example.demo.DTO.*;
 import com.example.demo.model.User;
 import com.example.demo.service.AuthService;
+import com.example.demo.service.RecaptchaService;
+
 import lombok.AllArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,15 +17,24 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final RecaptchaService recaptchaService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
+        if (!recaptchaService.verify(user.getCaptchaToken())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse("CAPTCHA verification failed"));
+        }
         User savedUser = authService.register(user);
         return ResponseEntity.ok(new UserResponse(savedUser));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        if (!recaptchaService.verify(request.getCaptchaToken())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse("CAPTCHA verification failed"));
+        }
         String token = authService.login(request.getUsername(), request.getPassword());
         User user = authService.getUserByUsername(request.getUsername());
         return ResponseEntity.ok(new AuthResponse(token, new UserResponse(user)));
