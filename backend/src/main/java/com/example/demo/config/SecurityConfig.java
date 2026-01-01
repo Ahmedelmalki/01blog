@@ -71,6 +71,8 @@ public class SecurityConfig {
                 .requestMatchers("/comments/**").authenticated()
                 .requestMatchers("/likes/**").authenticated()
                 .requestMatchers("/follow/**").authenticated()
+                .requestMatchers("/users/me").authenticated()  
+                .requestMatchers("/users/**").authenticated()  
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

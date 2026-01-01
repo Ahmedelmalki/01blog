@@ -22,7 +22,7 @@ import { CompatClient, Stomp } from '@stomp/stompjs';
     .notification-bell {
       position: relative;
       padding: 0.6rem 1rem;
-      background-color: #f8f9fa;
+      background-color: black;
       border: 1px solid #ddd;
       border-radius: 5px;
       cursor: pointer;
@@ -33,13 +33,13 @@ import { CompatClient, Stomp } from '@stomp/stompjs';
     }
 
     .notification-bell:hover {
-      background-color: #e9ecef;
+      background-color:black;
       border-color: #adb5bd;
     }
 
     .notification-bell fa-icon {
-      font-size: 1.1rem;
-      color: #666;
+      font-size: 0.8rem;
+      color: white;
       transition: color 0.2s;
     }
 
@@ -99,17 +99,17 @@ import { CompatClient, Stomp } from '@stomp/stompjs';
 export class NotificationBellComponent implements OnInit, OnDestroy {
   unreadCount = 0;
   faBell = faBell;
-  
+
   private stompClient: CompatClient | null = null;
   private subscription: any = null;
   private countCheckInterval: any = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
     this.loadUnreadCount();
     this.connectWebSocket();
-    
+
     this.countCheckInterval = setInterval(() => {
       this.loadUnreadCount();
     }, 30000);
@@ -130,7 +130,7 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
       'Authorization': `Bearer ${token}`
     });
     const url = '/api/notifications/unread-count';
-    
+
     this.http.get<{ unreadCount: number }>(url, { headers })
       .subscribe({
         next: (response) => {
@@ -147,8 +147,8 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
     if (!token) return;
 
     this.stompClient = Stomp.client('ws://localhost:8080/ws');
-    
-    this.stompClient.debug = () => {};
+
+    this.stompClient.debug = () => { };
 
     this.stompClient.connect(
       {},
@@ -158,7 +158,7 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
             '/user/queue/notifications',
             (message: any) => {
               this.unreadCount++;
-              
+
               if ('Notification' in window && Notification.permission === 'granted') {
                 const notification = JSON.parse(message.body);
                 new Notification('New Notification', {

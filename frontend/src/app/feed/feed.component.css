@@ -1,11 +1,9 @@
-/* Main feed container */
 .feed-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* Fixed header with title and action buttons */
 .feed-header {
   position: sticky;
   top: 0;
@@ -24,14 +22,14 @@
 }
 
 @font-face {
-  font-family: "PICKYSIDE\ GRUNGE";
-  src: url("../fonts/PICKYSIDE\ GRUNGE.otf") format("opentype");
+  font-family: "BlackRockie";
+  src: url("../fonts/BlackRockie.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
 }
 
 .feed-header h1 {
-  font-family: "PICKYSIDE\ GRUNGE", sans-serif;
+  font-family: "BlackRockie", sans-serif;
 }
 
 /* Header action buttons container */
@@ -41,36 +39,49 @@
   align-items: center;
 }
 
-/* Create Post button styling */
-.create-btn {
-  padding: 0.5rem 1.5rem;
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: background-color 0.2s;
-}
-
-.create-btn:hover {
-  background-color: #218838;
-}
-
-/* Dark mode button styling */
-.dark-mode-btn {
-  padding: 0.5rem 1rem;
-  background-color: #f8f9fa;
-  color: #333;
+/* Unified icon button styling - makes all icons the same size */
+.create-btn,
+.logout-btn,
+.dark-mode-btn,
+.dashboard-btn {
+  padding: 0.6rem 1rem;
   border: 1px solid #ddd;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1.1rem;
-  transition: all 0.2s;
+  font-size: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s;
+  position: relative;
+}
+
+/* Create Post button */
+.create-btn {
+  background-color: #000000;
+  color: #fff;
+  border-color: #000000;
+}
+
+.create-btn:hover {
+  background-color: #333;
+}
+
+/* Logout button */
+.logout-btn {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.logout-btn:hover {
+  background-color: #333;
+}
+
+/* Dark mode button */
+.dark-mode-btn {
+  background-color:black ;
+  color: #f8f9fa;
 }
 
 .dark-mode-btn:hover {
@@ -78,35 +89,49 @@
   border-color: #adb5bd;
 }
 
-/* Logout button styling */
-.logout-btn {
-  padding: 0.5rem 1.5rem;
-  background-color: #000;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.logout-btn:hover {
-  background-color: #333;
-}
-
+/* Dashboard button */
 .dashboard-btn {
-  padding: 0.5rem 1.5rem;
   background-color: #007bff;
   color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
+  border-color: #007bff;
   font-weight: 500;
-  transition: background-color 0.2s;
 }
 
 .dashboard-btn:hover {
   background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+/* Tooltip text styling */
+.create-btn .create-text,
+.logout-btn .logout-text {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000000;
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 3px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  margin-top: 0.25rem;
+}
+
+.create-btn:hover .create-text,
+.logout-btn:hover .logout-text {
+  opacity: 1;
+}
+
+/* Ensure all fa-icons inside buttons have the same size */
+.create-btn fa-icon,
+.logout-btn fa-icon,
+.dark-mode-btn fa-icon,
+.dashboard-btn fa-icon {
+  font-size: 0.8rem;
 }
 
 /* Feed navigation tabs */
@@ -319,4 +344,45 @@
   .feed-content-inner {
     padding: 1rem;
   }
+}
+
+/* Profile button in header */
+.profile-btn {
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.profile-btn:hover {
+  transform: scale(1.05);
+}
+
+.header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #007bff;
+  transition: border-color 0.2s;
+}
+
+.profile-btn:hover .header-avatar {
+  border-color: #0056b3;
+}
+
+.header-avatar .profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Dark mode for profile button */
+:host-context(.dark-mode) .header-avatar {
+  border-color: #4a9eff;
+}
+
+:host-context(.dark-mode) .profile-btn:hover .header-avatar {
+  border-color: #6bb3ff;
 }

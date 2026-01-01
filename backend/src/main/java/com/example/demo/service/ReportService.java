@@ -41,17 +41,6 @@ public class ReportService {
         return user.getRoles().contains("ADMIN");
     }
 
-
-    /*
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public class ReportRequest {
-            private String reason;
-            private String reportedUsername;  
-            private Long reportedPostId;  
-        }
-    */
     public Report createReport(String reporterUsername, ReportRequest request){
         if (request.getReportedUsername() == null && request.getReportedPostId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 

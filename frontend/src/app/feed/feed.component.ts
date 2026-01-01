@@ -3,10 +3,10 @@ import { FEED_IMPORTS } from './feed.imports';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { PostResponse } from '../models/post.models';
-import { faSun, faMoon, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faSun, faMoon, faChartBar, faSignOutAlt, faPen } from '@fortawesome/free-solid-svg-icons';
 import { DarkModeService } from '../services/dark-mode.service';
 import { PostsResponse } from '../models/post.models';
-
+import { UserInfo } from '../models/post.models';
 
 @Component({
   selector: 'app-feed',
@@ -21,10 +21,15 @@ export class FeedComponent implements OnInit {
   isLoadingMore = false;
   errorMessage: string | null = null;
   isDarkMode = false;
+  isAdmin = false;
   faMoon = faMoon;
   faSun = faSun;
   faChartBar = faChartBar;
-  isAdmin = false;
+  faSignOutAlt = faSignOutAlt;
+  faPen = faPen;
+
+  userInfo: UserInfo | null = null; 
+  currentUsername: string = ''; 
 
   activeTab: 'all' | 'following' = 'all';
   currentPage = 0;
@@ -38,6 +43,7 @@ export class FeedComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loadCurrentUserInfo();
     this.loadPosts();
     this.darkModeService.darkMode$.subscribe(isDark => {
       this.isDarkMode = isDark;
@@ -69,10 +75,8 @@ export class FeedComponent implements OnInit {
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        // Check if user has ADMIN role
         if (payload.roles && Array.isArray(payload.roles)) {
           this.isAdmin = payload.roles.includes('ADMIN');
-          // console.log("Is admin?", this.isAdmin);
         } else {
           console.warn("Roles not found or not an array");
         }
@@ -171,4 +175,36 @@ export class FeedComponent implements OnInit {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
+
+  loadCurrentUserInfo() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      this.currentUsername = payload.sub; 
+    } catch (e) {
+      console.error('Failed to decode token', e);
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    this.http.get<UserInfo>('/api/users/me', { headers }).subscribe({
+      next: (data) => {
+        this.userInfo = data;
+      },
+      error: (err) => {
+        console.error('Failed to load user info:', err);
+      }
+    });
+  }
+
+  goToMyProfile() {
+    if (this.currentUsername) {
+      this.router.navigate(['/profile', this.currentUsername]);
+    }
+  }
+
 }

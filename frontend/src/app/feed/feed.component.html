@@ -5,18 +5,32 @@
   <div class="feed-header">
     <h1>01 BLOG</h1>
     <div class="header-actions">
-      <button class="create-btn" routerLink="/post/create">+ Create Post</button>
-       <app-notification-bell></app-notification-bell>
+      <button class="create-btn" routerLink="/post/create">
+        <fa-icon [icon]="faPen"></fa-icon>
+        <span class="create-text">Create Post</span>
+      </button>
+      <app-notification-bell></app-notification-bell>
       <button *ngIf="isAdmin" class="dashboard-btn" routerLink="/admin/dashboard">
         <fa-icon [icon]="faChartBar"></fa-icon>
         Dashboard
       </button>
-      <button class="logout-btn" (click)="logout()">Logout</button>
+      <button class="logout-btn">
+        <fa-icon [icon]="faSignOutAlt"></fa-icon>
+        <span class="logout-text">Logout</span>
+      </button>
+      <button class="dark-mode-btn" (click)="toggleDarkMode()"
+        [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+        <fa-icon [icon]="isDarkMode ? faSun : faMoon"></fa-icon>
+      </button>
+
+      <!-- Profile Picture Button -->
+      <button class="profile-btn" (click)="goToMyProfile()" [attr.aria-label]="'Go to my profile'" *ngIf="userInfo">
+        <div class="header-avatar">
+          <img [src]="userInfo.profileLink || '/avatar/default-avatar.png'" [alt]="userInfo.username"
+            class="profile-image">
+        </div>
+      </button>
     </div>
-    <button class="dark-mode-btn" (click)="toggleDarkMode()"
-      [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
-      <fa-icon [icon]="isDarkMode ? faSun : faMoon"></fa-icon>
-    </button>
   </div>
 
   <!-- Feed Navigation Tabs -->
