@@ -22,6 +22,11 @@ export class ProfileComponent implements OnInit {
   faFlag = faFlag;
   showMenu = false;
   currentUsername: string = '';
+  isLoadingMorePosts = false;
+
+  currentPage = 0;
+  pageSize = 10;
+  hasMore = true;
 
   constructor(
     private http: HttpClient,
@@ -31,18 +36,21 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      console.log('==>',params);
-      
-      this.username = params['username']; // what is this
-      if (this.username) {
-        this.loadUserPosts();
-      } else {
-        this.loadCurrentUserProfile();
-      }
+      this.username = params['username'];
+      this.handleRouteChange();
     });
   }
 
-  loadCurrentUserProfile() {
+  private handleRouteChange() {
+    if (this.username) {
+      this.loadProfileCard();
+      this.loadUserPosts();
+    } else {
+      this.loadCurrentUserProfile();
+    }
+  }
+
+  loadCurrentUserProfile() { // why this method
     const token = localStorage.getItem('token');
     if (!token) {
       this.router.navigate(['/login']);
@@ -52,41 +60,68 @@ export class ProfileComponent implements OnInit {
     this.router.navigate(['/feed']);
   }
 
-  loadUserPosts() {
-    this.isLoadingPosts = true;
-    this.errorMessage = null;
+  getHeaders(): HttpHeaders | null {
     const token = localStorage.getItem('token');
     if (!token) {
       this.router.navigate(['/login']);
-      return;
+      return null;
     }
 
-    const headers = new HttpHeaders({
+    return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = `api/posts/user/${this.username}`;
+  }
+
+  loadProfileCard() {
+    const headers = this.getHeaders();
+    if (!headers) return;
+    this.http.get<UserInfo>(`/api/users/${this.username}`, { headers }).subscribe({
+      next: (user) => {
+        this.userInfo = user;
+        this.isLoadingUser = false;
+      },
+      error: (err) => {
+        console.error('Failed to load user info:', err);
+        this.isLoadingUser = false;
+        if (err.status === 401) {
+          localStorage.removeItem('token');
+          this.router.navigate(['/login']);
+        }
+      }
+    });
+
+  }
+
+  loadUserPosts(loadMore = false) {
+    if (loadMore) {
+      this.isLoadingMorePosts = true;
+    } else {
+      this.isLoadingPosts = true;
+      this.currentPage = 0;
+      this.posts = [];
+    }
+
+    this.errorMessage = null;
+    const headers = this.getHeaders();
+    if (!headers) return;
+    const url = `api/posts/user/${this.username}?page=${this.currentPage}&size=${this.pageSize}`;
 
     this.http.get<PostsResponse>(url, { headers }).subscribe({
       next: (data) => {
-        this.posts = data.posts;
-        this.isLoadingPosts = false;
-
-        if (this.posts.length > 0) {
-          this.userInfo = {
-            username: this.posts[0].author, 
-            firstname: '',
-            lastname: '',
-            email: '',
-            profileLink: this.posts[0].authorProfileLink,
-          };
-          this.isLoadingUser = false;
+        if (loadMore) {
+          this.posts = [...this.posts, ...data.posts];
+        } else {
+          this.posts = data.posts;
         }
+        this.hasMore = data.posts.length === this.pageSize;
+
+        this.isLoadingPosts = false;
+        this.isLoadingMorePosts = false;
       },
       error: (err) => {
-        console.error('Failed to load user posts:', err);
-        this.errorMessage = 'Failed to load user profile. Please try again.';
+        console.log('Failed to load user posts:', err);
+        this.errorMessage = 'Failed to load user posts. Please try again.';
         this.isLoadingPosts = false;
-        this.isLoadingUser = false;
 
         if (err.status === 401) {
           localStorage.removeItem('token');
@@ -94,6 +129,23 @@ export class ProfileComponent implements OnInit {
         }
       }
     });
+  }
+
+  loadMorePosts() {
+    if (!this.isLoadingMorePosts && this.hasMore) {
+      this.currentPage++;
+      this.loadUserPosts(true);
+    }
+  }
+
+  @HostListener('window:scroll')
+  onScroll() {
+    const scrollPosition = window.pageYOffset + window.innerHeight;
+    const pageHeight = document.documentElement.scrollHeight;
+
+    if (scrollPosition >= pageHeight - 500 && !this.isLoadingMorePosts && this.hasMore) {
+      this.loadMorePosts();
+    }
   }
 
   onReactionChanged(event: { postId: number, value: number }) {

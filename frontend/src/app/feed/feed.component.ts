@@ -17,11 +17,13 @@ import { UserInfo } from '../models/post.models';
 })
 export class FeedComponent implements OnInit {
   posts: PostResponse[] = [];
+  errorMessage: string | null = null;
+  
   isLoading = true;
   isLoadingMore = false;
-  errorMessage: string | null = null;
   isDarkMode = false;
   isAdmin = false;
+  
   faMoon = faMoon;
   faSun = faSun;
   faChartBar = faChartBar;
