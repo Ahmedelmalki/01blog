@@ -46,6 +46,10 @@
       <!-- Individual Comments -->
       <div *ngFor="let comment of comments" class="comment-item">
         <div class="comment-header">
+          <button *ngIf="isCurrentUserAuthor(comment)" class="delete-btn" (click)="deleteComment(comment.id)"
+            title="Delete comment">
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </button>
           <span class="comment-author">
             {{ comment.author.firstname }} {{ comment.author.lastname }}
           </span>

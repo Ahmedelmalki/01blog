@@ -29,7 +29,7 @@ public class Comment{
     @JsonIgnoreProperties({"password", "email"})
     private User author;
 
-    // ✅ CASCADE DELETE for comment likes
+    // CASCADE DELETE for comment likes
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"comment", "user"})
     private List<CommentLike> likes = new ArrayList<>();

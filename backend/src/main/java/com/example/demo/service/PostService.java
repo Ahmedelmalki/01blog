@@ -28,7 +28,15 @@ public class PostService {
         if (user.getState() == -1) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are banned and cannot create posts");
         }
+
+        if(post.getTitle().length() > 500){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "title is too long");
+        }
         
+        if(post.getContent().length() > 5000){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "post is too long");
+        }
+
         post.setAuthor(user);
         Post savedPost = postRepository.save(post);
 

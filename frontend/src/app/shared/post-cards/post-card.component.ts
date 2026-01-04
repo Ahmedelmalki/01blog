@@ -14,7 +14,7 @@ import { POST_CARD_IMPORTS } from './post-card.imports';
 })
 export class PostCardComponent implements OnInit {
   @Input() postResponse!: PostResponse;
-  @Output() postDeleted = new EventEmitter<number>();
+  @Output() postDeleted = new EventEmitter<number>(); // this one
   @Output() postUpdated = new EventEmitter<number>();
 
   showMenu = false;
@@ -69,7 +69,6 @@ export class PostCardComponent implements OnInit {
   }
 
   onDelete() {
-    console.log('delete post');
     this.showMenu = false;
     if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
       this.deletePost();
@@ -77,11 +76,8 @@ export class PostCardComponent implements OnInit {
   }
 
   onReport() {
-    console.log('Report post');
     this.showMenu = false;
-
     const reason = prompt('Please provide a reason for reporting this post:');
-
     if (reason && reason.trim()) {
       this.reportPost(reason.trim());
     }

@@ -9,7 +9,9 @@ import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
-import java.util.List;
+import org.springframework.http.ResponseEntity;
+
+import java.util.*;
 import lombok.*;
 
 @AllArgsConstructor
@@ -43,5 +45,20 @@ public class CommentService {
         Post post = postRepository.findById(postId)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
         return commentRepository.findByPostOrderByIdDesc(post);
+    }
+
+    public ResponseEntity<?> deleteComment(Long id, String username){
+        Comment comment = commentRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+        
+        System.out.println("=========\n"+comment.getAuthor()+" "+username+"\n=============");
+        if (!comment.getAuthor().getUsername().equals(username)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "you can't delete this comment");           
+        }
+        commentRepository.delete(comment);
+        
+        return ResponseEntity.ok(Map.of(
+            "message", "Comment and related reports deleted successfully"
+        ));
     }
 }

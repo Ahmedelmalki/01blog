@@ -6,6 +6,8 @@ import com.example.demo.service.CommentService;
 import com.example.demo.util.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -33,5 +35,16 @@ public class CommentController {
     public ResponseEntity<List<Comment>> getCommentsByPost(@PathVariable Long postId) {
         List<Comment> comments = commentService.getCommentsByPostId(postId);
         return ResponseEntity.ok(comments);
+    }
+
+    @DeleteMapping("comments/{id}")
+    public ResponseEntity<?> deleteComment(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String authHeader) {
+            
+        String token = authHeader.replace("Bearer ", "");
+        String username = jwtUtil.extractUsername(token);
+            
+        return commentService.deleteComment(id, username);
     }
 }
