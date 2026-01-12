@@ -166,6 +166,8 @@ export class RegisterComponent implements OnInit {
     this.http.post('/api/auth/register', payload)
       .subscribe({
         next: (res) => {
+          console.log("===========>", payload.username, payload.password);
+          
           console.log('Registration successful:', res);
           this.successMessage = 'Registration successful!';
           this.clearForm();

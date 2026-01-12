@@ -51,7 +51,6 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
         
-        System.out.println("=========\n"+comment.getAuthor()+" "+username+"\n=============");
         if (!comment.getAuthor().getUsername().equals(username)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "you can't delete this comment");           
         }
